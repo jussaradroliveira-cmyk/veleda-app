@@ -85,6 +85,15 @@ check('RLS: outro utilizador não vê diário alheio', j2?.length === 0)
 const r4 = await callReading(token, { question: 'ok', cards: [chosen[0]] })
 check('cartas inválidas → 400', r4.status === 400, `status ${r4.status}`)
 
+// limpeza: apaga os utilizadores de teste (precisa da service role no secrets.env)
+if (env.VELEDA_SUPABASE_SERVICE_ROLE_KEY) {
+  const admin = createClient(URL, env.VELEDA_SUPABASE_SERVICE_ROLE_KEY)
+  for (const uid of [userId, su2?.user?.id].filter(Boolean)) {
+    await admin.auth.admin.deleteUser(uid)
+  }
+  console.log('(utilizadores de teste apagados)')
+}
+
 console.log(`\n${pass} passaram, ${fail} falharam`)
 if (r1.body.reading) {
   console.log('\n--- excerto da leitura gerada ---')

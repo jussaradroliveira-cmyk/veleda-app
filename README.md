@@ -45,14 +45,42 @@ Enquanto não existirem, o app mostra placeholders com moldura dourada.
 node scripts/e2e.mjs   # e2e completo contra o backend real (cria e apaga utilizadores de teste)
 ```
 
-## Deploy de alterações
+## Site publicado
+
+**https://jussaradroliveira-cmyk.github.io/veleda-app/** (GitHub Pages)
+
+Publicar alterações do frontend:
+
+```bash
+npm run deploy
+```
+
+Deploy de alterações nas funções:
 
 ```bash
 supabase functions deploy generate-reading --project-ref phixumwuktqabcngncrk --use-api
+supabase functions deploy create-checkout --project-ref phixumwuktqabcngncrk --use-api
+supabase functions deploy stripe-webhook --project-ref phixumwuktqabcngncrk --use-api --no-verify-jwt
 ```
 
-## Por fazer (2.ª fase)
+## Stripe (pronto a ligar)
 
-- Checkout Stripe no paywall (agora é só ecrã)
-- Imagens reais das cartas
-- Hosting (Vercel/Netlify) — por agora corre localmente
+O código completo já está no ar: `create-checkout` (abre o Checkout de subscrição),
+`stripe-webhook` (liga/desliga `profiles.is_premium`). Sem chaves configuradas, o
+botão Premium mostra "quase a chegar" e nada rebenta.
+
+Para ativar, definir os secrets no projeto Supabase:
+
+```bash
+supabase secrets set --project-ref phixumwuktqabcngncrk \
+  STRIPE_SECRET_KEY=sk_test_... STRIPE_PRICE_ID=price_... STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+Webhook do Stripe a apontar para:
+`https://phixumwuktqabcngncrk.supabase.co/functions/v1/stripe-webhook`
+(eventos: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`)
+
+## Por fazer
+
+- Colar as chaves Stripe (ver acima) — o resto já está feito
+- Imagens reais das cartas → `public/cards/` + `npm run deploy`

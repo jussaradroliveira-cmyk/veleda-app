@@ -1,12 +1,15 @@
 import { useState } from 'react'
 
+// Resolve /cards/x.jpg contra o BASE_URL (em produção o site vive em /veleda-app/)
+const img = (path) => import.meta.env.BASE_URL + String(path).replace(/^\//, '')
+
 // Frente da carta: tenta a imagem real; se não existir, mostra o placeholder com moldura dourada.
 export function CardFront({ card, className = '' }) {
   const [imgOk, setImgOk] = useState(true)
   return (
     <div className={`tarot-card ${card.reversed ? 'reversed' : ''} ${className}`} title={card.name}>
       {imgOk && card.image_path ? (
-        <img src={card.image_path} alt={card.name} onError={() => setImgOk(false)} />
+        <img src={img(card.image_path)} alt={card.name} onError={() => setImgOk(false)} />
       ) : (
         <div className="card-face-inner">
           <div className="num">{card.arcana === 'maior' ? `ARCANO ${card.number}` : card.suit?.toUpperCase()}</div>
@@ -25,7 +28,7 @@ export function CardBack({ style, onClick, className = '' }) {
   return (
     <div className={`tarot-card ${className}`} style={style} onClick={onClick}>
       {imgOk ? (
-        <img src="/cards/verso.jpg" alt="verso da carta" onError={() => setImgOk(false)} />
+        <img src={img('/cards/verso.jpg')} alt="verso da carta" onError={() => setImgOk(false)} />
       ) : (
         <div className="card-back"><span className="orn">✦</span></div>
       )}

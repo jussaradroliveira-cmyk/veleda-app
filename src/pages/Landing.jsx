@@ -3,9 +3,9 @@ import { useAuth } from '../App'
 import { CardFront } from '../components/TarotCard'
 
 const heroCards = [
-  { name: 'A Estrela', arcana: 'maior', number: 17, image_path: '/cards/a-estrela.jpg' },
-  { name: 'O Sol', arcana: 'maior', number: 19, image_path: '/cards/o-sol.jpg' },
   { name: 'A Lua', arcana: 'maior', number: 18, image_path: '/cards/a-lua.jpg' },
+  { name: 'O Sol', arcana: 'maior', number: 19, image_path: '/cards/o-sol.jpg' },
+  { name: 'O Mundo', arcana: 'maior', number: 21, image_path: '/cards/o-mundo.jpg' },
 ]
 
 export default function Landing() {

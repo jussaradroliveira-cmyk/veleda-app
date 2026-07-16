@@ -12,7 +12,8 @@ const ANON = env.VELEDA_SUPABASE_ANON_KEY
 let pass = 0, fail = 0
 function check(name, ok, extra = '') {
   console.log(`${ok ? '✅' : '❌'} ${name}${extra ? ' — ' + extra : ''}`)
-  ok ? pass++ : fail++
+  if (ok) pass++
+  else fail++
 }
 
 const stamp = Math.floor(Date.now() / 1000)

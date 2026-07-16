@@ -8,7 +8,7 @@ export default function FanSpread({ deck, picked, onPick }) {
   const fan = deck.slice(0, FAN_SIZE)
   const spreadDeg = 110
   return (
-    <div>
+    <div className="reading-spread">
       <div className="fan-wrap">
         {fan.map((card, i) => {
           const angle = -spreadDeg / 2 + (spreadDeg / (FAN_SIZE - 1)) * i
@@ -23,6 +23,7 @@ export default function FanSpread({ deck, picked, onPick }) {
           )
         })}
       </div>
+      <div className="spread-divider" aria-hidden="true"><span>✦</span></div>
       <div className="spread-slots">
         {POSITIONS.map((label, i) => (
           <div className="slot" key={label}>

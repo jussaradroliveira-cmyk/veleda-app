@@ -17,7 +17,7 @@ export default function History() {
   }, [user.id])
 
   return (
-    <main>
+    <main className="internal-page history-page">
       <div className="container" style={{ maxWidth: 720 }}>
         <h2 style={{ marginBottom: '1.2rem' }}>✦ O teu histórico</h2>
         {readings === null && <p className="muted">A recordar as tuas leituras…</p>}

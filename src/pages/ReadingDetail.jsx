@@ -49,13 +49,13 @@ export default function ReadingDetail() {
     setTimeout(() => setSaved(false), 2500)
   }
 
-  if (!reading) return <main><div className="container"><p className="muted">A abrir a leitura…</p></div></main>
+  if (!reading) return <main className="internal-page"><div className="container"><p className="muted">A abrir a leitura…</p></div></main>
 
   return (
-    <main>
+    <main className="internal-page reading-detail-page">
       <div className="container" style={{ maxWidth: 720 }}>
         <p><Link to="/historico">← histórico</Link></p>
-        <div className="card-panel" style={{ marginTop: '0.8rem' }}>
+        <div className="card-panel ornate-panel" style={{ marginTop: '0.8rem' }}>
           <p className="muted">
             {new Date(reading.created_at).toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
@@ -74,7 +74,7 @@ export default function ReadingDetail() {
           <div className="reading-text" dangerouslySetInnerHTML={{ __html: marked.parse(reading.reading_text) }} />
         </div>
 
-        <div className="card-panel" style={{ marginTop: '1.5rem' }}>
+        <div className="card-panel ornate-panel" style={{ marginTop: '1.5rem' }}>
           <h3 style={{ color: 'var(--dourado)', marginBottom: '0.6rem' }}>✦ O teu diário</h3>
           <p className="muted" style={{ marginBottom: '0.8rem' }}>
             O que sentiste com esta leitura? O que reconheces na tua vida?

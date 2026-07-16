@@ -34,31 +34,25 @@ export default function Journal() {
   }
 
   return (
-    <main className="art-page journal-art-page">
-      <div className="art-frame art-frame--journal">
-        <div className="art-canvas art-canvas--journal">
-          <img src={`${import.meta.env.BASE_URL}design/diario.png`} alt="" />
-          <form className="art-overlay journal-art-form" onSubmit={(event) => { event.preventDefault(); addEntry() }}>
-            <label className="sr-only" htmlFor="journal-draft">Um pensamento, um sonho, um sinal</label>
-            <textarea id="journal-draft" className="journal-art-textarea" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Hoje senti…" />
-            <button className="art-button journal-art-submit" type="submit" disabled={busy || !draft.trim()}>
-              <span className="sr-only">{busy ? 'Guardando entrada' : 'Guardar entrada'}</span>
-            </button>
-          </form>
-        </div>
-      </div>
-      <section className="art-mobile art-mobile--journal">
-        <div className="art-mobile__panel">
+    <main className="internal-page journal-page">
+      <div className="container">
+        <header className="journal-hero">
           <p className="internal-kicker">Seu caderno íntimo</p>
           <h1>Diário de reflexão</h1>
+          <p className="muted journal-hero__lead">
+            Um lugar privado para reconhecer padrões, guardar sonhos e escutar o que permanece.
+          </p>
+        </header>
+        <section className="card-panel ornate-panel journal-compose">
           <form onSubmit={(event) => { event.preventDefault(); addEntry() }}>
-            <label htmlFor="mobile-journal-draft">Um pensamento, um sonho, um sinal</label>
-            <textarea id="mobile-journal-draft" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Hoje senti…" />
-            <button className="btn" type="submit" disabled={busy || !draft.trim()}>{busy ? 'Guardando…' : 'Guardar entrada'}</button>
+            <label className="journal-compose__label" htmlFor="journal-draft">Um pensamento, um sonho, um sinal</label>
+            <textarea id="journal-draft" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Hoje senti…" />
+            <button className="btn btn--wine" type="submit" disabled={busy || !draft.trim()}>
+              {busy ? 'Guardando…' : 'Guardar entrada'}
+            </button>
           </form>
-        </div>
-      </section>
-      <div className="container journal-entries">
+        </section>
+        <div className="journal-entries">
         {entries === null && <p className="muted">A folhear o teu diário…</p>}
         {entries?.length === 0 && <p className="muted">Ainda não há entradas no diário.</p>}
         {entries?.map((e) => (
@@ -75,6 +69,7 @@ export default function Journal() {
             </p>
           </div>
         ))}
+        </div>
       </div>
     </main>
   )

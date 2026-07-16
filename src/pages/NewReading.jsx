@@ -5,6 +5,7 @@ import { useAuth } from '../App'
 import { fetchCards, shuffleDeck, generateReading, readingsThisWeek } from '../lib/api'
 import FanSpread from '../components/FanSpread'
 import Paywall from '../components/Paywall'
+import StepIndicator from '../components/StepIndicator'
 import { CardFront } from '../components/TarotCard'
 
 export default function NewReading() {
@@ -64,31 +65,19 @@ export default function NewReading() {
 
   return (
     <main className={`internal-page reading-page reading-page--${step}`}>
-      <div className={step === 'nome' ? 'reading-name-container' : 'container'}>
+      <div className="container">
+        <StepIndicator current={step} />
         {step === 'nome' && (
-          <>
-            <div className="art-frame art-frame--name">
-              <div className="art-canvas art-canvas--name">
-                <img src={`${import.meta.env.BASE_URL}design/nova-leitura-nome.png`} alt="" />
-                <form className="art-overlay name-art-form" onSubmit={saveName}>
-                  <label className="sr-only" htmlFor="display-name">Seu nome</label>
-                  <input id="display-name" className="art-control name-art-input" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Seu nome" maxLength={60} autoComplete="name" required />
-                  <button className="art-button name-art-submit" type="submit" disabled={!displayName.trim()}><span className="sr-only">Continuar</span></button>
-                </form>
-              </div>
-            </div>
-            <section className="art-mobile art-mobile--name">
-              <div className="art-mobile__panel">
-                <p className="internal-kicker">Você · Pergunta · Cartas · Leitura</p>
-                <h1>Como você gostaria de ser chamada?</h1>
-                <form onSubmit={saveName}>
-                  <label htmlFor="mobile-display-name">Seu nome</label>
-                  <input id="mobile-display-name" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} maxLength={60} autoComplete="name" required />
-                  <button className="btn" type="submit" disabled={!displayName.trim()}>Continuar</button>
-                </form>
-              </div>
-            </section>
-          </>
+          <div className="card-panel ornate-panel name-panel">
+            <p className="internal-kicker">Antes de abrir as cartas</p>
+            <h2>Como você gostaria de ser chamada ou chamado?</h2>
+            <p className="muted name-panel__lead">A Veleda usará seu nome com delicadeza durante a leitura.</p>
+            <form onSubmit={saveName}>
+              <label className="sr-only" htmlFor="display-name">Seu nome</label>
+              <input id="display-name" className="name-input" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Seu nome" maxLength={60} autoComplete="name" required />
+              <button className="btn btn--wine" type="submit" disabled={!displayName.trim()}>Continuar</button>
+            </form>
+          </div>
         )}
         {step === 'pergunta' && (
           <div className="card-panel ornate-panel" style={{ maxWidth: 560, margin: '0 auto' }}>

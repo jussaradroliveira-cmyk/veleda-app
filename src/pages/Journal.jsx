@@ -34,18 +34,31 @@ export default function Journal() {
   }
 
   return (
-    <main>
-      <div className="container" style={{ maxWidth: 720 }}>
-        <h2 style={{ marginBottom: '1.2rem' }}>✦ O teu diário</h2>
-
-        <div className="card-panel" style={{ marginBottom: '1.5rem' }}>
-          <p className="muted" style={{ marginBottom: '0.8rem' }}>Um pensamento solto, um sonho, um sinal — regista aqui.</p>
-          <textarea value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Hoje senti…" />
-          <button className="btn small" onClick={addEntry} disabled={busy || !draft.trim()} style={{ marginTop: '0.8rem' }}>
-            {busy ? 'A guardar…' : 'Guardar entrada'}
-          </button>
+    <main className="art-page journal-art-page">
+      <div className="art-frame art-frame--journal">
+        <div className="art-canvas art-canvas--journal">
+          <img src={`${import.meta.env.BASE_URL}design/diario.png`} alt="" />
+          <form className="art-overlay journal-art-form" onSubmit={(event) => { event.preventDefault(); addEntry() }}>
+            <label className="sr-only" htmlFor="journal-draft">Um pensamento, um sonho, um sinal</label>
+            <textarea id="journal-draft" className="journal-art-textarea" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Hoje senti…" />
+            <button className="art-button journal-art-submit" type="submit" disabled={busy || !draft.trim()}>
+              <span className="sr-only">{busy ? 'Guardando entrada' : 'Guardar entrada'}</span>
+            </button>
+          </form>
         </div>
-
+      </div>
+      <section className="art-mobile art-mobile--journal">
+        <div className="art-mobile__panel">
+          <p className="internal-kicker">Seu caderno íntimo</p>
+          <h1>Diário de reflexão</h1>
+          <form onSubmit={(event) => { event.preventDefault(); addEntry() }}>
+            <label htmlFor="mobile-journal-draft">Um pensamento, um sonho, um sinal</label>
+            <textarea id="mobile-journal-draft" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Hoje senti…" />
+            <button className="btn" type="submit" disabled={busy || !draft.trim()}>{busy ? 'Guardando…' : 'Guardar entrada'}</button>
+          </form>
+        </div>
+      </section>
+      <div className="container journal-entries">
         {entries === null && <p className="muted">A folhear o teu diário…</p>}
         {entries?.length === 0 && <p className="muted">Ainda não há entradas no diário.</p>}
         {entries?.map((e) => (

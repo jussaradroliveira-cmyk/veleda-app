@@ -9,7 +9,9 @@ import { CardFront } from '../components/TarotCard'
 
 export default function NewReading() {
   const { user } = useAuth()
-  const [step, setStep] = useState('pergunta') // pergunta | tiragem | leitura
+  const savedName = localStorage.getItem('veleda_display_name') || ''
+  const [step, setStep] = useState(savedName ? 'pergunta' : 'nome') // nome | pergunta | tiragem | leitura
+  const [displayName, setDisplayName] = useState(savedName)
   const [question, setQuestion] = useState('')
   const [deck, setDeck] = useState([])
   const [picked, setPicked] = useState([])
@@ -22,6 +24,15 @@ export default function NewReading() {
   useEffect(() => {
     readingsThisWeek(user.id).then(setUsedThisWeek).catch(() => {})
   }, [user.id])
+
+  function saveName(e) {
+    e.preventDefault()
+    const cleanName = displayName.trim().replace(/\s+/g, ' ')
+    if (!cleanName) return
+    localStorage.setItem('veleda_display_name', cleanName)
+    setDisplayName(cleanName)
+    setStep('pergunta')
+  }
 
   async function startSpread(e) {
     e.preventDefault()
@@ -52,11 +63,36 @@ export default function NewReading() {
   }
 
   return (
-    <main>
-      <div className="container">
+    <main className={`internal-page reading-page reading-page--${step}`}>
+      <div className={step === 'nome' ? 'reading-name-container' : 'container'}>
+        {step === 'nome' && (
+          <>
+            <div className="art-frame art-frame--name">
+              <div className="art-canvas art-canvas--name">
+                <img src={`${import.meta.env.BASE_URL}design/nova-leitura-nome.png`} alt="" />
+                <form className="art-overlay name-art-form" onSubmit={saveName}>
+                  <label className="sr-only" htmlFor="display-name">Seu nome</label>
+                  <input id="display-name" className="art-control name-art-input" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Seu nome" maxLength={60} autoComplete="name" required />
+                  <button className="art-button name-art-submit" type="submit" disabled={!displayName.trim()}><span className="sr-only">Continuar</span></button>
+                </form>
+              </div>
+            </div>
+            <section className="art-mobile art-mobile--name">
+              <div className="art-mobile__panel">
+                <p className="internal-kicker">Você · Pergunta · Cartas · Leitura</p>
+                <h1>Como você gostaria de ser chamada?</h1>
+                <form onSubmit={saveName}>
+                  <label htmlFor="mobile-display-name">Seu nome</label>
+                  <input id="mobile-display-name" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} maxLength={60} autoComplete="name" required />
+                  <button className="btn" type="submit" disabled={!displayName.trim()}>Continuar</button>
+                </form>
+              </div>
+            </section>
+          </>
+        )}
         {step === 'pergunta' && (
-          <div className="card-panel" style={{ maxWidth: 560, margin: '0 auto' }}>
-            <h2>✦ O que te traz até às cartas?</h2>
+          <div className="card-panel ornate-panel" style={{ maxWidth: 560, margin: '0 auto' }}>
+            <h2>✦ {displayName}, o que te traz até às cartas?</h2>
             <p className="muted" style={{ margin: '0.5rem 0 1.2rem' }}>
               Escreve a tua pergunta com calma. Quanto mais concreta, mais clara será a leitura.
             </p>
@@ -82,7 +118,8 @@ export default function NewReading() {
         )}
 
         {step === 'tiragem' && (
-          <div style={{ textAlign: 'center' }}>
+          <div className="reading-stage">
+            <p className="internal-kicker">O chamado das cartas</p>
             <h2>✦ Escolhe 3 cartas</h2>
             <p className="muted">Deixa a intuição guiar a mão. {3 - picked.length > 0 ? `Faltam ${3 - picked.length}.` : 'Tiragem completa.'}</p>
             <FanSpread deck={deck} picked={picked} onPick={(c) => setPicked((p) => [...p, c])} />
@@ -96,7 +133,7 @@ export default function NewReading() {
         )}
 
         {step === 'leitura' && reading && (
-          <div className="card-panel" style={{ maxWidth: 720, margin: '0 auto' }}>
+          <div className="card-panel ornate-panel" style={{ maxWidth: 720, margin: '0 auto' }}>
             <p className="muted">A tua pergunta</p>
             <h2 style={{ marginBottom: '1rem' }}>“{reading.question}”</h2>
             <div className="spread-slots" style={{ marginBottom: '1.5rem' }}>

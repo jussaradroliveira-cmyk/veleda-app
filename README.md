@@ -33,9 +33,12 @@ Abre http://localhost:5173
 
 ## Imagens das cartas
 
-Colocar em `public/cards/`:
+As imagens ficam organizadas em `public/cards/`:
 - `verso.jpg` — verso da carta (usado no leque)
-- `<slug>.jpg` por carta — ex.: `o-louco.jpg`, `as-de-copas.jpg` (slugs na tabela `cards`)
+- `maiores/<slug>.png` — 22 Arcanos Maiores
+- `copas/<slug>.png`, `ouros/<slug>.png`, `espadas/<slug>.png` e `paus/<slug>.png` — 56 Arcanos Menores
+
+Exemplos: `maiores/o-louco.png`, `copas/as-de-copas.png`.
 
 Enquanto não existirem, o app mostra placeholders com moldura dourada.
 

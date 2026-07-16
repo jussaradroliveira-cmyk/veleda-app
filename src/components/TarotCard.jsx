@@ -1,15 +1,24 @@
 import { useState } from 'react'
 
-// Resolve /cards/x.jpg contra o BASE_URL (em produção o site vive em /veleda-app/)
+// Resolve imagens públicas contra o BASE_URL (em produção o site vive em /veleda-app/)
 const img = (path) => import.meta.env.BASE_URL + String(path).replace(/^\//, '')
+
+// Usa a estrutura nova mesmo enquanto image_path ainda não tiver sido atualizado no banco.
+function frontPath(card) {
+  if (!card?.slug) return card?.image_path
+  const inferredSuit = ['copas', 'ouros', 'espadas', 'paus'].find((suit) => card.slug.endsWith(`-de-${suit}`))
+  const folder = card.arcana === 'maior' || (!card.suit && !inferredSuit) ? 'maiores' : card.suit || inferredSuit
+  return folder ? `/cards/${folder}/${card.slug}.png` : card.image_path
+}
 
 // Frente da carta: tenta a imagem real; se não existir, mostra o placeholder com moldura dourada.
 export function CardFront({ card, className = '' }) {
   const [imgOk, setImgOk] = useState(true)
+  const imagePath = frontPath(card)
   return (
     <div className={`tarot-card ${card.reversed ? 'reversed' : ''} ${className}`} title={card.name}>
-      {imgOk && card.image_path ? (
-        <img src={img(card.image_path)} alt={card.name} onError={() => setImgOk(false)} />
+      {imgOk && imagePath ? (
+        <img src={img(imagePath)} alt={card.name} onError={() => setImgOk(false)} />
       ) : (
         <div className="card-face-inner">
           <div className="num">{card.arcana === 'maior' ? `ARCANO ${card.number}` : card.suit?.toUpperCase()}</div>

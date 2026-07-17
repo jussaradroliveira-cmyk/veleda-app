@@ -15,15 +15,41 @@ export default function Cookies() {
               ferramentas de análise de terceiros.
             </p>
 
+            <p>
+              O site também não carrega scripts, fontes ou recursos de outros
+              servidores: tudo é servido pela própria Veleda. Por isso,{' '}
+              <strong>não há cookies não essenciais para aceitar ou recusar</strong> —
+              e não mostramos aviso de consentimento, porque não haveria escolha real a fazer.
+            </p>
+
             <h3>O que guardamos no seu navegador</h3>
             <p>
-              Para o app funcionar, guardamos algumas informações essenciais no
-              armazenamento local do seu navegador (<em>localStorage</em>):
+              Para o app funcionar, guardamos apenas isto no armazenamento local
+              do seu navegador (<em>localStorage</em> — não são cookies):
             </p>
-            <ul>
-              <li><strong>Sessão de login</strong> — o token que mantém você conectada com segurança (Supabase Auth).</li>
-              <li><strong>Seu nome</strong> — o nome que você escolhe para a Veleda usar nas leituras.</li>
-            </ul>
+            <div className="legal-table-wrap">
+              <table className="legal-table">
+                <thead>
+                  <tr><th>Nome</th><th>Fornecedor</th><th>Finalidade</th><th>Categoria</th><th>Duração</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>sb-…-auth-token</code></td>
+                    <td>Supabase (Veleda)</td>
+                    <td>Manter sua sessão de login segura</td>
+                    <td>Essencial</td>
+                    <td>Até você sair da conta</td>
+                  </tr>
+                  <tr>
+                    <td><code>veleda_display_name</code></td>
+                    <td>Veleda</td>
+                    <td>Lembrar o nome que você escolheu para as leituras</td>
+                    <td>Essencial</td>
+                    <td>Até limpar os dados do navegador</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <p>
               Essas informações ficam no seu aparelho, servem apenas para a sua
               experiência no app e desaparecem se você sair da conta ou limpar os

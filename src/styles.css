@@ -1239,6 +1239,32 @@ textarea { min-height: 7rem; resize: vertical; }
 .legal-content li {
   margin-bottom: 0.4rem;
 }
+
+.legal-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 0.8rem;
+}
+
+.legal-table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.legal-table th,
+.legal-table td {
+  border: 1px solid rgba(141, 98, 47, 0.35);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.legal-table th {
+  color: var(--wine-deep);
+  background: rgba(185, 139, 67, 0.08);
+  font-weight: 600;
+}
 .paywall ul { margin: 1rem 0 1.4rem; list-style: none; }
 .paywall li { padding: 0.3rem 0; font-size: 0.92rem; }
 .paywall li::before { color: var(--gold-aged); content: '✦ '; }

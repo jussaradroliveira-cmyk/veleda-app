@@ -10,6 +10,8 @@ import ReadingDetail from './pages/ReadingDetail'
 import Journal from './pages/Journal'
 import Subscription from './pages/Subscription'
 import Cookies from './pages/Cookies'
+import Terms from './pages/Terms'
+import Privacy from './pages/Privacy'
 import AppHeader from './components/AppHeader'
 import AppFooter from './components/AppFooter'
 
@@ -50,6 +52,8 @@ export default function App() {
             <Route path="/diario" element={<Protected><Journal /></Protected>} />
             <Route path="/assinatura" element={<Protected><Subscription /></Protected>} />
             <Route path="/cookies" element={<Cookies />} />
+            <Route path="/termos" element={<Terms />} />
+            <Route path="/privacidade" element={<Privacy />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>

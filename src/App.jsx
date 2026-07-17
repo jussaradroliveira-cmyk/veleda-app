@@ -16,7 +16,7 @@ export { useAuth }
 function Protected({ children }) {
   const { session, loading } = useAuth()
   const location = useLocation()
-  if (loading) return <main className="container"><p className="muted">A abrir o véu…</p></main>
+  if (loading) return <main className="container"><p className="muted">Abrindo o véu…</p></main>
   if (!session) return <Navigate to="/auth" replace state={{ from: location.pathname }} />
   return children
 }

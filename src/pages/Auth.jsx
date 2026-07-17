@@ -23,8 +23,8 @@ export default function Auth() {
     setBusy(false)
     if (error) {
       const msgs = {
-        'Invalid login credentials': 'Email ou palavra-passe incorretos.',
-        'User already registered': 'Este email já tem conta — experimenta entrar.',
+        'Invalid login credentials': 'Email ou senha incorretos.',
+        'User already registered': 'Este email já tem conta — tente entrar.',
       }
       setError(msgs[error.message] || error.message)
       return

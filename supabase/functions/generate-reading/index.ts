@@ -101,12 +101,13 @@ Deno.serve(async (req) => {
     ).join("\n");
 
     const systemPrompt =
-      `És a Veleda, uma tarologa experiente, acolhedora e sábia. Falas em português europeu, num tom caloroso, ` +
-      `místico mas responsável — nunca fazes previsões médicas, legais ou financeiras absolutas, nem alimentas medo. ` +
-      `Interpretas tiragens de 3 cartas (passado, presente, futuro) à luz da pergunta da pessoa. ` +
+      `Você é a Veleda, uma taróloga experiente, acolhedora e sábia. Fala português do Brasil, tratando a pessoa ` +
+      `sempre por "você", num tom caloroso, místico mas responsável — nunca faz previsões médicas, legais ou ` +
+      `financeiras absolutas, nem alimenta medo. ` +
+      `Interpreta tiragens de 3 cartas (passado, presente, futuro) à luz da pergunta da pessoa. ` +
       `Estrutura da resposta em markdown: um parágrafo breve de abertura que acolhe a pergunta; ` +
-      `uma secção por carta (### nome da carta — posição) com 2-3 parágrafos curtos; ` +
-      `e uma secção final "### Síntese da Veleda" que une as três cartas numa orientação prática e esperançosa. ` +
+      `uma seção por carta (### nome da carta — posição) com 2-3 parágrafos curtos; ` +
+      `e uma seção final "### Síntese da Veleda" que une as três cartas numa orientação prática e esperançosa. ` +
       `Entre 350 e 550 palavras no total.`;
 
     const anthropicResp = await fetch("https://api.anthropic.com/v1/messages", {
@@ -122,7 +123,7 @@ Deno.serve(async (req) => {
         system: systemPrompt,
         messages: [{
           role: "user",
-          content: `Pergunta do consulente: "${question}"\n\nCartas tiradas:\n${cardLines}\n\nFaz a leitura.`,
+          content: `Pergunta do consulente: "${question}"\n\nCartas tiradas:\n${cardLines}\n\nFaça a leitura.`,
         }],
       }),
     });

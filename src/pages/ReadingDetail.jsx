@@ -49,7 +49,7 @@ export default function ReadingDetail() {
     setTimeout(() => setSaved(false), 2500)
   }
 
-  if (!reading) return <main className="internal-page"><div className="container"><p className="muted">A abrir a leitura…</p></div></main>
+  if (!reading) return <main className="internal-page"><div className="container"><p className="muted">Abrindo a leitura…</p></div></main>
 
   return (
     <main className="internal-page reading-detail-page">
@@ -57,7 +57,7 @@ export default function ReadingDetail() {
         <p><Link to="/historico">← histórico</Link></p>
         <div className="card-panel ornate-panel" style={{ marginTop: '0.8rem' }}>
           <p className="muted">
-            {new Date(reading.created_at).toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' })}
+            {new Date(reading.created_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
           <h2 style={{ margin: '0.3rem 0 1.2rem' }}>“{reading.question}”</h2>
           <div className="spread-slots" style={{ marginBottom: '1.5rem' }}>
@@ -75,14 +75,14 @@ export default function ReadingDetail() {
         </div>
 
         <div className="card-panel ornate-panel" style={{ marginTop: '1.5rem' }}>
-          <h3 style={{ color: 'var(--dourado)', marginBottom: '0.6rem' }}>✦ O teu diário</h3>
+          <h3 style={{ color: 'var(--dourado)', marginBottom: '0.6rem' }}>✦ Seu diário</h3>
           <p className="muted" style={{ marginBottom: '0.8rem' }}>
-            O que sentiste com esta leitura? O que reconheces na tua vida?
+            O que você sentiu com esta leitura? O que reconhece na sua vida?
           </p>
-          <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Escreve aqui as tuas reflexões…" />
+          <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Escreva aqui suas reflexões…" />
           <div style={{ marginTop: '0.8rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button className="btn small" onClick={saveNote} disabled={busy || !note.trim()}>
-              {busy ? 'A guardar…' : 'Guardar'}
+              {busy ? 'Guardando…' : 'Guardar'}
             </button>
             {saved && <span className="muted">guardado ✦</span>}
           </div>

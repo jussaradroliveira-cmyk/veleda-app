@@ -19,11 +19,11 @@ export default function History() {
   return (
     <main className="internal-page history-page">
       <div className="container" style={{ maxWidth: 720 }}>
-        <h2 style={{ marginBottom: '1.2rem' }}>✦ O teu histórico</h2>
-        {readings === null && <p className="muted">A recordar as tuas leituras…</p>}
+        <h2 style={{ marginBottom: '1.2rem' }}>✦ Seu histórico</h2>
+        {readings === null && <p className="muted">Relembrando suas leituras…</p>}
         {readings?.length === 0 && (
           <div className="card-panel" style={{ textAlign: 'center' }}>
-            <p className="muted">Ainda não tens leituras guardadas.</p>
+            <p className="muted">Você ainda não tem leituras guardadas.</p>
             <Link to="/leitura" className="btn" style={{ marginTop: '1rem' }}>Fazer a primeira leitura</Link>
           </div>
         )}
@@ -31,7 +31,7 @@ export default function History() {
           <Link to={`/historico/${r.id}`} className="history-item" key={r.id}>
             <div className="q">“{r.question}”</div>
             <div className="meta">
-              {new Date(r.created_at).toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' })}
+              {new Date(r.created_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
               {' ✦ '}
               {r.cards.map((c) => c.name).join(' · ')}
             </div>

@@ -28,12 +28,12 @@ export default function Paywall({ onClose }) {
         return
       }
       if (body.error === 'stripe_not_configured') {
-        setNotice('A subscrição Premium está quase a chegar ✦ volta em breve.')
+        setNotice('A assinatura Premium está chegando ✦ volte em breve.')
       } else {
-        setNotice('Não consegui abrir o pagamento. Tenta outra vez daqui a pouco.')
+        setNotice('Não consegui abrir o pagamento. Tente outra vez daqui a pouco.')
       }
     } catch {
-      setNotice('Não consegui abrir o pagamento. Tenta outra vez daqui a pouco.')
+      setNotice('Não consegui abrir o pagamento. Tente outra vez daqui a pouco.')
     } finally {
       setBusy(false)
     }
@@ -42,10 +42,10 @@ export default function Paywall({ onClose }) {
   return (
     <div className="paywall-overlay" onClick={onClose}>
       <div className="card-panel paywall" onClick={(e) => e.stopPropagation()}>
-        <h2>✦ O véu fecha-se por esta semana</h2>
+        <h2>✦ O véu se fecha por esta semana</h2>
         <p className="muted">
-          Já usaste a tua leitura gratuita desta semana. As cartas voltam a abrir-se na segunda-feira —
-          ou torna-te Premium e consulta a Veleda sempre que precisares.
+          Você já usou sua leitura gratuita desta semana. As cartas se abrem de novo na segunda-feira —
+          ou torne-se Premium e consulte a Veleda sempre que precisar.
         </p>
         <div className="preco">Veleda Premium</div>
         <ul>
@@ -54,7 +54,7 @@ export default function Paywall({ onClose }) {
           <li>Acesso antecipado a novas tiragens</li>
         </ul>
         <button className="btn" onClick={subscribe} disabled={busy}>
-          {busy ? 'A preparar…' : 'Quero ser Premium'}
+          {busy ? 'Preparando…' : 'Quero ser Premium'}
         </button>
         {notice && <p className="muted" style={{ marginTop: '0.8rem' }}>{notice}</p>}
         <p style={{ marginTop: '1rem' }}>

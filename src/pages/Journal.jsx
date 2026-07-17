@@ -53,12 +53,12 @@ export default function Journal() {
           </form>
         </section>
         <div className="journal-entries">
-        {entries === null && <p className="muted">A folhear o teu diário…</p>}
+        {entries === null && <p className="muted">Folheando seu diário…</p>}
         {entries?.length === 0 && <p className="muted">Ainda não há entradas no diário.</p>}
         {entries?.map((e) => (
           <div className="history-item" key={e.id}>
             <div className="meta">
-              {new Date(e.created_at).toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' })}
+              {new Date(e.created_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
               {e.reading_id && e.readings && (
                 <> ✦ sobre a leitura <Link to={`/historico/${e.reading_id}`}>“{e.readings.question}”</Link></>
               )}

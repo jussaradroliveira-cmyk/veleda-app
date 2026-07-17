@@ -19,15 +19,15 @@ function json(body: unknown, status = 200) {
   });
 }
 
-// início da semana (segunda-feira, hora de Lisboa)
-function startOfWeekLisbon(): Date {
+// início da semana (segunda-feira, hora de São Paulo — o público é brasileiro)
+function startOfWeekSaoPaulo(): Date {
   const now = new Date();
-  const lisbon = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Lisbon" }));
-  const day = (lisbon.getDay() + 6) % 7; // 0 = segunda
-  lisbon.setDate(lisbon.getDate() - day);
-  lisbon.setHours(0, 0, 0, 0);
-  // converte de volta para UTC aproximado (diferença Lisboa/UTC é 0 ou 1h — margem aceitável para quota semanal)
-  return lisbon;
+  const sp = new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+  const day = (sp.getDay() + 6) % 7; // 0 = segunda
+  sp.setDate(sp.getDate() - day);
+  sp.setHours(0, 0, 0, 0);
+  // margem de fuso aceitável para uma quota semanal
+  return sp;
 }
 
 Deno.serve(async (req) => {
@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     const { data: profile } = await admin
       .from("profiles").select("is_premium").eq("id", user.id).single();
     if (!profile?.is_premium) {
-      const weekStart = startOfWeekLisbon().toISOString();
+      const weekStart = startOfWeekSaoPaulo().toISOString();
       const { count } = await admin
         .from("readings")
         .select("id", { count: "exact", head: true })

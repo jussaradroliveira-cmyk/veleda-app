@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { startCheckout } from '../lib/billing'
 
 // Paywall semanal — o botão abre o checkout Stripe quando as chaves estiverem
 // configuradas no servidor; até lá mostra "em breve".
@@ -11,28 +11,14 @@ export default function Paywall({ onClose }) {
     setBusy(plan)
     setNotice('')
     try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const resp = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.access_token ?? ''}`,
-          },
-          body: JSON.stringify({ plan }),
-        }
-      )
-      const body = await resp.json().catch(() => ({}))
-      if (resp.ok && body.url) {
-        window.location.href = body.url
+      const r = await startCheckout(plan)
+      if (r.ok && r.url) {
+        window.location.href = r.url
         return
       }
-      if (body.error === 'stripe_not_configured') {
-        setNotice('A assinatura Premium está chegando ✦ volte em breve.')
-      } else {
-        setNotice('Não consegui abrir o pagamento. Tente outra vez daqui a pouco.')
-      }
+      setNotice(r.error === 'stripe_not_configured'
+        ? 'A assinatura Premium está chegando ✦ volte em breve.'
+        : 'Não consegui abrir o pagamento. Tente outra vez daqui a pouco.')
     } catch {
       setNotice('Não consegui abrir o pagamento. Tente outra vez daqui a pouco.')
     } finally {

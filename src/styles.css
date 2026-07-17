@@ -538,6 +538,18 @@ main:not(.landing) {
   font-size: 0.72rem;
 }
 
+.app-footer__links {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 0.35rem;
+}
+
+.app-footer__links a {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 /* Landing */
 .landing {
   position: relative;
@@ -1163,11 +1175,70 @@ textarea { min-height: 7rem; resize: vertical; }
 .paywall-overlay { position: fixed; z-index: 50; inset: 0; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(64, 35, 45, 0.48); }
 .paywall { width: 100%; max-width: 440px; text-align: center; }
 .paywall h2 { margin-bottom: 0.6rem; font-size: 1.8rem; }
-.paywall .preco { margin: 0.8rem 0 0.2rem; color: var(--gold-aged); font-family: var(--font-display); font-size: 2.4rem; }
-.paywall .preco__periodo { font-size: 1.2rem; }
+.paywall .preco,
+.subscription-panel .preco { margin: 0.8rem 0 0.2rem; color: var(--gold-aged); font-family: var(--font-display); font-size: 2.4rem; }
+.paywall .preco__periodo,
+.subscription-panel .preco__periodo { font-size: 1.2rem; }
 .paywall__anual { color: var(--wine-deep); font-size: 0.88rem; }
 .paywall__botoes { display: grid; gap: 0.6rem; margin-top: 0.4rem; }
 .paywall__botoes .btn { width: 100%; min-width: 0; }
+
+/* Página da assinatura */
+.subscription-panel {
+  text-align: center;
+}
+
+.subscription-lead {
+  max-width: 26rem;
+  margin: 0.6rem auto 1.4rem;
+}
+
+.subscription-note {
+  max-width: 26rem;
+  margin: 1rem auto 0;
+  font-size: 0.82rem;
+}
+
+.subscription-list {
+  margin: 1rem 0 1.2rem;
+  list-style: none;
+}
+
+.subscription-list li {
+  padding: 0.3rem 0;
+  font-size: 0.92rem;
+}
+
+.subscription-list li::before {
+  color: var(--gold-aged);
+  content: '\2726 ';
+}
+
+/* Páginas legais */
+.legal-panel .legal-content {
+  margin-top: 1.2rem;
+  text-align: left;
+}
+
+.legal-content h3 {
+  margin: 1.5rem 0 0.5rem;
+  color: var(--wine-deep);
+  font-size: 1.45rem;
+}
+
+.legal-content p {
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.legal-content ul {
+  margin: 0 0 0.8rem 1.2rem;
+  font-size: 0.95rem;
+}
+
+.legal-content li {
+  margin-bottom: 0.4rem;
+}
 .paywall ul { margin: 1rem 0 1.4rem; list-style: none; }
 .paywall li { padding: 0.3rem 0; font-size: 0.92rem; }
 .paywall li::before { color: var(--gold-aged); content: '✦ '; }

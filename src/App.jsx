@@ -8,6 +8,8 @@ import NewReading from './pages/NewReading'
 import History from './pages/History'
 import ReadingDetail from './pages/ReadingDetail'
 import Journal from './pages/Journal'
+import Subscription from './pages/Subscription'
+import Cookies from './pages/Cookies'
 import AppHeader from './components/AppHeader'
 import AppFooter from './components/AppFooter'
 
@@ -46,6 +48,8 @@ export default function App() {
             <Route path="/historico" element={<Protected><History /></Protected>} />
             <Route path="/historico/:id" element={<Protected><ReadingDetail /></Protected>} />
             <Route path="/diario" element={<Protected><Journal /></Protected>} />
+            <Route path="/assinatura" element={<Protected><Subscription /></Protected>} />
+            <Route path="/cookies" element={<Cookies />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>

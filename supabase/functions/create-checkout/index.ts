@@ -29,7 +29,12 @@ Deno.serve(async (req) => {
 
   try {
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    const priceId = Deno.env.get("STRIPE_PRICE_ID");
+    // dois planos: mensal (R$ 29,90) e anual (20% de desconto)
+    const priceMonthly = Deno.env.get("STRIPE_PRICE_ID_MONTHLY") ?? Deno.env.get("STRIPE_PRICE_ID");
+    const priceAnnual = Deno.env.get("STRIPE_PRICE_ID_ANNUAL");
+    const body = await req.json().catch(() => ({}));
+    const plan = body?.plan === "anual" ? "anual" : "mensal";
+    const priceId = plan === "anual" ? (priceAnnual ?? priceMonthly) : priceMonthly;
     if (!stripeKey || !priceId) return json({ error: "stripe_not_configured" }, 501);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -71,7 +76,7 @@ Deno.serve(async (req) => {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${base}${appPath}/leitura?premium=1`,
       cancel_url: `${base}${appPath}/leitura`,
-      metadata: { supabase_user_id: user.id },
+      metadata: { supabase_user_id: user.id, plan },
     });
 
     return json({ url: session.url });

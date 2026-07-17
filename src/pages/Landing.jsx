@@ -32,7 +32,6 @@ export default function Landing() {
           </div>
 
           <div className="landing-hero__visual" aria-label="As cartas A Lua, O Sol e O Mundo">
-            <div className="celestial-lines" aria-hidden="true" />
             <div className="hero-cards">
               {heroCards.map((card) => <CardFront key={card.name} card={card} />)}
             </div>

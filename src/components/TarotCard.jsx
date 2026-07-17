@@ -21,7 +21,7 @@ export function CardFront({ card, className = '' }) {
       title={`${card.name}${card.reversed ? ' — invertida' : ''}`}
     >
       {imgOk && imagePath ? (
-        <img src={img(imagePath)} alt={card.name} onError={() => setImgOk(false)} />
+        <img src={img(imagePath)} alt={card.name} draggable={false} onError={() => setImgOk(false)} />
       ) : (
         <div className="card-face-inner">
           <div className="num">{card.arcana === 'maior' ? `ARCANO ${card.number}` : card.suit?.toUpperCase()}</div>
@@ -40,7 +40,7 @@ export function CardBack({ style, onClick, className = '' }) {
   return (
     <div className={`tarot-card ${className}`} style={style} onClick={onClick}>
       {imgOk ? (
-        <img src={img('/cards/verso.webp')} alt="verso da carta" onError={() => setImgOk(false)} />
+        <img src={img('/cards/verso.webp')} alt="verso da carta" draggable={false} onError={() => setImgOk(false)} />
       ) : (
         <div className="card-back"><span className="orn">✦</span></div>
       )}

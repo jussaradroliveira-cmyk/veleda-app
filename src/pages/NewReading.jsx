@@ -44,7 +44,7 @@ export default function NewReading() {
       setPicked([])
       setStep('tiragem')
     } catch {
-      setError('Não consegui baralhar as cartas. Tenta de novo.')
+      setError('Não consegui embaralhar as cartas. Tente de novo.')
     }
   }
 
@@ -57,7 +57,7 @@ export default function NewReading() {
       setStep('leitura')
     } catch (err) {
       if (err.code === 'quota_exceeded') setShowPaywall(true)
-      else setError('A leitura falhou. Respira fundo e tenta outra vez.')
+      else setError('A leitura falhou. Respire fundo e tente outra vez.')
     } finally {
       setBusy(false)
     }
@@ -81,9 +81,9 @@ export default function NewReading() {
         )}
         {step === 'pergunta' && (
           <div className="card-panel ornate-panel" style={{ maxWidth: 560, margin: '0 auto' }}>
-            <h2>✦ {displayName}, o que te traz até às cartas?</h2>
+            <h2>✦ {displayName}, o que traz você até as cartas?</h2>
             <p className="muted" style={{ margin: '0.5rem 0 1.2rem' }}>
-              Escreve a tua pergunta com calma. Quanto mais concreta, mais clara será a leitura.
+              Escreva sua pergunta com calma. Quanto mais concreta, mais clara será a leitura.
             </p>
             <form onSubmit={startSpread}>
               <textarea
@@ -95,11 +95,11 @@ export default function NewReading() {
               />
               {error && <p className="error-msg">{error}</p>}
               <button className="btn" type="submit" disabled={!question.trim()} style={{ marginTop: '1rem' }}>
-                Baralhar as cartas
+                Embaralhar as cartas
               </button>
               {usedThisWeek !== null && usedThisWeek >= 1 && (
                 <p className="muted" style={{ marginTop: '0.8rem' }}>
-                  ✦ Já usaste a tua leitura gratuita desta semana — podes tirar as cartas, mas a leitura pedirá Premium.
+                  ✦ Você já usou sua leitura gratuita desta semana — pode tirar as cartas, mas a leitura pedirá Premium.
                 </p>
               )}
             </form>
@@ -109,21 +109,32 @@ export default function NewReading() {
         {step === 'tiragem' && (
           <div className="reading-stage">
             <p className="internal-kicker">O chamado das cartas</p>
-            <h2>✦ Escolhe 3 cartas</h2>
-            <p className="muted">Deixa a intuição guiar a mão. {3 - picked.length > 0 ? `Faltam ${3 - picked.length}.` : 'Tiragem completa.'}</p>
+            <h2>✦ Escolha 3 cartas</h2>
+            <p className="muted">Deixe a intuição guiar sua mão. {3 - picked.length > 0 ? `Faltam ${3 - picked.length}.` : 'Tiragem completa.'}</p>
             <FanSpread deck={deck} picked={picked} onPick={(c) => setPicked((p) => [...p, c])} />
-            <div style={{ marginTop: '1.6rem' }}>
-              <button className="btn" onClick={reveal} disabled={picked.length !== 3 || busy}>
-                {busy ? 'A Veleda está a ler…' : 'Revelar a leitura'}
-              </button>
-            </div>
+            {busy ? (
+              <div className="reading-loading" role="status">
+                <div className="celestial-spinner" aria-hidden="true">
+                  <span className="ring ring--outer" />
+                  <span className="ring ring--inner" />
+                  <span className="star">✦</span>
+                </div>
+                <p>A Veleda está fazendo sua leitura…</p>
+              </div>
+            ) : (
+              <div style={{ marginTop: '1.6rem' }}>
+                <button className="btn" onClick={reveal} disabled={picked.length !== 3}>
+                  Revelar a leitura
+                </button>
+              </div>
+            )}
             {error && <p className="error-msg" style={{ marginTop: '0.8rem' }}>{error}</p>}
           </div>
         )}
 
         {step === 'leitura' && reading && (
           <div className="card-panel ornate-panel" style={{ maxWidth: 720, margin: '0 auto' }}>
-            <p className="muted">A tua pergunta</p>
+            <p className="muted">Sua pergunta</p>
             <h2 style={{ marginBottom: '1rem' }}>“{reading.question}”</h2>
             <div className="spread-slots" style={{ marginBottom: '1.5rem' }}>
               {reading.cards.map((c) => {

@@ -1,23 +1,30 @@
+import { useMemo } from 'react'
 import { CardBack, CardFront } from './TarotCard'
 
 const POSITIONS = ['Passado', 'Presente', 'Futuro']
-const FAN_SIZE = 21 // cartas visíveis no leque
 
-// Leque de versos: a pessoa escolhe 3 cartas do baralho baralhado.
+// Leque de versos: a pessoa escolhe 3 cartas do baralho embaralhado.
 export default function FanSpread({ deck, picked, onPick }) {
-  const fan = deck.slice(0, FAN_SIZE)
-  const spreadDeg = 110
+  // menos cartas e arco mais fechado em ecrãs estreitos, para o toque ser confortável
+  const narrow = useMemo(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 600px)').matches,
+    []
+  )
+  const fanSize = narrow ? 15 : 21
+  const spreadDeg = narrow ? 96 : 110
+  const fan = deck.slice(0, fanSize)
+
   return (
     <div className="reading-spread">
       <div className="fan-wrap">
         {fan.map((card, i) => {
-          const angle = -spreadDeg / 2 + (spreadDeg / (FAN_SIZE - 1)) * i
+          const angle = -spreadDeg / 2 + (spreadDeg / (fanSize - 1)) * i
           const isPicked = picked.some((p) => p.id === card.id)
           return (
             <CardBack
               key={card.id}
               className={`fan-card ${isPicked ? 'picked' : ''}`}
-              style={{ transform: `translateX(-50%) rotate(${angle}deg)` }}
+              style={{ '--fan-angle': `${angle}deg` }}
               onClick={() => !isPicked && picked.length < 3 && onPick(card)}
             />
           )

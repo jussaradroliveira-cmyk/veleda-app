@@ -10,8 +10,8 @@ export default function FanSpread({ deck, picked, onPick }) {
     () => typeof window !== 'undefined' && window.matchMedia('(max-width: 600px)').matches,
     []
   )
-  const fanSize = narrow ? 15 : 21
-  const spreadDeg = narrow ? 96 : 110
+  const fanSize = narrow ? 17 : 21
+  const spreadDeg = narrow ? 60 : 110
   const fan = deck.slice(0, fanSize)
 
   return (

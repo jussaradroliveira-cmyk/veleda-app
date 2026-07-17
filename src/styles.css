@@ -336,6 +336,27 @@ main:not(.landing) {
   background: url('/design/bg-wine.webp') center / cover no-repeat var(--wine-dark);
 }
 
+/* No telemóvel o diário usa a variante vertical da arte vinho;
+   o topo dessa arte é escuro, por isso o cabeçalho passa a claro */
+@media (max-width: 700px) {
+  .journal-page::before {
+    background: url('/design/bg-wine-vertical.webp') center / cover no-repeat var(--wine-dark);
+  }
+
+  .journal-page .journal-hero .internal-kicker {
+    color: #e8c893;
+  }
+
+  .journal-page .journal-hero h1 {
+    color: var(--cream);
+    text-shadow: 0 1px 14px rgba(64, 35, 45, 0.45);
+  }
+
+  .journal-page .journal-hero .journal-hero__lead {
+    color: rgba(255, 248, 237, 0.88);
+  }
+}
+
 .journal-hero {
   max-width: 46rem;
   margin: 0 auto clamp(2rem, 4.5vw, 3rem);
@@ -952,7 +973,7 @@ textarea { min-height: 7rem; resize: vertical; }
 .tarot-card {
   position: relative;
   width: 120px;
-  height: 200px;
+  height: 180px;
   overflow: hidden;
   flex-shrink: 0;
   border: 3px solid var(--gold-aged);
@@ -960,11 +981,14 @@ textarea { min-height: 7rem; resize: vertical; }
   background: var(--rose-antique);
   box-shadow: 0 0 0 1px #d8ba78 inset, 0 6px 18px rgba(64, 35, 45, 0.25);
 }
-.tarot-card.reversed .card-face-inner,
+/* Carta invertida: a arte aparece de cabeça para baixo (o placeholder de
+   texto mantém-se legível) */
 .tarot-card.reversed > img {
-  transform: none;
+  transform: rotate(180deg);
 }
-.tarot-card img { width: 100%; height: 100%; object-fit: contain; background: var(--rose-antique); }
+/* cover, não contain: as artes têm proporções ligeiramente diferentes e o
+   contain fazia cada carta aparecer de um tamanho dentro da mesma caixa */
+.tarot-card img { width: 100%; height: 100%; object-fit: cover; background: var(--rose-antique); }
 .card-face-inner { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem; text-align: center; background: var(--paper); }
 .card-face-inner .num { color: var(--gold-aged); font-family: var(--font-display); font-size: 0.75rem; letter-spacing: 0.2em; }
 .card-face-inner .nome { font-family: var(--font-display); font-size: 1rem; line-height: 1.2; }
@@ -1095,7 +1119,7 @@ textarea { min-height: 7rem; resize: vertical; }
 .spread-slots { display: flex; justify-content: center; flex-wrap: wrap; gap: clamp(1.5rem, 5vw, 3.5rem); margin-top: 0; }
 .slot { text-align: center; }
 .slot .slot-label { margin-bottom: 0.85rem; color: var(--wine-deep); font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.16em; text-transform: uppercase; }
-.slot .placeholder-slot { display: flex; width: 120px; height: 200px; align-items: center; justify-content: center; border: 2px dashed rgba(185, 139, 67, 0.5); border-radius: 12px; color: var(--gold-aged); }
+.slot .placeholder-slot { display: flex; width: 120px; height: 180px; align-items: center; justify-content: center; border: 2px dashed rgba(185, 139, 67, 0.5); border-radius: 12px; color: var(--gold-aged); }
 @keyframes flipIn { from { opacity: 0; transform: rotateY(90deg); } to { opacity: 1; transform: rotateY(0); } }
 .flip-in { animation: flipIn 0.5s ease both; }
 .reading-text { font-size: 1.05rem; }
@@ -1201,10 +1225,22 @@ textarea { min-height: 7rem; resize: vertical; }
   .benefits-list article > span { width: 3.8rem; }
   .benefits-list .btn { width: 100%; min-width: 0; }
   .card-panel { padding: 1.3rem; }
-  .tarot-card { width: 92px; height: 154px; }
-  .slot .placeholder-slot { width: 92px; height: 154px; }
-  .fan-wrap { height: 340px; }
-  .fan-card { width: 128px; height: 229px; }
+  .tarot-card { width: 102px; height: 153px; }
+  .slot .placeholder-slot { width: 102px; height: 153px; }
+  /* Tiragem compacta: leque + cartas escolhidas + botão sem scroll.
+     As cartas ancoram a 118px do fundo do leque para as pontas do arco
+     (que rodam para baixo) ficarem contidas, sem pisar os rótulos. */
+  main.reading-page { padding-block: 0.9rem 2rem; }
+  .reading-page--tiragem .step-indicator { margin-bottom: 0.8rem; }
+  .reading-stage { padding: 0.9rem 0.4rem 1.2rem; }
+  .reading-stage h2 { font-size: 1.4rem; }
+  .reading-stage .internal-kicker { display: none; }
+  .reading-stage > .muted { font-size: 0.75rem; }
+  .fan-wrap { height: 292px; margin-top: 0.2rem; }
+  .fan-card { bottom: 74px; width: 118px; height: 210px; transform-origin: 50% 138%; }
+  .spread-divider { margin: 0.4rem auto; }
+  .slot .slot-label { margin-bottom: 0.3rem; font-size: 0.8rem; }
+  .spread-slots { gap: 0.9rem; }
 }
 
 @media (max-width: 900px) and (min-width: 561px) {

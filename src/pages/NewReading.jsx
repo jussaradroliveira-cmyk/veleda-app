@@ -149,7 +149,7 @@ export default function NewReading() {
             </div>
             <div className="reading-text" dangerouslySetInnerHTML={{ __html: marked.parse(reading.reading_text) }} />
             <div style={{ marginTop: '1.8rem', display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
-              <Link to={`/historico/${reading.id}`} className="btn">Escrever no diário</Link>
+              <Link to="/diario" className="btn">Escrever no diário</Link>
               <Link to="/historico" className="btn ghost">Ver histórico</Link>
             </div>
           </div>

@@ -72,8 +72,8 @@ export default function Subscription() {
           {isPremium === false && (
             <>
               <h2>✦ Veleda Premium</h2>
-              <div className="preco">R$ 29,90<span className="preco__periodo">/mês</span></div>
-              <p className="paywall__anual">✦ ou plano anual com <strong>20% de desconto</strong> — R$ 287,04/ano (sai a R$ 23,92/mês)</p>
+              <div className="preco">R$ 39,90<span className="preco__periodo">/mês</span></div>
+              <p className="paywall__anual">✦ ou plano anual com <strong>20% de desconto</strong> — R$ 383,04/ano (sai a R$ 31,92/mês)</p>
               <ul className="subscription-list">
                 <li>Leituras ilimitadas</li>
                 <li>Histórico e diário sem limites</li>
@@ -84,7 +84,7 @@ export default function Subscription() {
                   {busy === 'anual' ? 'Preparando…' : 'Assinar anual · 20% off'}
                 </button>
                 <button className="btn ghost" onClick={() => subscribe('mensal')} disabled={!!busy}>
-                  {busy === 'mensal' ? 'Preparando…' : 'Assinar mensal · R$ 29,90'}
+                  {busy === 'mensal' ? 'Preparando…' : 'Assinar mensal · R$ 39,90'}
                 </button>
               </div>
             </>

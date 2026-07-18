@@ -34,8 +34,8 @@ export default function Paywall({ onClose }) {
           Você já usou sua leitura gratuita desta semana. As cartas se abrem de novo na segunda-feira —
           ou torne-se Premium e consulte a Veleda sempre que precisar.
         </p>
-        <div className="preco">R$ 29,90<span className="preco__periodo">/mês</span></div>
-        <p className="paywall__anual">✦ ou plano anual com <strong>20% de desconto</strong> — R$ 287,04/ano (sai a R$ 23,92/mês)</p>
+        <div className="preco">R$ 39,90<span className="preco__periodo">/mês</span></div>
+        <p className="paywall__anual">✦ ou plano anual com <strong>20% de desconto</strong> — R$ 383,04/ano (sai a R$ 31,92/mês)</p>
         <ul>
           <li>Leituras ilimitadas</li>
           <li>Histórico e diário sem limites</li>
@@ -46,7 +46,7 @@ export default function Paywall({ onClose }) {
             {busy === 'anual' ? 'Preparando…' : 'Assinar anual · 20% off'}
           </button>
           <button className="btn ghost" onClick={() => subscribe('mensal')} disabled={!!busy}>
-            {busy === 'mensal' ? 'Preparando…' : 'Assinar mensal · R$ 29,90'}
+            {busy === 'mensal' ? 'Preparando…' : 'Assinar mensal · R$ 39,90'}
           </button>
         </div>
         {notice && <p className="muted" style={{ marginTop: '0.8rem' }}>{notice}</p>}

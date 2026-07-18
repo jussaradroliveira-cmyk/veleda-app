@@ -14,6 +14,20 @@ export default function Landing() {
 
   return (
     <main className="landing">
+      {!session && (
+        <section className="welcome-hero" aria-label="Boas-vindas">
+          <div className="welcome-hero__inner">
+            <p className="welcome-hero__kicker">✦ Tarô simbólico com alma ✦</p>
+            <h1>Bem-vinda ao<br />Tarô Veleda</h1>
+            <p className="welcome-hero__lead">As cartas escutam você.</p>
+            <div className="welcome-hero__actions">
+              <Link to="/auth" className="btn btn--wine">Faça seu login</Link>
+              <Link to="/auth" state={{ signup: true }} className="btn ghost">Cadastre-se</Link>
+            </div>
+            <a className="welcome-hero__scroll" href="#ritual-title">conheça o ritual ↓</a>
+          </div>
+        </section>
+      )}
       <section className="landing-hero">
         <div className="container landing-hero__grid">
           <div className="landing-hero__copy">

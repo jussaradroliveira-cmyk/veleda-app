@@ -13,7 +13,10 @@ const TITULOS = {
 }
 
 export default function Auth() {
-  const [mode, setMode] = useState('login') // login | signup | forgot | reset
+  const navigate = useNavigate()
+  const location = useLocation()
+  // chegar com state.signup abre direto no modo de cadastro (botão "Cadastre-se")
+  const [mode, setMode] = useState(location.state?.signup ? 'signup' : 'login') // login | signup | forgot | reset
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -21,8 +24,6 @@ export default function Auth() {
   const [busy, setBusy] = useState(false)
   const [ageOk, setAgeOk] = useState(false)
   const [termsOk, setTermsOk] = useState(false)
-  const navigate = useNavigate()
-  const location = useLocation()
   const isLogin = mode === 'login'
 
   // quem chega pelo link do email de recuperação entra no modo "nova senha"

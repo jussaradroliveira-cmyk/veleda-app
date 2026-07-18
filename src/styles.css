@@ -587,6 +587,70 @@ main:not(.landing) {
   position: relative;
 }
 
+/* Boas-vindas para quem chega sem sessão: a arte vinho recebe primeiro */
+.welcome-hero {
+  position: relative;
+  display: grid;
+  min-height: calc(100vh - 5.7rem);
+  place-items: center;
+  padding: clamp(2rem, 5vw, 4rem) 1.2rem;
+  text-align: center;
+  background: url('/design/bg-wine.webp') center / cover no-repeat var(--wine-dark);
+}
+
+@media (max-width: 700px) {
+  .welcome-hero {
+    min-height: calc(100svh - 5rem);
+    background-image: url('/design/bg-wine-vertical.webp');
+  }
+}
+
+.welcome-hero__inner {
+  max-width: 36rem;
+}
+
+.welcome-hero__kicker {
+  margin-bottom: 1rem;
+  color: var(--wine-deep);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.welcome-hero h1 {
+  color: var(--wine-deep);
+  font-size: clamp(2.8rem, 7vw, 4.6rem);
+}
+
+.welcome-hero__lead {
+  margin-top: 1rem;
+  color: var(--plum-brown);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+}
+
+.welcome-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+.welcome-hero__actions .btn--wine {
+  min-width: 13rem;
+}
+
+.welcome-hero__scroll {
+  display: inline-block;
+  margin-top: 2.4rem;
+  color: var(--wine-deep);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  opacity: 0.85;
+}
+
 .landing-hero__grid {
   display: grid;
   min-height: clamp(39rem, calc(100vh - 5.7rem), 51rem);

@@ -9,7 +9,7 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const FREE_READINGS_PER_WEEK = 1;
+const FREE_READINGS_PER_WEEK = 2;
 const MODEL = "claude-sonnet-5";
 
 function json(body: unknown, status = 200) {

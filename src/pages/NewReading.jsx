@@ -2,17 +2,19 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { marked } from 'marked'
 import { useAuth } from '../App'
+import { supabase } from '../lib/supabase'
 import { fetchCards, shuffleDeck, generateReading, readingsThisWeek } from '../lib/api'
 import FanSpread from '../components/FanSpread'
 import Paywall from '../components/Paywall'
 import StepIndicator from '../components/StepIndicator'
 import { CardFront } from '../components/TarotCard'
 
+const FREE_READINGS_PER_WEEK = 2
+
 export default function NewReading() {
   const { user } = useAuth()
-  const savedName = localStorage.getItem('veleda_display_name') || ''
-  const [step, setStep] = useState(savedName ? 'pergunta' : 'nome') // nome | pergunta | tiragem | leitura
-  const [displayName, setDisplayName] = useState(savedName)
+  const [step, setStep] = useState(null) // null (a carregar) | nome | pergunta | tiragem | leitura
+  const [displayName, setDisplayName] = useState('')
   const [question, setQuestion] = useState('')
   const [deck, setDeck] = useState([])
   const [picked, setPicked] = useState([])
@@ -26,11 +28,26 @@ export default function NewReading() {
     readingsThisWeek(user.id).then(setUsedThisWeek).catch(() => {})
   }, [user.id])
 
-  function saveName(e) {
+  // o nome vive no perfil (por conta), nunca no aparelho — senão uma pessoa
+  // via o nome de outra que tivesse usado o mesmo navegador
+  useEffect(() => {
+    supabase
+      .from('profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .single()
+      .then(({ data }) => {
+        const nome = (data?.display_name ?? '').trim()
+        setDisplayName(nome)
+        setStep(nome ? 'pergunta' : 'nome')
+      })
+  }, [user.id])
+
+  async function saveName(e) {
     e.preventDefault()
     const cleanName = displayName.trim().replace(/\s+/g, ' ')
     if (!cleanName) return
-    localStorage.setItem('veleda_display_name', cleanName)
+    await supabase.from('profiles').update({ display_name: cleanName }).eq('id', user.id)
     setDisplayName(cleanName)
     setStep('pergunta')
   }
@@ -66,7 +83,8 @@ export default function NewReading() {
   return (
     <main className={`internal-page reading-page reading-page--${step}`}>
       <div className="container">
-        <StepIndicator current={step} />
+        {step === null && <p className="muted" style={{ textAlign: 'center' }}>Abrindo o véu…</p>}
+        {step !== null && <StepIndicator current={step} />}
         {step === 'nome' && (
           <div className="card-panel ornate-panel name-panel">
             <p className="internal-kicker">Antes de abrir as cartas</p>
@@ -97,9 +115,9 @@ export default function NewReading() {
               <button className="btn" type="submit" disabled={!question.trim()} style={{ marginTop: '1rem' }}>
                 Embaralhar as cartas
               </button>
-              {usedThisWeek !== null && usedThisWeek >= 1 && (
+              {usedThisWeek !== null && usedThisWeek >= FREE_READINGS_PER_WEEK && (
                 <p className="muted" style={{ marginTop: '0.8rem' }}>
-                  ✦ Você já usou sua leitura gratuita desta semana — pode tirar as cartas, mas a leitura pedirá Premium.
+                  ✦ Você já usou suas {FREE_READINGS_PER_WEEK} leituras gratuitas desta semana — pode tirar as cartas, mas a leitura pedirá Premium.
                 </p>
               )}
             </form>

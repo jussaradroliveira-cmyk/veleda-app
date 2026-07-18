@@ -25,7 +25,9 @@ export default function Cookies() {
             <h3>O que guardamos no seu navegador</h3>
             <p>
               Para o app funcionar, guardamos apenas isto no armazenamento local
-              do seu navegador (<em>localStorage</em> — não são cookies):
+              do seu navegador (<em>localStorage</em> — não é um cookie). O nome
+              que você escolhe para as leituras fica guardado na sua conta, não
+              no navegador.
             </p>
             <div className="legal-table-wrap">
               <table className="legal-table">
@@ -39,13 +41,6 @@ export default function Cookies() {
                     <td>Manter sua sessão de login segura</td>
                     <td>Essencial</td>
                     <td>Até você sair da conta</td>
-                  </tr>
-                  <tr>
-                    <td><code>veleda_display_name</code></td>
-                    <td>Veleda</td>
-                    <td>Lembrar o nome que você escolheu para as leituras</td>
-                    <td>Essencial</td>
-                    <td>Até limpar os dados do navegador</td>
                   </tr>
                 </tbody>
               </table>

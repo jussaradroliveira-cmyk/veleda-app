@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+
+// versão dos documentos aceites no cadastro (atualizar quando os textos mudarem)
+const TERMS_VERSION = 'minuta-2-2026-07-18'
 
 const TITULOS = {
   login: 'Que bom ter você de volta',
@@ -16,6 +19,8 @@ export default function Auth() {
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [busy, setBusy] = useState(false)
+  const [ageOk, setAgeOk] = useState(false)
+  const [termsOk, setTermsOk] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const isLogin = mode === 'login'
@@ -61,12 +66,18 @@ export default function Auth() {
       return
     }
 
+    if (mode === 'signup' && (!ageOk || !termsOk)) {
+      setBusy(false)
+      setError('Para criar a conta, confirme que tem 18 anos ou mais e que aceita os Termos e a Política de Privacidade.')
+      return
+    }
+
     const fn = isLogin
       ? supabase.auth.signInWithPassword({ email, password })
       : supabase.auth.signUp({ email, password })
-    const { error } = await fn
-    setBusy(false)
+    const { data, error } = await fn
     if (error) {
+      setBusy(false)
       const msgs = {
         'Invalid login credentials': 'Email ou senha incorretos.',
         'User already registered': 'Este email já tem conta — tente entrar.',
@@ -74,6 +85,14 @@ export default function Auth() {
       setError(msgs[error.message] || error.message)
       return
     }
+    if (mode === 'signup' && data?.user) {
+      // regista a versão e o momento do aceite no perfil recém-criado
+      await supabase
+        .from('profiles')
+        .update({ terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() })
+        .eq('id', data.user.id)
+    }
+    setBusy(false)
     navigate(location.state?.from || '/leitura')
   }
 
@@ -81,6 +100,8 @@ export default function Auth() {
     setMode(next)
     setError('')
     setNotice('')
+    setAgeOk(false)
+    setTermsOk(false)
   }
 
   const showEmail = mode !== 'reset'
@@ -125,9 +146,29 @@ export default function Auth() {
                 <input id="auth-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} autoComplete={isLogin ? 'current-password' : 'new-password'} />
               </div>
             )}
+            {mode === 'signup' && (
+              <fieldset className="consent-fieldset">
+                <legend className="sr-only">Declarações obrigatórias</legend>
+                <label className="consent-check">
+                  <input type="checkbox" checked={ageOk} onChange={(e) => setAgeOk(e.target.checked)} required />
+                  <span>Declaro ter 18 anos ou mais.</span>
+                </label>
+                <label className="consent-check">
+                  <input type="checkbox" checked={termsOk} onChange={(e) => setTermsOk(e.target.checked)} required />
+                  <span>
+                    Li e aceito os <Link to="/termos" target="_blank">Termos de Uso</Link> e a{' '}
+                    <Link to="/privacidade" target="_blank">Política de Privacidade</Link>.
+                  </span>
+                </label>
+              </fieldset>
+            )}
             {error && <p className="error-msg" role="alert">{error}</p>}
             {notice && <p className="muted" role="status">{notice}</p>}
-            <button className="btn btn--wine auth-submit" type="submit" disabled={busy}>
+            <button
+              className="btn btn--wine auth-submit"
+              type="submit"
+              disabled={busy || (mode === 'signup' && (!ageOk || !termsOk))}
+            >
               {submitLabel}
             </button>
             {mode === 'login' && (

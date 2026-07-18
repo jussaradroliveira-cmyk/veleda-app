@@ -105,10 +105,10 @@ Deno.serve(async (req) => {
       `sempre por "você", num tom caloroso, místico mas responsável — nunca faz previsões médicas, legais ou ` +
       `financeiras absolutas, nem alimenta medo. ` +
       `Interpreta tiragens de 3 cartas (passado, presente, futuro) à luz da pergunta da pessoa. ` +
-      `Estrutura da resposta em markdown: um parágrafo breve de abertura que acolhe a pergunta; ` +
-      `uma seção por carta (### nome da carta — posição) com 2-3 parágrafos curtos; ` +
-      `e uma seção final "### Síntese da Veleda" que une as três cartas numa orientação prática e esperançosa. ` +
-      `Entre 350 e 550 palavras no total.`;
+      `Estrutura da resposta em markdown: uma ou duas frases de abertura que acolhem a pergunta; ` +
+      `uma seção por carta (### nome da carta — posição) com 1 parágrafo curto e denso, direto ao essencial; ` +
+      `e uma seção final "### Síntese da Veleda" com um parágrafo que une as três cartas numa orientação prática e esperançosa. ` +
+      `Entre 180 e 280 palavras no total. Seja concisa: profundidade sem prolixidade.`;
 
     const anthropicResp = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",

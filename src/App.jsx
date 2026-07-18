@@ -9,6 +9,7 @@ import History from './pages/History'
 import ReadingDetail from './pages/ReadingDetail'
 import Journal from './pages/Journal'
 import Subscription from './pages/Subscription'
+import Account from './pages/Account'
 import Cookies from './pages/Cookies'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
@@ -51,6 +52,7 @@ export default function App() {
             <Route path="/historico/:id" element={<Protected><ReadingDetail /></Protected>} />
             <Route path="/diario" element={<Protected><Journal /></Protected>} />
             <Route path="/assinatura" element={<Protected><Subscription /></Protected>} />
+            <Route path="/conta" element={<Protected><Account /></Protected>} />
             <Route path="/cookies" element={<Cookies />} />
             <Route path="/termos" element={<Terms />} />
             <Route path="/privacidade" element={<Privacy />} />

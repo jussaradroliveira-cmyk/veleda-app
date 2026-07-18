@@ -68,7 +68,7 @@ export default function AppHeader() {
           <AppLink to="/leitura">Nova leitura</AppLink>
           <AppLink to="/historico">Histórico</AppLink>
           <AppLink to="/diario">Diário</AppLink>
-          {session && <NavLink to="/assinatura">Assinatura</NavLink>}
+          {session && <NavLink to="/conta">Minha conta</NavLink>}
           {session ? (
             <button type="button" onClick={sair}>Sair</button>
           ) : (

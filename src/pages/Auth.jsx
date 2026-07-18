@@ -79,7 +79,7 @@ export default function Auth() {
     if (error) {
       setBusy(false)
       const msgs = {
-        'Invalid login credentials': 'Email ou senha incorretos.',
+        'Invalid login credentials': 'Email ou senha incorretos. Se você ainda não tem conta, toque em "Cadastre-se" aqui embaixo.',
         'User already registered': 'Este email já tem conta — tente entrar.',
       }
       setError(msgs[error.message] || error.message)

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { CardBack, CardFront } from './TarotCard'
 
 const POSITIONS = ['Passado', 'Presente', 'Futuro']
@@ -10,9 +10,21 @@ export default function FanSpread({ deck, picked, onPick }) {
     () => typeof window !== 'undefined' && window.matchMedia('(max-width: 600px)').matches,
     []
   )
-  const fanSize = narrow ? 17 : 21
-  const spreadDeg = narrow ? 60 : 110
+  const fanSize = narrow ? 19 : 26
+  const spreadDeg = narrow ? 58 : 112
   const fan = deck.slice(0, fanSize)
+
+  // a escolha tem um momento: a carta levanta e brilha antes de ir para o lugar
+  const [lifting, setLifting] = useState(null)
+
+  function handlePick(card) {
+    if (picked.length >= 3 || lifting) return
+    setLifting(card.id)
+    setTimeout(() => {
+      onPick(card)
+      setLifting(null)
+    }, 550)
+  }
 
   return (
     <div className="reading-spread">
@@ -23,9 +35,9 @@ export default function FanSpread({ deck, picked, onPick }) {
           return (
             <CardBack
               key={card.id}
-              className={`fan-card ${isPicked ? 'picked' : ''}`}
+              className={`fan-card ${isPicked ? 'picked' : ''} ${lifting === card.id ? 'lifting' : ''}`}
               style={{ '--fan-angle': `${angle}deg` }}
-              onClick={() => !isPicked && picked.length < 3 && onPick(card)}
+              onClick={() => !isPicked && handlePick(card)}
             />
           )
         })}

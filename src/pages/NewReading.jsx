@@ -31,16 +31,23 @@ export default function NewReading() {
   // o nome vive no perfil (por conta), nunca no aparelho — senão uma pessoa
   // via o nome de outra que tivesse usado o mesmo navegador
   useEffect(() => {
+    let ativo = true
     supabase
       .from('profiles')
       .select('display_name')
       .eq('id', user.id)
       .single()
       .then(({ data }) => {
-        const nome = (data?.display_name ?? '').trim()
-        setDisplayName(nome)
-        setStep(nome ? 'pergunta' : 'nome')
+        if (!ativo) return
+        // só na primeira resolução — nunca sobrepor o que a pessoa já digitou
+        setStep((prev) => {
+          if (prev !== null) return prev
+          const nome = (data?.display_name ?? '').trim()
+          setDisplayName(nome)
+          return nome ? 'pergunta' : 'nome'
+        })
       })
+    return () => { ativo = false }
   }, [user.id])
 
   async function saveName(e) {

@@ -110,27 +110,43 @@ Deno.serve(async (req) => {
       `e uma seção final "### Síntese da Veleda" com um parágrafo que une as três cartas numa orientação prática e esperançosa. ` +
       `Entre 280 e 380 palavras no total. Profundidade sem prolixidade.`;
 
-    const anthropicResp = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": anthropicKey,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 1500,
-        system: systemPrompt,
-        messages: [{
-          role: "user",
-          content: `Pergunta do consulente: "${question}"\n\nCartas tiradas:\n${cardLines}\n\nFaça a leitura.`,
-        }],
-      }),
+    // com várias pessoas a ler ao mesmo tempo, a API pode devolver 429/529
+    // transitórios — retentar 2x com espera resolve a maioria dos casos
+    const anthropicBody = JSON.stringify({
+      model: MODEL,
+      max_tokens: 1500,
+      system: systemPrompt,
+      messages: [{
+        role: "user",
+        content: `Pergunta do consulente: "${question}"\n\nCartas tiradas:\n${cardLines}\n\nFaça a leitura.`,
+      }],
     });
 
-    if (!anthropicResp.ok) {
-      const errText = await anthropicResp.text();
-      console.error("anthropic error", anthropicResp.status, errText);
+    let anthropicResp: Response | null = null;
+    for (let tentativa = 1; tentativa <= 3; tentativa++) {
+      anthropicResp = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "x-api-key": anthropicKey,
+          "anthropic-version": "2023-06-01",
+          "content-type": "application/json",
+        },
+        body: anthropicBody,
+      });
+      if (anthropicResp.ok) break;
+      const status = anthropicResp.status;
+      const retryable = status === 429 || status === 529 || status >= 500;
+      if (!retryable || tentativa === 3) break;
+      const retryAfter = Number(anthropicResp.headers.get("retry-after")) || 0;
+      const espera = Math.min(retryAfter * 1000 || tentativa * 2500, 10000);
+      console.warn(`anthropic ${status}, tentativa ${tentativa}/3 — a esperar ${espera}ms`);
+      await anthropicResp.body?.cancel();
+      await new Promise((r) => setTimeout(r, espera));
+    }
+
+    if (!anthropicResp || !anthropicResp.ok) {
+      const errText = anthropicResp ? await anthropicResp.text() : "sem resposta";
+      console.error("anthropic error", anthropicResp?.status, errText.slice(0, 400));
       return json({ error: "reading_failed" }, 502);
     }
     const anthropicData = await anthropicResp.json();

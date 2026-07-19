@@ -81,7 +81,7 @@ export default function NewReading() {
       setStep('leitura')
     } catch (err) {
       if (err.code === 'quota_exceeded') setShowPaywall(true)
-      else setError('A leitura falhou. Respire fundo e tente outra vez.')
+      else setError('O véu tremeu por um instante e a leitura não chegou. Suas cartas continuam escolhidas — toque em "Revelar a leitura" para tentar de novo.')
     } finally {
       setBusy(false)
     }

@@ -16,23 +16,30 @@ export async function fetchCards() {
   return data
 }
 
-// chama a Edge Function; devolve {reading} ou lança erro com .code
+// chama a Edge Function; devolve {reading} ou lança erro com .code.
+// Em 5xx (ex.: worker do Supabase morto num arranque frio) tenta de novo
+// sozinha — um worker fresco costuma resolver sem a pessoa dar conta.
 export async function generateReading(question, chosen) {
   const { data: { session } } = await supabase.auth.getSession()
-  const resp = await fetch(
-    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-reading`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${session?.access_token ?? ''}`,
-      },
-      body: JSON.stringify({
-        question,
-        cards: chosen.map((c) => ({ card_id: c.id, reversed: c.reversed })),
-      }),
-    }
-  )
+  const payload = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session?.access_token ?? ''}`,
+    },
+    body: JSON.stringify({
+      question,
+      cards: chosen.map((c) => ({ card_id: c.id, reversed: c.reversed })),
+    }),
+  }
+
+  let resp
+  for (let tentativa = 1; tentativa <= 2; tentativa++) {
+    resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-reading`, payload)
+    if (resp.ok || resp.status < 500 || tentativa === 2) break
+    await new Promise((r) => setTimeout(r, 2500))
+  }
+
   const body = await resp.json().catch(() => ({}))
   if (!resp.ok) {
     const err = new Error(body.error || 'erro')

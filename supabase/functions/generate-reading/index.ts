@@ -34,7 +34,12 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
 
+  // marcas de tempo por etapa: se o worker morrer, o último log diz onde
+  const t0 = Date.now();
+  const marca = (etapa: string) => console.log(`[leitura] ${etapa} +${Date.now() - t0}ms`);
+
   try {
+    marca("inicio");
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -48,6 +53,7 @@ Deno.serve(async (req) => {
     });
     const { data: { user }, error: authError } = await userClient.auth.getUser();
     if (authError || !user) return json({ error: "unauthorized" }, 401);
+    marca("auth ok");
 
     // 2. input
     const body = await req.json().catch(() => null);
@@ -80,6 +86,7 @@ Deno.serve(async (req) => {
         return json({ error: "quota_exceeded", free_per_week: FREE_READINGS_PER_WEEK }, 402);
       }
     }
+    marca("quota ok");
 
     // 4. dados das cartas
     const { data: cards, error: cardsError } = await admin
@@ -124,15 +131,28 @@ Deno.serve(async (req) => {
 
     let anthropicResp: Response | null = null;
     for (let tentativa = 1; tentativa <= 3; tentativa++) {
-      anthropicResp = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "x-api-key": anthropicKey,
-          "anthropic-version": "2023-06-01",
-          "content-type": "application/json",
-        },
-        body: anthropicBody,
-      });
+      marca(`anthropic tentativa ${tentativa}`);
+      const controlo = new AbortController();
+      const timer = setTimeout(() => controlo.abort(), 45000);
+      try {
+        anthropicResp = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: {
+            "x-api-key": anthropicKey,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+          },
+          body: anthropicBody,
+          signal: controlo.signal,
+        });
+      } catch (e) {
+        console.warn(`anthropic tentativa ${tentativa} abortada/failed:`, String(e).slice(0, 120));
+        anthropicResp = null;
+        if (tentativa < 3) continue;
+        break;
+      } finally {
+        clearTimeout(timer);
+      }
       if (anthropicResp.ok) break;
       const status = anthropicResp.status;
       const retryable = status === 429 || status === 529 || status >= 500;
@@ -149,6 +169,7 @@ Deno.serve(async (req) => {
       console.error("anthropic error", anthropicResp?.status, errText.slice(0, 400));
       return json({ error: "reading_failed" }, 502);
     }
+    marca(`anthropic ok (${anthropicResp.status})`);
     const anthropicData = await anthropicResp.json();
     const readingText = anthropicData.content?.[0]?.text ?? "";
     if (!readingText) return json({ error: "reading_failed" }, 502);
@@ -173,6 +194,7 @@ Deno.serve(async (req) => {
       return json({ error: "save_failed" }, 500);
     }
 
+    marca("gravado");
     return json({ reading });
   } catch (e) {
     console.error("unexpected", e);

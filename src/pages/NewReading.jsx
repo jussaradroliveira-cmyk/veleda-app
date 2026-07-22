@@ -9,7 +9,23 @@ import Paywall from '../components/Paywall'
 import StepIndicator from '../components/StepIndicator'
 import { CardFront } from '../components/TarotCard'
 
-const FREE_READINGS_PER_WEEK = 2
+const FREE_READINGS_PER_WEEK = 1
+
+// espelha a validação da Edge Function: uma leitura, uma pergunta
+function isCompoundQuestion(q) {
+  const marks = (q.match(/\?/g) ?? []).length
+  if (marks > 1) return true
+  const interrogativas = /\b(quando|onde|como|por\s*qu[eê]|o\s*que|quem|qual|quais|ser[áa]\s+que|vou|vai|devo|posso|quero\s+saber|me\s+diga|fale\s+sobre)\b/gi
+  const clausulas = q.split(/\b(?:e|e\s+tamb[ée]m|al[ée]m\s+disso)\b/i)
+  let comInterrogativa = 0
+  for (const c of clausulas) {
+    if (interrogativas.test(c)) comInterrogativa++
+    interrogativas.lastIndex = 0
+  }
+  return comInterrogativa >= 2
+}
+
+const MSG_COMPOSTA = 'Sinto aqui mais de uma pergunta. As cartas pedem um único foco por leitura — escolha a que mais importa agora e guarde a outra para a próxima.'
 
 export default function NewReading() {
   const { user } = useAuth()
@@ -23,6 +39,7 @@ export default function NewReading() {
   const [error, setError] = useState('')
   const [showPaywall, setShowPaywall] = useState(false)
   const [usedThisWeek, setUsedThisWeek] = useState(null)
+  const [isPremium, setIsPremium] = useState(false)
 
   useEffect(() => {
     readingsThisWeek(user.id).then(setUsedThisWeek).catch(() => {})
@@ -34,11 +51,12 @@ export default function NewReading() {
     let ativo = true
     supabase
       .from('profiles')
-      .select('display_name')
+      .select('display_name, is_premium')
       .eq('id', user.id)
       .single()
       .then(({ data }) => {
         if (!ativo) return
+        setIsPremium(Boolean(data?.is_premium))
         // só na primeira resolução — nunca sobrepor o que a pessoa já digitou
         setStep((prev) => {
           if (prev !== null) return prev
@@ -62,6 +80,10 @@ export default function NewReading() {
   async function startSpread(e) {
     e.preventDefault()
     setError('')
+    if (isCompoundQuestion(question)) {
+      setError(MSG_COMPOSTA)
+      return
+    }
     try {
       const cards = await fetchCards()
       setDeck(shuffleDeck(cards))
@@ -81,6 +103,7 @@ export default function NewReading() {
       setStep('leitura')
     } catch (err) {
       if (err.code === 'quota_exceeded') setShowPaywall(true)
+      else if (err.code === 'compound_question') setError(MSG_COMPOSTA)
       else setError('O véu tremeu por um instante e a leitura não chegou. Suas cartas continuam escolhidas — toque em "Revelar a leitura" para tentar de novo.')
     } finally {
       setBusy(false)
@@ -108,7 +131,7 @@ export default function NewReading() {
           <div className="card-panel ornate-panel" style={{ maxWidth: 560, margin: '0 auto' }}>
             <h2>✦ {displayName}, o que traz você até as cartas?</h2>
             <p className="muted" style={{ margin: '0.5rem 0 1.2rem' }}>
-              Escreva sua pergunta com calma. Quanto mais concreta, mais clara será a leitura.
+              Escreva sua pergunta com calma — uma só por leitura. Quanto mais concreta, mais clara será a resposta.
             </p>
             <form onSubmit={startSpread}>
               <textarea
@@ -122,9 +145,9 @@ export default function NewReading() {
               <button className="btn" type="submit" disabled={!question.trim()} style={{ marginTop: '1rem' }}>
                 Embaralhar as cartas
               </button>
-              {usedThisWeek !== null && usedThisWeek >= FREE_READINGS_PER_WEEK && (
+              {!isPremium && usedThisWeek !== null && usedThisWeek >= FREE_READINGS_PER_WEEK && (
                 <p className="muted" style={{ marginTop: '0.8rem' }}>
-                  ✦ Você já usou suas {FREE_READINGS_PER_WEEK} leituras gratuitas desta semana — pode tirar as cartas, mas a leitura pedirá Premium.
+                  ✦ Você já usou sua leitura gratuita desta semana — pode tirar as cartas, mas a leitura pedirá Premium.
                 </p>
               )}
             </form>

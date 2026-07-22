@@ -9,7 +9,22 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const FREE_READINGS_PER_WEEK = 2;
+const FREE_READINGS_PER_WEEK = 1;
+
+// pergunta composta (duas perguntas em uma): mais de um "?", ou duas
+// interrogativas ligadas por conjunção — a leitura pede um único foco
+export function isCompoundQuestion(q: string): boolean {
+  const marks = (q.match(/\?/g) ?? []).length;
+  if (marks > 1) return true;
+  const interrogativas = /\b(quando|onde|como|por\s*qu[eê]|o\s*que|quem|qual|quais|ser[áa]\s+que|vou|vai|devo|posso|quero\s+saber|me\s+diga|fale\s+sobre)\b/gi;
+  const clausulas = q.split(/\b(?:e|e\s+tamb[ée]m|al[ée]m\s+disso)\b/i);
+  let comInterrogativa = 0;
+  for (const c of clausulas) {
+    if (interrogativas.test(c)) comInterrogativa++;
+    interrogativas.lastIndex = 0;
+  }
+  return comInterrogativa >= 2;
+}
 const MODEL = "claude-sonnet-5";
 
 function json(body: unknown, status = 200) {
@@ -60,6 +75,7 @@ Deno.serve(async (req) => {
     const question = (body?.question ?? "").toString().trim();
     const chosen = body?.cards;
     if (!question || question.length > 500) return json({ error: "invalid_question" }, 400);
+    if (isCompoundQuestion(question)) return json({ error: "compound_question" }, 400);
     if (!Array.isArray(chosen) || chosen.length !== 3) return json({ error: "invalid_cards" }, 400);
     const positions = ["passado", "presente", "futuro"];
     for (let i = 0; i < 3; i++) {
@@ -115,7 +131,9 @@ Deno.serve(async (req) => {
       `Estrutura da resposta em markdown: um parágrafo breve de abertura que acolhe a pergunta; ` +
       `uma seção por carta (### nome da carta — posição) com 1-2 parágrafos densos, direto ao essencial; ` +
       `e uma seção final "### Síntese da Veleda" com um parágrafo que une as três cartas numa orientação prática e esperançosa. ` +
-      `Entre 280 e 380 palavras no total. Profundidade sem prolixidade.`;
+      `Entre 280 e 380 palavras no total. Profundidade sem prolixidade. ` +
+      `Cada leitura responde a UMA pergunta: se o texto trouxer mais de uma, acolha apenas o tema central ` +
+      `e diga com carinho que os outros merecem uma leitura própria.`;
 
     // com várias pessoas a ler ao mesmo tempo, a API pode devolver 429/529
     // transitórios — retentar 2x com espera resolve a maioria dos casos

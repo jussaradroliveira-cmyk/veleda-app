@@ -31,7 +31,7 @@ export default function Paywall({ onClose }) {
       <div className="card-panel paywall" onClick={(e) => e.stopPropagation()}>
         <h2>✦ O véu se fecha por esta semana</h2>
         <p className="muted">
-          Você já usou suas leituras gratuitas desta semana. As cartas se abrem de novo na segunda-feira —
+          Você já usou sua leitura gratuita desta semana. As cartas se abrem de novo na segunda-feira —
           ou torne-se Premium e consulte a Veleda sempre que precisar.
         </p>
         <div className="preco">R$ 39,90<span className="preco__periodo">/mês</span></div>

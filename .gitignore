@@ -27,3 +27,6 @@ art-originais/
 cards-originais/
 design-refs/
 supabase/.temp/
+.vercel
+.env*
+.env.local

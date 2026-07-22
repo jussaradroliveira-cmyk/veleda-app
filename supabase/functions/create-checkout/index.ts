@@ -13,7 +13,9 @@ const corsHeaders = {
 
 const ALLOWED_ORIGINS = [
   "http://localhost:5173",
-  "https://jussaradroliveira-cmyk.github.io",
+  "https://veledataro.com",
+  "https://www.veledataro.com",
+  "https://veleda-app.vercel.app",
 ];
 
 function json(body: unknown, status = 200) {
@@ -68,7 +70,7 @@ Deno.serve(async (req) => {
 
     const reqOrigin = req.headers.get("origin") ?? "";
     const base = ALLOWED_ORIGINS.find((o) => reqOrigin.startsWith(o)) ?? ALLOWED_ORIGINS[1];
-    const appPath = base.includes("github.io") ? "/veleda-app" : "";
+    const appPath = "";
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,

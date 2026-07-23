@@ -12,11 +12,12 @@ const TITULOS = {
   reset: 'Escolha sua nova senha',
 }
 
-export default function Auth() {
+export default function Auth({ recoveryLock = false, onRecoveryDone }) {
   const navigate = useNavigate()
   const location = useLocation()
+  // recoveryLock: renderizada pelo lock de recuperação — só o modo reset existe.
   // chegar com state.signup abre direto no modo de cadastro (botão "Cadastre-se")
-  const [mode, setMode] = useState(location.state?.signup ? 'signup' : 'login') // login | signup | forgot | reset
+  const [mode, setMode] = useState(recoveryLock ? 'reset' : (location.state?.signup ? 'signup' : 'login')) // login | signup | forgot | reset
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -63,6 +64,8 @@ export default function Auth() {
           : 'Não consegui salvar a nova senha. Tente de novo.')
         return
       }
+      // só aqui o lock abre: senha confirmada no servidor
+      onRecoveryDone?.()
       navigate('/leitura')
       return
     }

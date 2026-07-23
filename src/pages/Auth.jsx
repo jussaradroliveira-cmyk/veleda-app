@@ -51,7 +51,7 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
       })
       setBusy(false)
       if (error) setError('Não consegui enviar o email. Confira o endereço e tente de novo.')
-      else setNotice('✦ Enviamos um link de recuperação para seu email. Abra a mensagem e siga o link.')
+      else setNotice('sent')
       return
     }
 
@@ -108,7 +108,8 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
     setTermsOk(false)
   }
 
-  const showEmail = mode !== 'reset'
+  const emailSent = mode === 'forgot' && notice === 'sent'
+  const showEmail = mode !== 'reset' && !emailSent
   const showPassword = mode === 'login' || mode === 'signup' || mode === 'reset'
   const submitLabel = busy
     ? 'Aguarde…'
@@ -167,14 +168,27 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
               </fieldset>
             )}
             {error && <p className="error-msg" role="alert">{error}</p>}
-            {notice && <p className="muted" role="status">{notice}</p>}
-            <button
-              className="btn btn--wine auth-submit"
-              type="submit"
-              disabled={busy || (mode === 'signup' && (!ageOk || !termsOk))}
-            >
-              {submitLabel}
-            </button>
+            {emailSent && (
+              <div className="sent-notice" role="status">
+                <p className="sent-notice__title">📧 Vá ao seu email</p>
+                <p>
+                  Enviamos um link de recuperação. Abra a mensagem <strong>mais recente</strong> —
+                  confira também o <strong>Spam</strong> — e siga o link para escolher sua nova senha.
+                </p>
+                <p className="sent-notice__small">
+                  Só o email mais recente vale: se pedir outro link, os anteriores deixam de funcionar.
+                </p>
+              </div>
+            )}
+            {!emailSent && (
+              <button
+                className="btn btn--wine auth-submit"
+                type="submit"
+                disabled={busy || (mode === 'signup' && (!ageOk || !termsOk))}
+              >
+                {submitLabel}
+              </button>
+            )}
             {mode === 'login' && (
               <p className="auth-switch-row">
                 <button className="text-button" type="button" onClick={() => switchMode('forgot')}>

@@ -316,6 +316,34 @@ main:not(.landing) {
   text-decoration: underline;
 }
 
+.sent-notice {
+  margin: 0.4rem 0 0.8rem;
+  border: 1px solid rgba(185, 139, 67, 0.65);
+  border-radius: 0.9rem;
+  padding: 1rem 1.2rem;
+  background: rgba(185, 139, 67, 0.1);
+  text-align: left;
+}
+
+.sent-notice__title {
+  margin-bottom: 0.4rem;
+  color: var(--wine-deep);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.sent-notice p:not(.sent-notice__title) {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.sent-notice__small {
+  margin-top: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.78rem !important;
+}
+
 .auth-switch-row {
   margin-top: 1.1rem;
   color: var(--text-secondary);

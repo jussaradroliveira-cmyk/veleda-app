@@ -5,7 +5,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "O Veleda Tarô Simbólico (“Veleda”, “Aplicativo” ou “Serviço”) é operado por [RAZÃO SOCIAL/NOME EMPRESARIAL], inscrita no [CNPJ/NIF/NIPC] sob o nº [●], com sede em [ENDEREÇO COMPLETO], e contato geral em [E-MAIL DE SUPORTE]."
+    "O Veleda Tarô Simbólico (“Veleda”, “Aplicativo” ou “Serviço”) é operado por Jussara D R Oliveira, inscrita no NIF 302020250 sob o nº 302020250, com sede em Ericeira, Portugal, e contato geral em contact@veledataro.com."
   ],
   [
     "p",
@@ -17,7 +17,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "O controlador é [RAZÃO SOCIAL], [CNPJ/NIF/NIPC], com endereço em [●]. Contato do encarregado/DPO ou canal de privacidade: [E-MAIL DE PRIVACIDADE]. Se houver representante na União Europeia ou no Brasil, seus dados serão indicados aqui: [REPRESENTANTE, SE APLICÁVEL]."
+    "O controlador é Jussara D R Oliveira, NIF 302020250, com endereço em Ericeira, Portugal. Contato do encarregado/DPO ou canal de privacidade: contact@veledataro.com. Se houver representante na União Europeia ou no Brasil, seus dados serão indicados aqui: Não aplicável."
   ],
   [
     "h3",
@@ -121,7 +121,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "A pergunta, as cartas, o nome de tratamento e contexto estritamente necessário podem ser enviados ao provedor [ANTHROPIC/CONFIRMAR] para gerar a resposta. Configuraremos o serviço, sempre que disponível e contratualmente aplicável, para impedir treinamento geral com os dados do Veleda e limitar retenção do fornecedor."
+    "A pergunta, as cartas, o nome de tratamento e contexto estritamente necessário podem ser enviados ao provedor Anthropic (Claude) para gerar a resposta. Configuraremos o serviço, sempre que disponível e contratualmente aplicável, para impedir treinamento geral com os dados do Veleda e limitar retenção do fornecedor."
   ],
   [
     "p",
@@ -293,7 +293,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "Solicitações devem ser enviadas a [E-MAIL DE PRIVACIDADE]. Poderemos confirmar identidade de forma proporcional. Responderemos nos prazos legais; pedidos complexos poderão exigir extensão permitida, com justificativa. Se negarmos total ou parcialmente, explicaremos a razão e os meios de recurso."
+    "Solicitações devem ser enviadas a contact@veledataro.com. Poderemos confirmar identidade de forma proporcional. Responderemos nos prazos legais; pedidos complexos poderão exigir extensão permitida, com justificativa. Se negarmos total ou parcialmente, explicaremos a razão e os meios de recurso."
   ],
   [
     "h3",
@@ -301,7 +301,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "O Serviço é destinado a maiores de 18 anos. Não coletamos intencionalmente dados de crianças ou adolescentes. Pais ou responsáveis que identifiquem uso por menor devem contatar [E-MAIL DE PRIVACIDADE] para investigação e exclusão."
+    "O Serviço é destinado a maiores de 18 anos. Não coletamos intencionalmente dados de crianças ou adolescentes. Pais ou responsáveis que identifiquem uso por menor devem contatar contact@veledataro.com para investigação e exclusão."
   ],
   [
     "h3",
@@ -337,7 +337,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "Controlador: [RAZÃO SOCIAL] · [CNPJ/NIF/NIPC] · [ENDEREÇO] · Privacidade/DPO: [E-MAIL]. Brasil: Autoridade Nacional de Proteção de Dados — ANPD. Portugal: Comissão Nacional de Proteção de Dados — CNPD. O titular também pode procurar a autoridade do país europeu onde reside, trabalha ou considera ter ocorrido violação."
+    "Controlador: Jussara D R Oliveira · NIF 302020250 · Ericeira, Portugal · Privacidade/DPO: contact@veledataro.com. Brasil: Autoridade Nacional de Proteção de Dados — ANPD. Portugal: Comissão Nacional de Proteção de Dados — CNPD. O titular também pode procurar a autoridade do país europeu onde reside, trabalha ou considera ter ocorrido violação."
   ],
   [
     "p",

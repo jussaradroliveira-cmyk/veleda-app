@@ -5,7 +5,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "O Veleda Tarô Simbólico (“Veleda”, “Aplicativo” ou “Serviço”) é operado por [RAZÃO SOCIAL/NOME EMPRESARIAL], inscrita no [CNPJ/NIF/NIPC] sob o nº [●], com sede em [ENDEREÇO COMPLETO], e contato geral em [E-MAIL DE SUPORTE]."
+    "O Veleda Tarô Simbólico (“Veleda”, “Aplicativo” ou “Serviço”) é operado por Jussara D R Oliveira, inscrita no NIF 302020250 sob o nº 302020250, com sede em Ericeira, Portugal, e contato geral em contact@veledataro.com."
   ],
   [
     "p",
@@ -53,7 +53,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "As leituras podem ser produzidas ou auxiliadas por modelos de inteligência artificial de terceiros, incluindo [ANTHROPIC/OUTRO PROVEDOR A CONFIRMAR]. Ao enviar uma pergunta, você reconhece que o texto poderá ser processado por esses fornecedores conforme contratos e salvaguardas aplicáveis."
+    "As leituras podem ser produzidas ou auxiliadas por modelos de inteligência artificial de terceiros, incluindo Anthropic (Claude). Ao enviar uma pergunta, você reconhece que o texto poderá ser processado por esses fornecedores conforme contratos e salvaguardas aplicáveis."
   ],
   [
     "p",
@@ -77,7 +77,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "Comunique imediatamente suspeita de acesso não autorizado a [E-MAIL DE SUPORTE]."
+    "Comunique imediatamente suspeita de acesso não autorizado a contact@veledataro.com."
   ],
   [
     "p",
@@ -98,6 +98,10 @@ const BLOCOS = [
   [
     "p",
     "Preço-base previsto para o Brasil: R$ 39,90 por mês. O plano anual, com desconto de 20% sobre doze mensalidades, é de R$ 383,04 por ano. Eventual preço promocional — inclusive desconto no primeiro mês — somente será aplicável quando exibido de forma clara antes da compra, com indicação do preço promocional, duração e valor recorrente posterior. Os preços para a União Europeia ainda não estão definidos e serão informados antes do lançamento nessa região. Impostos, moeda, período, benefícios e condições efetivamente aplicáveis serão apresentados de maneira clara antes da confirmação da compra, respeitada a oferta e a legislação."
+  ],
+  [
+    "p",
+    "Consulta avulsa (pagamento único, sem assinatura): por R$ 49,90 você adquire um pacote de 5 (cinco) leituras, válido por 30 (trinta) dias a contar da data da compra. As leituras não utilizadas nesse prazo expiram. O preço, a quantidade e o prazo de validade são exibidos de forma clara antes da confirmação da compra. A consulta avulsa não renova automaticamente e é independente da assinatura Premium."
   ],
   [
     "h3",
@@ -229,7 +233,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "Você pode excluir a conta em “Minha conta” → “Privacidade” → “Excluir minha conta”. Antes da confirmação, o Veleda informará as consequências, solicitará nova autenticação e oferecerá a exportação dos dados quando aplicável. A exclusão encerrará o acesso e iniciará a eliminação dos dados nos prazos da Política de Privacidade. Se houver assinatura ativa, o fluxo deverá exigir seu cancelamento ou confirmar expressamente como a cobrança será encerrada, evitando renovação posterior. O pedido também poderá ser feito por [E-MAIL DE PRIVACIDADE]. O encerramento não elimina obrigações anteriores nem dados cuja retenção seja exigida ou permitida por lei."
+    "Você pode excluir a conta em “Minha conta” → “Privacidade” → “Excluir minha conta”. Antes da confirmação, o Veleda informará as consequências, solicitará nova autenticação e oferecerá a exportação dos dados quando aplicável. A exclusão encerrará o acesso e iniciará a eliminação dos dados nos prazos da Política de Privacidade. Se houver assinatura ativa, o fluxo deverá exigir seu cancelamento ou confirmar expressamente como a cobrança será encerrada, evitando renovação posterior. O pedido também poderá ser feito por contact@veledataro.com. O encerramento não elimina obrigações anteriores nem dados cuja retenção seja exigida ou permitida por lei."
   ],
   [
     "h3",
@@ -273,7 +277,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "Antes de processo judicial, incentivamos contato por [E-MAIL DE SUPORTE]. Consumidores europeus podem recorrer às entidades de resolução alternativa de litígios aplicáveis no país da empresa e de sua residência."
+    "Antes de processo judicial, incentivamos contato por contact@veledataro.com. Consumidores europeus podem recorrer às entidades de resolução alternativa de litígios aplicáveis no país da empresa e de sua residência."
   ],
   [
     "h3",
@@ -281,7 +285,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "Operadora: [RAZÃO SOCIAL] · [CNPJ/NIF/NIPC] · [ENDEREÇO] · Suporte: [E-MAIL] · Privacidade: [E-MAIL DE PRIVACIDADE]."
+    "Operadora: Jussara D R Oliveira · NIF 302020250 · Ericeira, Portugal · Suporte: contact@veledataro.com · Privacidade: contact@veledataro.com."
   ],
   [
     "p",

@@ -11,6 +11,8 @@ export default function AppFooter() {
           <span aria-hidden="true">·</span>
           <Link to="/privacidade">Privacidade</Link>
           <span aria-hidden="true">·</span>
+          <Link to="/subprocessadores">Subprocessadores</Link>
+          <span aria-hidden="true">·</span>
           <Link to="/cookies">Cookies</Link>
         </nav>
       </div>

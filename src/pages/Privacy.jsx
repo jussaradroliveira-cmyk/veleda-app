@@ -161,7 +161,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "A lista nominal atualizada de fornecedores e seus países deverá ser publicada em [URL DE SUBOPERADORES]. Não vendemos dados pessoais. Não compartilhamos perguntas ou diário para publicidade comportamental de terceiros."
+    "A lista nominal atualizada de fornecedores e seus países está publicada em veledataro.com/subprocessadores. Não vendemos dados pessoais. Não compartilhamos perguntas ou diário para publicidade comportamental de terceiros."
   ],
   [
     "h3",

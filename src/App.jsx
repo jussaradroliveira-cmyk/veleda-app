@@ -13,6 +13,7 @@ import Account from './pages/Account'
 import Cookies from './pages/Cookies'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
+import Subprocessors from './pages/Subprocessors'
 import AppHeader from './components/AppHeader'
 import AppFooter from './components/AppFooter'
 
@@ -82,6 +83,7 @@ export default function App() {
                 <Route path="/cookies" element={<Cookies />} />
                 <Route path="/termos" element={<Terms />} />
                 <Route path="/privacidade" element={<Privacy />} />
+                <Route path="/subprocessadores" element={<Subprocessors />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>

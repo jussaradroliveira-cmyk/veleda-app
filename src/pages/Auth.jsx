@@ -109,6 +109,8 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
         .from('profiles')
         .update({ terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() })
         .eq('id', data.user.id)
+      // dispara o convite para adicionar ao ecrã inicial (mostrado no telemóvel)
+      localStorage.setItem('veleda_install_hint', '1')
     }
     setBusy(false)
     navigate(location.state?.from || '/leitura')

@@ -16,6 +16,7 @@ import Privacy from './pages/Privacy'
 import Subprocessors from './pages/Subprocessors'
 import AppHeader from './components/AppHeader'
 import AppFooter from './components/AppFooter'
+import InstallPrompt from './components/InstallPrompt'
 
 export { useAuth }
 
@@ -88,6 +89,7 @@ export default function App() {
               </Routes>
             </div>
             <AppFooter />
+            <InstallPrompt />
           </>
         )}
       </div>

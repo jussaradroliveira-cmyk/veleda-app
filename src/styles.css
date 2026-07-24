@@ -1677,3 +1677,64 @@ textarea { min-height: 7rem; resize: vertical; }
   .hero-cards .tarot-card { width: 7.35rem; margin-inline: -2.15rem; }
   .benefits-list article { grid-template-columns: 1fr; justify-items: center; text-align: center; }
 }
+
+/* Convite para adicionar ao ecrã inicial (pós-cadastro, telemóvel) */
+.install-prompt {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: min(94vw, 30rem);
+  padding: 0.9rem 2.2rem 0.9rem 0.9rem;
+  border: 1px solid rgba(216, 186, 120, 0.5);
+  border-radius: 1rem;
+  background: linear-gradient(150deg, var(--wine-deep), var(--wine-dark));
+  box-shadow: 0 1rem 2.6rem rgba(64, 35, 45, 0.4);
+  color: var(--ivory);
+  animation: install-rise 0.35s ease both;
+}
+@keyframes install-rise {
+  from { opacity: 0; transform: translate(-50%, 1rem); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.install-prompt__icon {
+  width: 3.2rem;
+  height: 3.2rem;
+  flex: 0 0 auto;
+  border-radius: 0.7rem;
+  box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.35);
+}
+.install-prompt__title {
+  color: #e8c893;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+.install-prompt__text {
+  margin-top: 0.15rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: rgba(255, 248, 237, 0.9);
+}
+.install-prompt__cta {
+  margin-top: 0.55rem;
+}
+.install-prompt__close {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.5rem;
+  border: 0;
+  padding: 0.2rem 0.4rem;
+  background: transparent;
+  color: rgba(255, 248, 237, 0.65);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+@media (prefers-reduced-motion: reduce) {
+  .install-prompt { animation: none; }
+}

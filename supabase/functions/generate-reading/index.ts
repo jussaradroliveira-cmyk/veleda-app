@@ -53,6 +53,10 @@ Deno.serve(async (req) => {
   const t0 = Date.now();
   const marca = (etapa: string) => console.log(`[leitura] ${etapa} +${Date.now() - t0}ms`);
 
+  // estado de crédito acessível também no catch (refund em exceção inesperada)
+  let usedCredit = false;
+  let refundFn: (() => Promise<void>) | null = null;
+
   try {
     marca("inicio");
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -88,7 +92,29 @@ Deno.serve(async (req) => {
 
     const admin = createClient(supabaseUrl, serviceKey);
 
-    // 3. quota semanal (premium = ilimitado)
+    refundFn = async () => { await admin.rpc("refund_reading_credit", { uid: user.id }).catch(() => {}); };
+
+    // idempotência: se uma leitura idêntica (mesma pergunta e cartas) foi gravada
+    // nos últimos 2 min, devolve-a em vez de gerar de novo — protege contra
+    // retentativas do cliente (evita segunda leitura e cobrança dupla de crédito)
+    const recentWindow = new Date(Date.now() - 120000).toISOString();
+    const chosenIds = ids.slice().sort((a, b) => a - b).join(",");
+    const { data: recent } = await admin
+      .from("readings")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("question", question)
+      .gte("created_at", recentWindow)
+      .order("created_at", { ascending: false })
+      .limit(5);
+    const dup = (recent ?? []).find((r) =>
+      Array.isArray(r.cards) &&
+      r.cards.map((c: { card_id: number }) => c.card_id).sort((a: number, b: number) => a - b).join(",") === chosenIds
+    );
+    if (dup) { marca("idempotente"); return json({ reading: dup }); }
+
+    // 3. elegibilidade: premium (ilimitado) → leitura grátis da semana →
+    //    crédito de consulta avulsa (reservado atomicamente e devolvido se falhar)
     const { data: profile } = await admin
       .from("profiles").select("is_premium").eq("id", user.id).single();
     if (!profile?.is_premium) {
@@ -99,10 +125,17 @@ Deno.serve(async (req) => {
         .eq("user_id", user.id)
         .gte("created_at", weekStart);
       if ((count ?? 0) >= FREE_READINGS_PER_WEEK) {
-        return json({ error: "quota_exceeded", free_per_week: FREE_READINGS_PER_WEEK }, 402);
+        // grátis da semana esgotada: tenta consumir 1 crédito avulso, atómico.
+        // consume_reading_credit devolve os restantes, ou null se não havia crédito válido.
+        const { data: remaining, error: creditErr } = await admin
+          .rpc("consume_reading_credit", { uid: user.id });
+        if (creditErr || remaining === null || remaining === undefined) {
+          return json({ error: "quota_exceeded", free_per_week: FREE_READINGS_PER_WEEK }, 402);
+        }
+        usedCredit = true;
       }
     }
-    marca("quota ok");
+    marca(usedCredit ? "crédito reservado" : "quota ok");
 
     // 4. dados das cartas
     const { data: cards, error: cardsError } = await admin
@@ -182,15 +215,21 @@ Deno.serve(async (req) => {
       await new Promise((r) => setTimeout(r, espera));
     }
 
+    // devolve o crédito reservado se a leitura não chegou a ser gerada/guardada
+    const refundIfCredit = async () => {
+      if (usedCredit) { await refundFn!(); usedCredit = false; }
+    };
+
     if (!anthropicResp || !anthropicResp.ok) {
       const errText = anthropicResp ? await anthropicResp.text() : "sem resposta";
       console.error("anthropic error", anthropicResp?.status, errText.slice(0, 400));
+      await refundIfCredit();
       return json({ error: "reading_failed" }, 502);
     }
     marca(`anthropic ok (${anthropicResp.status})`);
     const anthropicData = await anthropicResp.json();
     const readingText = anthropicData.content?.[0]?.text ?? "";
-    if (!readingText) return json({ error: "reading_failed" }, 502);
+    if (!readingText) { await refundIfCredit(); return json({ error: "reading_failed" }, 502); }
 
     // 6. guardar no histórico
     const cardsJson = drawn.map((d) => ({
@@ -209,6 +248,7 @@ Deno.serve(async (req) => {
       .single();
     if (insertError) {
       console.error("insert error", insertError);
+      await refundIfCredit();
       return json({ error: "save_failed" }, 500);
     }
 
@@ -216,6 +256,8 @@ Deno.serve(async (req) => {
     return json({ reading });
   } catch (e) {
     console.error("unexpected", e);
+    // exceção inesperada após reservar crédito: devolve-o
+    if (usedCredit && refundFn) { await refundFn().catch(() => {}); }
     return json({ error: "internal" }, 500);
   }
 });

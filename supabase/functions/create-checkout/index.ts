@@ -31,12 +31,13 @@ Deno.serve(async (req) => {
 
   try {
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    // dois planos: mensal (R$ 29,90) e anual (20% de desconto)
+    // assinatura mensal/anual + consulta avulsa (pagamento único, 5 leituras)
     const priceMonthly = Deno.env.get("STRIPE_PRICE_ID_MONTHLY") ?? Deno.env.get("STRIPE_PRICE_ID");
     const priceAnnual = Deno.env.get("STRIPE_PRICE_ID_ANNUAL");
+    const priceAvulso = Deno.env.get("STRIPE_PRICE_ID_AVULSO");
     const body = await req.json().catch(() => ({}));
-    const plan = body?.plan === "anual" ? "anual" : "mensal";
-    const priceId = plan === "anual" ? (priceAnnual ?? priceMonthly) : priceMonthly;
+    const plan = ["anual", "mensal", "avulso"].includes(body?.plan) ? body.plan : "mensal";
+    const priceId = plan === "avulso" ? priceAvulso : plan === "anual" ? (priceAnnual ?? priceMonthly) : priceMonthly;
     if (!stripeKey || !priceId) return json({ error: "stripe_not_configured" }, 501);
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -56,7 +57,8 @@ Deno.serve(async (req) => {
     // cliente Stripe: reutiliza ou cria
     const { data: profile } = await admin
       .from("profiles").select("stripe_customer_id, is_premium").eq("id", user.id).single();
-    if (profile?.is_premium) return json({ error: "already_premium" }, 400);
+    // premium só bloqueia a assinatura; a consulta avulsa continua disponível para todos
+    if (profile?.is_premium && plan !== "avulso") return json({ error: "already_premium" }, 400);
 
     let customerId = profile?.stripe_customer_id;
     if (!customerId) {
@@ -72,13 +74,16 @@ Deno.serve(async (req) => {
     const base = ALLOWED_ORIGINS.find((o) => reqOrigin.startsWith(o)) ?? ALLOWED_ORIGINS[1];
     const appPath = "";
 
+    const isAvulso = plan === "avulso";
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      mode: "subscription",
+      mode: isAvulso ? "payment" : "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${base}${appPath}/leitura?premium=1`,
+      success_url: `${base}${appPath}/leitura?${isAvulso ? "avulso" : "premium"}=1`,
       cancel_url: `${base}${appPath}/leitura`,
       metadata: { supabase_user_id: user.id, plan },
+      // o pagamento único também precisa do user_id no PaymentIntent p/ o webhook
+      ...(isAvulso ? { payment_intent_data: { metadata: { supabase_user_id: user.id, plan } } } : {}),
     });
 
     return json({ url: session.url });

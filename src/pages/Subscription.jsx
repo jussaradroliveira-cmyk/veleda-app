@@ -6,16 +6,23 @@ import { startCheckout, openBillingPortal } from '../lib/billing'
 export default function Subscription() {
   const { user } = useAuth()
   const [isPremium, setIsPremium] = useState(null)
+  const [credits, setCredits] = useState(0)
+  const [creditsExpire, setCreditsExpire] = useState(null)
   const [busy, setBusy] = useState('')
   const [notice, setNotice] = useState('')
 
   useEffect(() => {
     supabase
       .from('profiles')
-      .select('is_premium')
+      .select('is_premium, reading_credits, reading_credits_expire_at')
       .eq('id', user.id)
       .single()
-      .then(({ data }) => setIsPremium(Boolean(data?.is_premium)))
+      .then(({ data }) => {
+        setIsPremium(Boolean(data?.is_premium))
+        const valido = data?.reading_credits_expire_at && new Date(data.reading_credits_expire_at) > new Date()
+        setCredits(valido ? (data.reading_credits ?? 0) : 0)
+        setCreditsExpire(valido ? data.reading_credits_expire_at : null)
+      })
   }, [user.id])
 
   async function subscribe(plan) {
@@ -88,6 +95,24 @@ export default function Subscription() {
                 </button>
               </div>
             </>
+          )}
+
+          {isPremium === false && (
+            <div className="account-block avulso-block">
+              <h4>Consulta avulsa</h4>
+              {credits > 0 && (
+                <p className="avulso-saldo">
+                  ✦ Você tem <strong>{credits} {credits === 1 ? 'leitura' : 'leituras'}</strong>
+                  {creditsExpire && <> · válidas até {new Date(creditsExpire).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}</>}
+                </p>
+              )}
+              <p className="muted">
+                Prefere sem assinatura? <strong>5 leituras por R$ 49,90</strong>, válidas por 30 dias após a compra.
+              </p>
+              <button className="btn ghost small" onClick={() => subscribe('avulso')} disabled={!!busy}>
+                {busy === 'avulso' ? 'Preparando…' : credits > 0 ? 'Comprar mais 5 leituras' : 'Comprar 5 leituras · R$ 49,90'}
+              </button>
+            </div>
           )}
 
           {notice && <p className="muted" role="status" style={{ marginTop: '0.9rem' }}>{notice}</p>}

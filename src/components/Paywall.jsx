@@ -49,6 +49,15 @@ export default function Paywall({ onClose }) {
             {busy === 'mensal' ? 'Preparando…' : 'Assinar mensal · R$ 39,90'}
           </button>
         </div>
+        <div className="paywall__avulso">
+          <p className="paywall__avulso-label">Sem compromisso?</p>
+          <p className="paywall__avulso-desc">
+            <strong>Consulta avulsa</strong> — 5 leituras por <strong>R$ 49,90</strong>, válidas por 30 dias.
+          </p>
+          <button className="btn ghost small" onClick={() => subscribe('avulso')} disabled={!!busy}>
+            {busy === 'avulso' ? 'Preparando…' : 'Comprar 5 leituras · R$ 49,90'}
+          </button>
+        </div>
         {notice && <p className="muted" style={{ marginTop: '0.8rem' }}>{notice}</p>}
         <p style={{ marginTop: '1rem' }}>
           <a href="#" onClick={(e) => { e.preventDefault(); onClose() }}>voltar</a>

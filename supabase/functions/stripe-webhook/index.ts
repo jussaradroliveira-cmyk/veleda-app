@@ -46,6 +46,23 @@ Deno.serve(async (req) => {
       const session = event.data.object as Stripe.Checkout.Session;
       if (session.mode === "subscription" && typeof session.customer === "string") {
         await setPremiumByCustomer(session.customer, true, session.subscription as string);
+      } else if (
+        session.mode === "payment" &&
+        session.payment_status === "paid" &&
+        session.metadata?.plan === "avulso"
+      ) {
+        // consulta avulsa paga: concede 5 leituras válidas 30 dias.
+        // idempotência: o event.id fica registado; um webhook repetido não concede de novo.
+        const uid = session.metadata?.supabase_user_id;
+        if (uid) {
+          const { data: already } = await admin
+            .from("processed_stripe_events").select("id").eq("id", event.id).maybeSingle();
+          if (!already) {
+            const { error: grantErr } = await admin.rpc("grant_reading_pack", { uid, qty: 5, valid_days: 30 });
+            if (grantErr) { console.error("grant_reading_pack", grantErr); return new Response("grant failed", { status: 500 }); }
+            await admin.from("processed_stripe_events").insert({ id: event.id, kind: "avulso_grant" });
+          }
+        }
       }
       break;
     }

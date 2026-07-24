@@ -40,6 +40,7 @@ export default function NewReading() {
   const [showPaywall, setShowPaywall] = useState(false)
   const [usedThisWeek, setUsedThisWeek] = useState(null)
   const [isPremium, setIsPremium] = useState(false)
+  const [credits, setCredits] = useState(0)
 
   useEffect(() => {
     readingsThisWeek(user.id).then(setUsedThisWeek).catch(() => {})
@@ -51,12 +52,14 @@ export default function NewReading() {
     let ativo = true
     supabase
       .from('profiles')
-      .select('display_name, is_premium')
+      .select('display_name, is_premium, reading_credits, reading_credits_expire_at')
       .eq('id', user.id)
       .single()
       .then(({ data }) => {
         if (!ativo) return
         setIsPremium(Boolean(data?.is_premium))
+        const valido = data?.reading_credits_expire_at && new Date(data.reading_credits_expire_at) > new Date()
+        setCredits(valido ? (data.reading_credits ?? 0) : 0)
         // só na primeira resolução — nunca sobrepor o que a pessoa já digitou
         setStep((prev) => {
           if (prev !== null) return prev
@@ -145,9 +148,14 @@ export default function NewReading() {
               <button className="btn" type="submit" disabled={!question.trim()} style={{ marginTop: '1rem' }}>
                 Embaralhar as cartas
               </button>
-              {!isPremium && usedThisWeek !== null && usedThisWeek >= FREE_READINGS_PER_WEEK && (
+              {!isPremium && credits > 0 && (
                 <p className="muted" style={{ marginTop: '0.8rem' }}>
-                  ✦ Você já usou sua leitura gratuita desta semana — pode tirar as cartas, mas a leitura pedirá Premium.
+                  ✦ Você tem <strong>{credits} {credits === 1 ? 'leitura avulsa' : 'leituras avulsas'}</strong> disponíveis.
+                </p>
+              )}
+              {!isPremium && credits === 0 && usedThisWeek !== null && usedThisWeek >= FREE_READINGS_PER_WEEK && (
+                <p className="muted" style={{ marginTop: '0.8rem' }}>
+                  ✦ Você já usou sua leitura gratuita desta semana — pode tirar as cartas, mas a leitura pedirá Premium ou uma consulta avulsa.
                 </p>
               )}
             </form>

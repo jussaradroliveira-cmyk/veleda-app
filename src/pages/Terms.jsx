@@ -273,7 +273,7 @@ const BLOCOS = [
   ],
   [
     "p",
-    "Para consumidores, aplicam-se as normas obrigatórias do local de residência. Sem afastar essas proteções, os Termos serão regidos pelas leis de [BRASIL/PORTUGAL — DEFINIR CONFORME A EMPRESA]. O foro será [FORO], salvo foro legalmente assegurado ao consumidor."
+    "Para consumidores, aplicam-se as normas obrigatórias do local de residência. Sem afastar essas proteções, os Termos serão regidos pelas leis de Portugal. O foro será a Comarca de Lisboa, Portugal, salvo foro legalmente assegurado ao consumidor."
   ],
   [
     "p",

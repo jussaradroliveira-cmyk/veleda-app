@@ -25,7 +25,15 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
   const [busy, setBusy] = useState(false)
   const [ageOk, setAgeOk] = useState(false)
   const [termsOk, setTermsOk] = useState(false)
+  // cooldown do reenvio: o Supabase exige ~60s entre pedidos ao mesmo email
+  const [cooldown, setCooldown] = useState(0)
   const isLogin = mode === 'login'
+
+  useEffect(() => {
+    if (cooldown <= 0) return undefined
+    const t = setInterval(() => setCooldown((s) => s - 1), 1000)
+    return () => clearInterval(t)
+  }, [cooldown])
 
   // quem chega pelo link do email de recuperação entra no modo "nova senha"
   useEffect(() => {
@@ -46,12 +54,18 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
     setBusy(true)
 
     if (mode === 'forgot') {
+      if (cooldown > 0) { setBusy(false); return } // clique enquanto cinza não dispara nada
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}${import.meta.env.BASE_URL}auth`,
       })
       setBusy(false)
-      if (error) setError('Não consegui enviar o email. Confira o endereço e tente de novo.')
-      else setNotice('sent')
+      // no 429 (pedido repetido cedo demais) o email já foi enviado antes — mensagem honesta, nunca "erro"
+      if (error && error.status !== 429) {
+        setError('Não consegui enviar o email. Confira o endereço e tente de novo.')
+      } else {
+        setNotice('sent')
+        setCooldown(60)
+      }
       return
     }
 
@@ -106,16 +120,18 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
     setNotice('')
     setAgeOk(false)
     setTermsOk(false)
+    setCooldown(0)
   }
 
   const emailSent = mode === 'forgot' && notice === 'sent'
-  const showEmail = mode !== 'reset' && !emailSent
+  const showEmail = mode !== 'reset'
   const showPassword = mode === 'login' || mode === 'signup' || mode === 'reset'
+  const forgotBlocked = mode === 'forgot' && cooldown > 0
   const submitLabel = busy
     ? 'Aguarde…'
     : mode === 'login' ? 'Entrar'
     : mode === 'signup' ? 'Criar conta'
-    : mode === 'forgot' ? 'Enviar link de recuperação'
+    : mode === 'forgot' ? (cooldown > 0 ? 'Link enviado' : 'Enviar link de recuperação')
     : 'Salvar nova senha'
 
   return (
@@ -171,24 +187,16 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
             {emailSent && (
               <div className="sent-notice" role="status">
                 <p className="sent-notice__title">📧 Vá ao seu email</p>
-                <p>
-                  Enviamos um link de recuperação. Abra a mensagem <strong>mais recente</strong> —
-                  confira também o <strong>Spam</strong> — e siga o link para escolher sua nova senha.
-                </p>
-                <p className="sent-notice__small">
-                  Só o email mais recente vale: se pedir outro link, os anteriores deixam de funcionar.
-                </p>
+                <p>Enviamos um link para o seu e-mail. Confirme sua caixa de entrada e o Spam.</p>
               </div>
             )}
-            {!emailSent && (
-              <button
-                className="btn btn--wine auth-submit"
-                type="submit"
-                disabled={busy || (mode === 'signup' && (!ageOk || !termsOk))}
-              >
-                {submitLabel}
-              </button>
-            )}
+            <button
+              className="btn btn--wine auth-submit"
+              type="submit"
+              disabled={busy || forgotBlocked || (mode === 'signup' && (!ageOk || !termsOk))}
+            >
+              {submitLabel}
+            </button>
             {mode === 'login' && (
               <p className="auth-switch-row">
                 <button className="text-button" type="button" onClick={() => switchMode('forgot')}>

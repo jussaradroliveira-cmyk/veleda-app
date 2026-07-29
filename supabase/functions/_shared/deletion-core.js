@@ -4,7 +4,7 @@ export function subscriptionMayMaintainBilling(status) {
   return !TERMINAL_SUBSCRIPTION_STATUSES.has(status)
 }
 
-export async function listAllSubscriptions(stripe, customerId) {
+export async function listAllSubscriptions(stripe, customerId, options = {}) {
   const subscriptions = []
   let startingAfter
   do {
@@ -12,6 +12,7 @@ export async function listAllSubscriptions(stripe, customerId) {
       customer: customerId,
       status: 'all',
       limit: 100,
+      ...(options.expand ? { expand: options.expand } : {}),
       ...(startingAfter ? { starting_after: startingAfter } : {}),
     })
     subscriptions.push(...page.data)

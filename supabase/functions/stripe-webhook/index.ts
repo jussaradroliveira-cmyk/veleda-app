@@ -5,10 +5,9 @@ import {
   assertStripeMode,
   loadBillingCatalog,
 } from "../_shared/billing-config.js";
-import {
-  subscriptionSnapshot,
-  validatePackPurchase,
-} from "../_shared/stripe-state.js";
+import { validatePackPurchase } from "../_shared/stripe-state.js";
+import { customerEntitlement } from "../_shared/entitlement.js";
+import { listAllSubscriptions } from "../_shared/deletion-core.js";
 
 function technicalCode(error: unknown) {
   return (typeof error === "object" && error && "code" in error
@@ -76,26 +75,27 @@ Deno.serve(async (req) => {
   }
 
   async function syncSubscription(subscriptionId: string) {
-    // Fonte de verdade: estado atual na Stripe, não o payload potencialmente atrasado.
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
-      expand: ["items.data.price"],
-    });
-    const snapshot = subscriptionSnapshot(subscription, event);
-    if (!snapshot.customer_id) throw Object.assign(new Error("customer_missing"), { code: "customer_missing" });
-    const catalogItem = findCatalogItemByPriceId(catalog, snapshot.price_id);
+    // VLT2-001/002: decide o estado do customer a partir de TODAS as suas
+    // assinaturas de catálogo (fonte de verdade na Stripe), não de um único
+    // evento potencialmente atrasado. Premium só com correspondência ao catálogo.
+    const evtSub = await stripe.subscriptions.retrieve(subscriptionId);
+    const customerId = typeof evtSub.customer === "string" ? evtSub.customer : evtSub.customer?.id;
+    if (!customerId) throw Object.assign(new Error("customer_missing"), { code: "customer_missing" });
+    const all = await listAllSubscriptions(stripe, customerId, { expand: ["data.items.data.price"] });
+    const ent = customerEntitlement(all, catalog);
     const { data, error } = await admin.rpc("process_stripe_subscription_event", {
       event_id: event.id,
       event_created: event.created,
-      customer_id_value: snapshot.customer_id,
-      subscription_id_value: snapshot.subscription_id,
-      status_value: snapshot.status,
-      premium_value: snapshot.is_premium,
-      price_id_value: snapshot.price_id,
-      currency_value: snapshot.currency,
-      unit_amount_value: snapshot.unit_amount,
-      market_value: catalogItem?.market ?? null,
-      current_period_end_value: snapshot.current_period_end
-        ? new Date(snapshot.current_period_end * 1000).toISOString()
+      customer_id_value: customerId,
+      subscription_id_value: ent.subscription_id,
+      status_value: ent.status,
+      premium_value: ent.is_premium,
+      price_id_value: ent.price_id,
+      currency_value: ent.currency,
+      unit_amount_value: ent.unit_amount,
+      market_value: ent.market,
+      current_period_end_value: ent.current_period_end
+        ? new Date(ent.current_period_end * 1000).toISOString()
         : null,
       livemode_value: event.livemode,
     });

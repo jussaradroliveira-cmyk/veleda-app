@@ -4,8 +4,9 @@
 // correspondente ao ambiente.
 import { createClient } from "npm:@supabase/supabase-js@2";
 import Stripe from "npm:stripe@17";
-import { assertStripeMode, findCatalogItemByPriceId, loadBillingCatalog } from "../_shared/billing-config.js";
-import { subscriptionSnapshot } from "../_shared/stripe-state.js";
+import { assertStripeMode, loadBillingCatalog } from "../_shared/billing-config.js";
+import { customerEntitlement } from "../_shared/entitlement.js";
+import { listAllSubscriptions } from "../_shared/deletion-core.js";
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
@@ -37,35 +38,26 @@ Deno.serve(async (req) => {
   const results = [];
   for (const profile of profiles ?? []) {
     try {
-      const subscriptions = await stripe.subscriptions.list({
-        customer: profile.stripe_customer_id,
-        status: "all",
-        limit: 100,
+      // VLT2-002: percorre TODAS as assinaturas do customer, filtra pelo catálogo,
+      // regra determinística, e remove Premium quando não há assinatura válida.
+      const all = await listAllSubscriptions(stripe, profile.stripe_customer_id, {
+        expand: ["data.items.data.price"],
       });
-      const current = subscriptions.data.sort((a, b) => b.created - a.created)[0];
-      if (!current) {
-        results.push({ customer: "pseudonymized", result: "no_subscription" });
-        continue;
-      }
-      const subscription = await stripe.subscriptions.retrieve(current.id, {
-        expand: ["items.data.price"],
-      });
-      const syntheticEvent = { id: "reconciliation", created: Math.floor(Date.now() / 1000) };
-      const snapshot = subscriptionSnapshot(subscription, syntheticEvent);
-      const catalogItem = findCatalogItemByPriceId(catalog, snapshot.price_id);
+      const ent = customerEntitlement(all, catalog);
+      const reconciledAt = Math.floor(Date.now() / 1000);
       const { data, error: rpcError } = await admin.rpc("reconcile_stripe_subscription", {
-        customer_id_value: snapshot.customer_id,
-        subscription_id_value: snapshot.subscription_id,
-        status_value: snapshot.status,
-        premium_value: snapshot.is_premium,
-        price_id_value: snapshot.price_id,
-        currency_value: snapshot.currency,
-        unit_amount_value: snapshot.unit_amount,
-        market_value: catalogItem?.market ?? null,
-        current_period_end_value: snapshot.current_period_end
-          ? new Date(snapshot.current_period_end * 1000).toISOString()
+        customer_id_value: profile.stripe_customer_id,
+        subscription_id_value: ent.subscription_id,
+        status_value: ent.status,
+        premium_value: ent.is_premium,
+        price_id_value: ent.price_id,
+        currency_value: ent.currency,
+        unit_amount_value: ent.unit_amount,
+        market_value: ent.market,
+        current_period_end_value: ent.current_period_end
+          ? new Date(ent.current_period_end * 1000).toISOString()
           : null,
-        reconciled_at_value: syntheticEvent.created,
+        reconciled_at_value: reconciledAt,
       });
       if (rpcError) throw rpcError;
       results.push({ customer: "pseudonymized", result: data });

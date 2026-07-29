@@ -3,11 +3,15 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../App'
 
+// Espelha a constraint journal_entries_content_len no banco (VLT-011).
+const MAX_JOURNAL_CHARS = 8000
+
 export default function Journal() {
   const { user } = useAuth()
   const [entries, setEntries] = useState(null)
   const [draft, setDraft] = useState('')
   const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
 
   const load = useCallback(async () => {
     const { data } = await supabase
@@ -22,9 +26,16 @@ export default function Journal() {
 
   async function addEntry() {
     setBusy(true)
-    await supabase.from('journal_entries').insert({ user_id: user.id, content: draft })
-    setDraft('')
+    setError('')
+    const { error: insertError } = await supabase
+      .from('journal_entries')
+      .insert({ user_id: user.id, content: draft.slice(0, MAX_JOURNAL_CHARS) })
     setBusy(false)
+    if (insertError) {
+      setError('Não consegui guardar esta entrada. Tente encurtar o texto.')
+      return
+    }
+    setDraft('')
     load()
   }
 
@@ -46,10 +57,11 @@ export default function Journal() {
         <section className="card-panel ornate-panel journal-compose">
           <form onSubmit={(event) => { event.preventDefault(); addEntry() }}>
             <label className="journal-compose__label" htmlFor="journal-draft">Um pensamento, um sonho, um sinal</label>
-            <textarea id="journal-draft" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Hoje senti…" />
+            <textarea id="journal-draft" value={draft} maxLength={MAX_JOURNAL_CHARS} onChange={(e) => setDraft(e.target.value)} placeholder="Hoje senti…" />
             <button className="btn btn--wine" type="submit" disabled={busy || !draft.trim()}>
               {busy ? 'Guardando…' : 'Guardar entrada'}
             </button>
+            {error && <p className="error-msg" role="alert">{error}</p>}
           </form>
         </section>
         <div className="journal-entries">

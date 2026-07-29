@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { marked } from 'marked'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../App'
 import { CardFront } from '../components/TarotCard'
+import SafeMarkdown from '../components/SafeMarkdown'
+
+// Espelha a constraint journal_entries_content_len no banco (VLT-011).
+const MAX_JOURNAL_CHARS = 8000
 
 export default function ReadingDetail() {
   const { id } = useParams()
@@ -14,6 +17,7 @@ export default function ReadingDetail() {
   const [noteId, setNoteId] = useState(null)
   const [saved, setSaved] = useState(false)
   const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     async function load() {
@@ -34,17 +38,26 @@ export default function ReadingDetail() {
   async function saveNote() {
     setBusy(true)
     setSaved(false)
+    setError('')
+    const content = note.slice(0, MAX_JOURNAL_CHARS)
+    let saveError
     if (noteId) {
-      await supabase.from('journal_entries')
-        .update({ content: note, updated_at: new Date().toISOString() })
+      const { error: updateError } = await supabase.from('journal_entries')
+        .update({ content, updated_at: new Date().toISOString() })
         .eq('id', noteId)
+      saveError = updateError
     } else {
-      const { data } = await supabase.from('journal_entries')
-        .insert({ user_id: user.id, reading_id: id, content: note })
+      const { data, error: insertError } = await supabase.from('journal_entries')
+        .insert({ user_id: user.id, reading_id: id, content })
         .select('id').single()
+      saveError = insertError
       if (data) setNoteId(data.id)
     }
     setBusy(false)
+    if (saveError) {
+      setError('Não consegui guardar. Tente encurtar o texto.')
+      return
+    }
     setSaved(true)
     setTimeout(() => setSaved(false), 2500)
   }
@@ -71,7 +84,7 @@ export default function ReadingDetail() {
               )
             })}
           </div>
-          <div className="reading-text" dangerouslySetInnerHTML={{ __html: marked.parse(reading.reading_text) }} />
+          <SafeMarkdown>{reading.reading_text}</SafeMarkdown>
         </div>
 
         <div className="card-panel ornate-panel" style={{ marginTop: '1.5rem' }}>
@@ -79,13 +92,14 @@ export default function ReadingDetail() {
           <p className="muted" style={{ marginBottom: '0.8rem' }}>
             O que você sentiu com esta leitura? O que reconhece na sua vida?
           </p>
-          <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Escreva aqui suas reflexões…" />
+          <textarea value={note} maxLength={MAX_JOURNAL_CHARS} onChange={(e) => setNote(e.target.value)} placeholder="Escreva aqui suas reflexões…" />
           <div style={{ marginTop: '0.8rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button className="btn small" onClick={saveNote} disabled={busy || !note.trim()}>
               {busy ? 'Guardando…' : 'Guardar'}
             </button>
             {saved && <span className="muted">guardado ✦</span>}
           </div>
+          {error && <p className="error-msg" role="alert">{error}</p>}
         </div>
       </div>
     </main>

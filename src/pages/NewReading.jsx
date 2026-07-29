@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { marked } from 'marked'
 import { useAuth } from '../App'
 import { supabase } from '../lib/supabase'
 import { fetchCards, shuffleDeck, generateReading, readingsThisWeek } from '../lib/api'
@@ -8,6 +7,7 @@ import FanSpread from '../components/FanSpread'
 import Paywall from '../components/Paywall'
 import StepIndicator from '../components/StepIndicator'
 import { CardFront } from '../components/TarotCard'
+import SafeMarkdown from '../components/SafeMarkdown'
 
 const FREE_READINGS_PER_WEEK = 1
 
@@ -41,6 +41,7 @@ export default function NewReading() {
   const [usedThisWeek, setUsedThisWeek] = useState(null)
   const [isPremium, setIsPremium] = useState(false)
   const [credits, setCredits] = useState(0)
+  const [idempotencyKey, setIdempotencyKey] = useState('')
 
   useEffect(() => {
     readingsThisWeek(user.id).then(setUsedThisWeek).catch(() => {})
@@ -91,6 +92,7 @@ export default function NewReading() {
       const cards = await fetchCards()
       setDeck(shuffleDeck(cards))
       setPicked([])
+      setIdempotencyKey(crypto.randomUUID())
       setStep('tiragem')
     } catch {
       setError('Não consegui embaralhar as cartas. Tente de novo.')
@@ -101,7 +103,7 @@ export default function NewReading() {
     setBusy(true)
     setError('')
     try {
-      const r = await generateReading(question, picked)
+      const r = await generateReading(question, picked, idempotencyKey)
       setReading(r)
       setStep('leitura')
     } catch (err) {
@@ -203,7 +205,7 @@ export default function NewReading() {
                 )
               })}
             </div>
-            <div className="reading-text" dangerouslySetInnerHTML={{ __html: marked.parse(reading.reading_text) }} />
+            <SafeMarkdown>{reading.reading_text}</SafeMarkdown>
             <div style={{ marginTop: '1.8rem', display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
               <Link to="/diario" className="btn">Escrever no diário</Link>
               <Link to="/historico" className="btn ghost">Ver histórico</Link>

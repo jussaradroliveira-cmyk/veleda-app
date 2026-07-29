@@ -58,7 +58,7 @@ test('Premium is authorized but still has defensive constants', async () => {
   const quota = new AtomicQuotaFixture({ premium: true })
   assert.equal(await quota.reserve('user', '2026-07-27', 'premium'), 'authorized')
   assert.equal(READING_LIMITS.maxConcurrentPerUser, 2)
-  assert.equal(READING_LIMITS.maxPerDayPremium, 100)
+  assert.equal(READING_LIMITS.premiumPerDay, 10)
 })
 
 test('unauthenticated flow is rejected before reserve by contract', () => {

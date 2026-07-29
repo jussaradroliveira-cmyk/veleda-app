@@ -4,7 +4,8 @@ export const READING_LIMITS = Object.freeze({
   maxConcurrentPerUser: 2,
   maxPerMinutePerUser: 5,
   maxPerHourPerUser: 20,
-  maxPerDayPremium: 100,
+  // Premium: até 10 leituras por dia, com reset diário à meia-noite UTC.
+  premiumPerDay: 10,
   maxGlobalReservationsPerDay: 5_000,
   freePerWeek: 1,
   reservationTtlSeconds: 180,

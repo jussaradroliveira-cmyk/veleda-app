@@ -26,6 +26,7 @@ function isCompoundQuestion(q) {
 }
 
 const MSG_COMPOSTA = 'Sinto aqui mais de uma pergunta. As cartas pedem um único foco por leitura — escolha a que mais importa agora e guarde a outra para a próxima.'
+const MSG_PREMIUM_DIA = 'Você já fez suas 10 leituras de hoje. Amanhã as cartas estarão à sua espera.'
 
 export default function NewReading() {
   const { user } = useAuth()
@@ -116,6 +117,7 @@ export default function NewReading() {
       setStep('leitura')
     } catch (err) {
       if (err.code === 'quota_exceeded') setShowPaywall(true)
+      else if (err.code === 'premium_daily_reached') setError(MSG_PREMIUM_DIA)
       else if (err.code === 'compound_question') setError(MSG_COMPOSTA)
       else setError('O véu tremeu por um instante e a leitura não chegou. Suas cartas continuam escolhidas — toque em "Revelar a leitura" para tentar de novo.')
     } finally {

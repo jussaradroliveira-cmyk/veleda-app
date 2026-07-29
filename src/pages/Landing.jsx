@@ -103,7 +103,7 @@ export default function Landing() {
               <span aria-hidden="true">❀</span>
               <div>
                 <h3>Veleda Premium</h3>
-                <p>Leituras sujeitas a uso razoável e acesso contínuo ao seu ritual.</p>
+                <p>Até 10 leituras por dia e acesso contínuo ao seu ritual.</p>
                 <p className="benefits-price">Preço e moeda conforme o mercado selecionado.</p>
               </div>
             </article>

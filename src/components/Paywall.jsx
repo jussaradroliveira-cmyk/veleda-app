@@ -36,7 +36,7 @@ export default function Paywall({ onClose }) {
           ou torne-se Premium e consulte a Veleda sempre que precisar.
         </p>
         <ul>
-          <li>Leituras sujeitas a uso razoável</li>
+          <li>Até 10 leituras por dia</li>
           <li>Histórico e diário sem limites</li>
           <li>Acesso antecipado a novas tiragens</li>
         </ul>

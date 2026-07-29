@@ -151,6 +151,9 @@ Deno.serve(async (req) => {
     if (reservation?.result === "quota_exceeded") {
       return json({ error: "quota_exceeded", free_per_week: READING_LIMITS.freePerWeek }, 402);
     }
+    if (reservation?.result === "premium_daily_reached") {
+      return json({ error: "premium_daily_reached", premium_per_day: READING_LIMITS.premiumPerDay }, 429);
+    }
     if (["rate_limited", "concurrency_limited"].includes(reservation?.result)) {
       return json({ error: reservation.result, retryable: true }, 429);
     }

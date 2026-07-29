@@ -65,7 +65,7 @@ export default function Subscription() {
             <>
               <h2>✦ Você é Premium</h2>
               <p className="muted subscription-lead">
-                Leituras sem limite comercial predeterminado, sujeitas a uso razoável e proteção contra abuso.
+                Até 10 leituras por dia, com reset diário e acesso contínuo ao seu ritual.
               </p>
               <button className="btn btn--wine" onClick={managePortal} disabled={!!busy}>
                 {busy === 'portal' ? 'Abrindo…' : 'Gerenciar renovação no Stripe'}
@@ -82,7 +82,7 @@ export default function Subscription() {
             <>
               <h2>✦ Veleda Premium</h2>
               <ul className="subscription-list">
-                <li>Leituras sujeitas a uso razoável</li>
+                <li>Até 10 leituras por dia</li>
                 <li>Histórico e diário sem limites</li>
                 <li>Acesso antecipado a novas tiragens</li>
               </ul>

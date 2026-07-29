@@ -67,6 +67,10 @@ export default function BillingOffers({ busy, onCheckout, includePack = true }) 
       <p className="paywall__anual">
         ✦ plano anual: <strong>{money(annual, selected.locale)}/ano</strong>
       </p>
+      <p className="muted billing-personal-note">
+        Sua assinatura é pessoal e intransferível. As leituras são para seu uso próprio
+        e não podem ser partilhadas ou revendidas.
+      </p>
       <div className="paywall__botoes">
         <button className="btn btn--wine" onClick={() => onCheckout('anual', market)} disabled={!!busy}>
           {busy === 'anual' ? 'Preparando…' : `Assinar anual · ${money(annual, selected.locale)}`}

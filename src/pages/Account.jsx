@@ -15,22 +15,25 @@ export default function Account() {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
 
+  // Exportação server-side, completa e falha-fechada: só gera o ficheiro se o
+  // servidor devolver o inventário íntegro (nada de download parcial).
   async function exportData() {
     setExporting(true)
     setExportNotice('')
     try {
-      const [profile, readings, journal] = await Promise.all([
-        supabase.from('profiles').select('display_name, is_premium, created_at').eq('id', user.id).maybeSingle(),
-        supabase.from('readings').select('question, cards, reading_text, created_at').eq('user_id', user.id).order('created_at'),
-        supabase.from('journal_entries').select('content, reading_id, created_at, updated_at').eq('user_id', user.id).order('created_at'),
-      ])
-      const dump = {
-        exportado_em: new Date().toISOString(),
-        email: user.email,
-        perfil: profile.data ?? null,
-        leituras: readings.data ?? [],
-        diario: journal.data ?? [],
+      const { data: { session } } = await supabase.auth.getSession()
+      const resp = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/export-data`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token ?? ''}`,
+        },
+      })
+      if (!resp.ok) {
+        setExportNotice('Não consegui gerar o arquivo agora. Nada foi baixado — tente de novo em instantes.')
+        return
       }
+      const dump = await resp.json()
       const blob = new Blob([JSON.stringify(dump, null, 2)], { type: 'application/json' })
       const a = document.createElement('a')
       a.href = URL.createObjectURL(blob)
@@ -39,7 +42,7 @@ export default function Account() {
       URL.revokeObjectURL(a.href)
       setExportNotice('✦ Arquivo gerado — confira sua pasta de downloads.')
     } catch {
-      setExportNotice('Não consegui gerar o arquivo. Tente de novo.')
+      setExportNotice('Não consegui gerar o arquivo agora. Nada foi baixado — tente de novo em instantes.')
     } finally {
       setExporting(false)
     }
@@ -106,7 +109,8 @@ export default function Account() {
           <div className="account-block">
             <h4>Exportar meus dados</h4>
             <p className="muted">
-              Baixe um arquivo com seu perfil, suas leituras e seu diário — eles são seus.
+              Baixe um arquivo completo com seus dados: conta, perfil, leituras, diário,
+              consentimentos e histórico de compras — eles são seus.
             </p>
             <button className="btn small" onClick={exportData} disabled={exporting}>
               {exporting ? 'Gerando…' : 'Exportar meus dados'}

@@ -23,7 +23,6 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
   const [ageOk, setAgeOk] = useState(false)
   const [termsOk, setTermsOk] = useState(false)
   const [privacyOk, setPrivacyOk] = useState(false)
-  const [market, setMarket] = useState('BR')
   // cooldown do reenvio: o Supabase exige ~60s entre pedidos ao mesmo email
   const [cooldown, setCooldown] = useState(0)
   const isLogin = mode === 'login'
@@ -99,8 +98,9 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
               accept_terms: true,
               acknowledge_privacy: true,
               declare_age_18: true,
-              locale: market === 'PT_EU' ? 'pt-PT' : 'pt-BR',
-              market,
+              // VLT2-007: lançamento só-BR — mercado imposto, sem escolha no front.
+              locale: 'pt-BR',
+              market: 'BR',
             },
           },
         })
@@ -181,13 +181,6 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
             {mode === 'signup' && (
               <fieldset className="consent-fieldset">
                 <legend className="sr-only">Declarações obrigatórias</legend>
-                <div className="field">
-                  <label htmlFor="signup-market">Mercado da oferta</label>
-                  <select id="signup-market" value={market} onChange={(e) => setMarket(e.target.value)}>
-                    <option value="BR">Brasil</option>
-                    <option value="PT_EU">Portugal / União Europeia</option>
-                  </select>
-                </div>
                 <label className="consent-check">
                   <input type="checkbox" checked={ageOk} onChange={(e) => setAgeOk(e.target.checked)} required />
                   <span>Declaro ter 18 anos ou mais.</span>

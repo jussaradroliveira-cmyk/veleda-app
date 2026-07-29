@@ -54,6 +54,32 @@ test('public catalog never exposes Stripe Price IDs', () => {
   assert.doesNotMatch(JSON.stringify(publicBillingCatalog(catalog)), /price_secret/)
 })
 
+test('VLT2-007: por defeito (sem config) só BR fica ativo', () => {
+  const catalog = loadBillingCatalog(env({
+    STRIPE_PRICE_ID_MONTHLY: 'price_br_month',
+    STRIPE_PRICE_ID_ANNUAL: 'price_br_year',
+    STRIPE_PRICE_ID_AVULSO: 'price_br_pack',
+  }))
+  assert.deepEqual(Object.keys(catalog.markets), ['BR'])
+  assert.deepEqual(Object.keys(publicBillingCatalog(catalog).markets), ['BR'])
+})
+
+test('VLT2-007: com PT off, forçar mercado PT_EU é rejeitado no servidor', () => {
+  // Mesma config de produção (só BR): getCatalogItem para PT_EU devolve null,
+  // logo o create-checkout responde market_or_plan_unavailable a {market:"PT_EU"}.
+  const catalog = loadBillingCatalog(env({
+    BILLING_MARKETS_ENABLED: 'BR',
+    STRIPE_PRICE_ID_BR_MONTHLY: 'price_br_month',
+    STRIPE_PRICE_ID_BR_ANNUAL: 'price_br_year',
+    STRIPE_PRICE_ID_BR_AVULSO: 'price_br_pack',
+  }))
+  assert.equal(getCatalogItem(catalog, 'PT_EU', 'mensal'), null)
+  assert.equal(getCatalogItem(catalog, 'PT_EU', 'anual'), null)
+  assert.equal(getCatalogItem(catalog, 'PT_EU', 'avulso'), null)
+  // e o único mercado que o create-checkout impõe é BR
+  assert.deepEqual(Object.keys(catalog.markets), ['BR'])
+})
+
 test('Stripe key must match configured test/live mode', () => {
   assert.equal(assertStripeMode('sk_test_example', env({ STRIPE_MODE: 'test' })), 'test')
   assert.throws(() => assertStripeMode('sk_live_example', env({ STRIPE_MODE: 'test' })), /stripe_mode_mismatch/)

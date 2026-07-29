@@ -90,7 +90,7 @@ Não envie dados de terceiros sem autorização, documentos confidenciais, segre
 
 Evite incluir dados sobre saúde, genética, biometria, religião, opiniões políticas, sexualidade, origem racial ou étnica, crianças ou outros dados sensíveis.
 
-Se optar por incluir dados sensíveis na pergunta, o Usuário solicita e consente de forma específica com o tratamento estritamente necessário para gerar aquela leitura, podendo retirar o consentimento antes do envio. O diário não é enviado ao fornecedor de IA.
+O Usuário é orientado a não incluir dados sensíveis na pergunta. Caso, por sua própria escolha, opte por incluí-los, esses dados são tratados apenas na medida estritamente necessária para gerar aquela leitura, ao abrigo do consentimento prestado no cadastro e nos termos desta Política, não sendo utilizados para qualquer outra finalidade. O diário não é enviado ao fornecedor de IA.
 
 É proibido conteúdo ilegal, fraudulento, ameaçador, discriminatório, abusivo, invasivo ou que viole direitos de terceiros.
 
@@ -182,4 +182,4 @@ Identificador da transação, se disponível: ________________________
 
 Data: ____/____/________   Assinatura (apenas se enviado em papel): __________________________
 
-Veleda Tarô Simbólico  |  Termos de Uso  |  versão 2.1  |  29 de julho de 2026
+Veleda Tarô Simbólico  |  Termos de Uso  |  versão 2.2  |  29 de julho de 2026

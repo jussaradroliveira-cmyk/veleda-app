@@ -32,4 +32,4 @@ A lista será atualizada antes da ativação de um novo fornecedor que trate dad
 
 Responsável: Jussara Derly Rodrigues de Oliveira Grota · NIF 302020250 · Rua Comandante Manuel Freire, 8, 2655-443 Ericeira, Portugal · Privacidade: contact@veledataro.com.
 
-Veleda Tarô Simbólico  |  Lista de Subprocessadores  |  versão 2.1  |  29 de julho de 2026
+Veleda Tarô Simbólico  |  Lista de Subprocessadores  |  versão 2.2  |  29 de julho de 2026

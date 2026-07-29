@@ -17,6 +17,7 @@ import Subprocessors from './pages/Subprocessors'
 import AppHeader from './components/AppHeader'
 import AppFooter from './components/AppFooter'
 import InstallPrompt from './components/InstallPrompt'
+import ReacceptGate from './components/ReacceptGate'
 
 export { useAuth }
 
@@ -42,23 +43,53 @@ export default function App() {
     () => arrivedViaRecoveryLink ||
       (typeof window !== 'undefined' && localStorage.getItem(RECOVERY_FLAG) === '1')
   )
+  // VLT2-010: documentos legais que a pessoa ainda tem de reaceitar. null =
+  // ainda não verificámos; [] = em dia; [...] = reaceite pendente.
+  const [pendingConsents, setPendingConsents] = useState([])
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    let active = true
+
+    // pergunta ao servidor o que falta reaceitar (fonte de verdade: RPC).
+    async function refreshPending() {
+      const { data, error } = await supabase.rpc('pending_consents')
+      if (!active) return
+      // falha-aberta: um erro de rede não deve trancar a pessoa fora; o gate
+      // reaparece na próxima verificação/sessão.
+      setPendingConsents(error ? [] : (data ?? []))
+    }
+
+    async function boot() {
+      const { data } = await supabase.auth.getSession()
+      if (!active) return
       setSession(data.session)
-      setLoading(false)
-      // sem sessão o lock não se aplica — a pessoa terá de pedir novo link
-      if (!data.session) { localStorage.removeItem(RECOVERY_FLAG); setRecoveryPending(false) }
-    })
+      if (data.session) {
+        await refreshPending()
+      } else {
+        // sem sessão o lock não se aplica — a pessoa terá de pedir novo link
+        localStorage.removeItem(RECOVERY_FLAG); setRecoveryPending(false)
+        setPendingConsents([])
+      }
+      if (active) setLoading(false)
+    }
+    boot()
+
     const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
       setSession(s)
       if (event === 'PASSWORD_RECOVERY') { localStorage.setItem(RECOVERY_FLAG, '1'); setRecoveryPending(true) }
-      if (event === 'SIGNED_OUT') { localStorage.removeItem(RECOVERY_FLAG); setRecoveryPending(false) }
+      if (event === 'SIGNED_OUT') {
+        localStorage.removeItem(RECOVERY_FLAG); setRecoveryPending(false); setPendingConsents([])
+      }
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
+        refreshPending()
+      }
     })
-    return () => sub.subscription.unsubscribe()
+    return () => { active = false; sub.subscription.unsubscribe() }
   }, [])
 
   const recoveryDone = () => { localStorage.removeItem(RECOVERY_FLAG); setRecoveryPending(false) }
+
+  const reacceptPending = !!session && pendingConsents.length > 0
 
   return (
     <AuthContext.Provider value={{ session, user: session?.user ?? null, loading }}>
@@ -67,6 +98,22 @@ export default function App() {
           // lock de recuperação: um único ecrã, sem header, sem navegação
           <div className="app-content">
             <Auth recoveryLock onRecoveryDone={recoveryDone} />
+          </div>
+        ) : reacceptPending ? (
+          // gate de reaceite: bloqueia o uso, mas deixa LER /termos e /privacidade
+          // (os links abrem noutro separador, que cai nestas mesmas rotas).
+          <div className="app-content">
+            <Routes>
+              <Route path="/termos" element={<Terms />} />
+              <Route path="/privacidade" element={<Privacy />} />
+              <Route path="*" element={(
+                <ReacceptGate
+                  pending={pendingConsents}
+                  onDone={() => setPendingConsents([])}
+                  onSignOut={() => supabase.auth.signOut()}
+                />
+              )} />
+            </Routes>
           </div>
         ) : (
           <>

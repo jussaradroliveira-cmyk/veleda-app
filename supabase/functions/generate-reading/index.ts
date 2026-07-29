@@ -126,6 +126,18 @@ Deno.serve(async (req) => {
     userId = user.id;
     admin = createClient(supabaseUrl, serviceKey);
 
+    // VLT2-010: reforço server-side — não confiar só no gate do front. Se a
+    // versão vigente dos Termos/Privacidade for maior do que a última aceite,
+    // recusa a leitura até a pessoa reaceitar. Usa o userClient para que
+    // auth.uid() dentro de pending_consents() resolva o titular do pedido.
+    const { data: pendingConsents, error: pendingError } = await userClient.rpc("pending_consents");
+    if (pendingError) {
+      throw Object.assign(new Error("consent_check_failed"), { code: "consent_check_failed" });
+    }
+    if (Array.isArray(pendingConsents) && pendingConsents.length > 0) {
+      return json({ error: "reaccept_required", retryable: false }, 403);
+    }
+
     const requestHash = await sha256(JSON.stringify({ question, cards: chosen }));
     const { data: reservation, error: reservationError } = await admin.rpc(
       "reserve_reading_request",

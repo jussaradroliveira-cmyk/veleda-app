@@ -4,7 +4,7 @@ import fs from 'node:fs'
 import { createHash } from 'node:crypto'
 
 const migration = fs.readFileSync('supabase/migrations/20260728120000_phase1_security_integrity.sql', 'utf8')
-const consentV21 = fs.readFileSync('supabase/migrations/20260729132430_consent_v21_text_hash.sql', 'utf8')
+const publishV22 = fs.readFileSync('supabase/migrations/20260729190000_publish_legal_v22.sql', 'utf8')
 const auth = fs.readFileSync('src/pages/Auth.jsx', 'utf8')
 const sha256File = (f) => createHash('sha256').update(fs.readFileSync(f)).digest('hex')
 
@@ -20,16 +20,17 @@ test('user id and timestamp are server-controlled', () => {
   assert.doesNotMatch(auth, /terms_accepted_at|new Date\(\)\.toISOString\(\)/)
 })
 
-test('published document versions and hashes match server records (v2.1)', () => {
-  // o trigger vigente grava versão 2.1
-  assert.match(consentV21, /'terms_acceptance', '2\.1'/)
-  assert.match(consentV21, /'privacy_acknowledgement', '2\.1'/)
-  // o hash guardado é o SHA-256 do texto verbatim efetivamente exibido
-  assert.match(consentV21, new RegExp('sha256:' + sha256File('src/pages/legal/termos.md')))
-  assert.match(consentV21, new RegExp('sha256:' + sha256File('src/pages/legal/privacidade.md')))
+test('published document versions and hashes match server records (v2.2)', () => {
+  // a migração de publicação torna a 2.2 vigente em legal_documents
+  assert.match(publishV22, /'terms_acceptance', '2\.2'/)
+  assert.match(publishV22, /'privacy_acknowledgement', '2\.2'/)
+  // o hash publicado é o SHA-256 do texto verbatim efetivamente exibido
+  assert.match(publishV22, new RegExp('sha256:' + sha256File('src/pages/legal/termos.md')))
+  assert.match(publishV22, new RegExp('sha256:' + sha256File('src/pages/legal/privacidade.md')))
   // as páginas mostram a versão vigente
-  assert.match(fs.readFileSync('src/pages/Terms.jsx', 'utf8'), /Versão 2\.1/)
-  assert.match(fs.readFileSync('src/pages/Privacy.jsx', 'utf8'), /Versão 2\.1/)
+  assert.match(fs.readFileSync('src/pages/Terms.jsx', 'utf8'), /Versão 2\.2/)
+  assert.match(fs.readFileSync('src/pages/Privacy.jsx', 'utf8'), /Versão 2\.2/)
+  assert.match(fs.readFileSync('src/pages/Subprocessors.jsx', 'utf8'), /Versão 2\.2/)
 })
 
 test('signup trigger creates consent even when email confirmation delays session', () => {

@@ -39,7 +39,7 @@ O Veleda não compra bancos de dados, não cria perfis ocultos para publicidade 
 Finalidade — Base jurídica principal
 Criar e administrar a conta; autenticar; fornecer leituras, histórico e diário. — Execução do contrato e diligências pré-contratuais — RGPD art. 6.º, n.º 1, b); LGPD art. 7.º, V.
 Processar assinatura, pacote, faturação, cancelamento, reembolso e chargeback. — Execução do contrato, cumprimento de obrigação legal e exercício de direitos.
-Enviar pergunta e cartas ao fornecedor de IA para produzir a leitura solicitada. — Execução do contrato para dados comuns; consentimento explícito, específico e destacado quando a pergunta contiver dados sensíveis e essa base for necessária.
+Enviar pergunta e cartas ao fornecedor de IA para produzir a leitura solicitada. — Execução do contrato para dados comuns; quando a pergunta contiver dados sensíveis inseridos voluntariamente, tratamento ao abrigo do consentimento prestado no cadastro, na medida estritamente necessária para gerar a leitura.
 Prevenir fraude, abuso, acesso indevido e incidentes. — Interesse legítimo em segurança, prevenção e defesa; obrigação legal quando aplicável.
 Responder suporte e exercer direitos dos titulares. — Execução do contrato, obrigação legal e interesse legítimo em atendimento e prova.
 Cumprir obrigações fiscais, contabilísticas, regulatórias e ordens válidas. — Cumprimento de obrigação legal ou regulatória.
@@ -53,7 +53,7 @@ ATENÇÃO A DADOS ÍNTIMOS. Perguntas e diário podem revelar saúde, religião,
 
 A pergunta e as cartas selecionadas são enviadas ao fornecedor de IA para gerar a resposta. O nome, o e-mail, o diário e o histórico não são enviados à IA. A própria pergunta, contudo, pode conter dados pessoais ou sensíveis voluntariamente inseridos pelo Usuário.
 
-Ao submeter uma pergunta que contenha dados sensíveis, o Usuário declara ter recebido aviso destacado e consente de forma específica com o tratamento estritamente necessário para gerar aquela leitura. O Usuário pode retirar o consentimento antes do envio, apagando ou reformulando a pergunta. O diário permanece armazenado no Veleda e não é utilizado como contexto para a IA.
+O Veleda orienta o Usuário a não incluir dados sensíveis na pergunta. Caso o Usuário, por sua própria escolha, insira dados sensíveis, estes são tratados apenas na medida estritamente necessária para gerar aquela leitura, ao abrigo do consentimento prestado no cadastro e nesta Política, não sendo utilizados para qualquer outra finalidade. O Usuário pode, antes de enviar, apagar ou reformular a pergunta. O diário permanece armazenado no Veleda e não é utilizado como contexto para a IA.
 
 A IA não é utilizada para tomar decisões exclusivamente automatizadas que produzam efeitos jurídicos ou impacto semelhante sobre crédito, emprego, seguro, saúde, elegibilidade ou direitos do Usuário.
 
@@ -129,4 +129,4 @@ Alterações materiais serão comunicadas por meio adequado. Se uma nova finalid
 
 Responsável: Jussara Derly Rodrigues de Oliveira Grota · NIF 302020250 · Rua Comandante Manuel Freire, 8, 2655-443 Ericeira, Portugal · Canal de privacidade: contact@veledataro.com.
 
-Veleda Tarô Simbólico  |  Política de Privacidade  |  versão 2.1  |  29 de julho de 2026
+Veleda Tarô Simbólico  |  Política de Privacidade  |  versão 2.2  |  29 de julho de 2026

@@ -245,6 +245,15 @@ main:not(.landing) {
   gap: clamp(2.5rem, 6vw, 6rem);
 }
 
+/* VLT2-010: gate de reaceite — painel único centrado */
+.reaccept-wrap {
+  display: flex;
+  justify-content: center;
+}
+.reaccept-wrap .auth-panel {
+  max-width: 34rem;
+}
+
 .auth-intro h1 {
   max-width: 24ch;
   color: var(--wine-deep);

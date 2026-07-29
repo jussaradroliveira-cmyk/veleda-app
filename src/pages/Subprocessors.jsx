@@ -8,7 +8,7 @@ export default function Subprocessors() {
         <div className="card-panel ornate-panel legal-panel">
           <p className="internal-kicker">Transparência</p>
           <h2>Subprocessadores</h2>
-          <p className="muted">Versão 2.1 · vigente a partir de 29 de julho de 2026</p>
+          <p className="muted">Versão 2.2 · vigente a partir de 29 de julho de 2026</p>
           <LegalDoc text={subprocessadoresText} />
         </div>
       </div>

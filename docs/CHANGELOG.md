@@ -5,6 +5,34 @@ redeployadas, frontend publicado na Vercel). Referências = commits em `main`.
 
 ---
 
+## 29 de julho de 2026 — Lançamento só-BR, legais v2.2 e reaceite genérico (VLT2-007/009/010)
+
+Aplicado na ordem segura: migrations → Edge Functions → frontend. **Stripe intocado.**
+
+- **VLT2-007** Lançamento só Brasil. `create-checkout` impõe o mercado quando há um
+  único ativo (hoje BR) — o cliente não escolhe nem força outro pelo body. Seletor
+  de mercado removido do cadastro (BR/pt-BR fixos). PT/EEE reativa-se por config
+  (`BILLING_MARKETS_ENABLED` + preços EU) sem reescrever. Live sem esses secrets.
+- **VLT2-009** Cláusula de dados sensíveis alinhada (revisão jurídica): deixa de
+  prometer "consentimento específico com mecanismo próprio" e passa a "coberto pelo
+  consentimento prestado no cadastro". Termos §9 e Privacidade §4/§5. Fonte verbatim
+  em `DOCS JURIDICOS/*.docx`.
+- **Documentos legais v2.2** Termos, Privacidade e Subprocessadores → 2.2 (os dois
+  primeiros com texto ajustado; o terceiro só marcador). Novos SHA-256 publicados.
+- **VLT2-010** Mecanismo **genérico** de reaceite. Tabela `legal_documents` como
+  fonte de verdade da versão vigente; RPCs `pending_consents()` e
+  `accept_current_consents()` (gravam versão+hash do servidor, append-only,
+  `origin='reaccept_web'`); `handle_new_user` passa a ler a versão vigente (sem
+  hardcode). Gate no `App.jsx` bloqueia o uso até reaceitar, deixando ler
+  /termos e /privacidade. Reforço server-side: `generate-reading` recusa
+  (`reaccept_required`) enquanto houver reaceite pendente — não confia só no front.
+  Publicar a 2.2 ativou o reaceite para as contas 2.1.
+- Migrations `20260729180000` (mecanismo), `20260729190000` (publica 2.2),
+  `20260729193000` (menor privilégio: só `authenticated` executa as RPCs).
+  Verificado no live (transação revertida): conta 2.1 barrada→reaceita grava
+  2.2+hash real; conta 2.2 entra direto; cadastro novo grava 2.2+hash; só BR no
+  checkout. `npm test` 62/62.
+
 ## 29 de julho de 2026 — Round 2: núcleo de pagamento (VLT2-001/002/003)
 
 Correção na raiz dos 3 achados Altos de pagamento da segunda auditoria

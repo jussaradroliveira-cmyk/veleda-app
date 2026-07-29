@@ -66,7 +66,11 @@ Deno.serve(async (req) => {
     if (raw.length > 4096) return json({ error: "payload_too_large" }, 413, origin);
     const body = JSON.parse(raw || "{}");
     const plan = body?.plan;
-    const market = body?.market;
+    // VLT2-007: com um único mercado ativo (hoje: BR), o mercado é imposto pelo
+    // servidor — o cliente não pode escolher/forçar outro pelo body. PT/EEE
+    // reativa-se por config (BILLING_MARKETS_ENABLED + preços EU) sem reescrever.
+    const enabledMarkets = Object.keys(catalog.markets);
+    const market = enabledMarkets.length === 1 ? enabledMarkets[0] : body?.market;
     const item = getCatalogItem(catalog, market, plan);
     if (!item) return json({ error: "market_or_plan_unavailable" }, 400, origin);
 

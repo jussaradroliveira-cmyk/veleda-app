@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
-// versão dos documentos aceites no cadastro (atualizar quando os textos mudarem)
-const TERMS_VERSION = 'minuta-2-2026-07-18'
-
 const TITULOS = {
   login: 'Que bom ter você de volta',
   signup: 'Crie sua conta Veleda',
@@ -25,6 +22,8 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
   const [busy, setBusy] = useState(false)
   const [ageOk, setAgeOk] = useState(false)
   const [termsOk, setTermsOk] = useState(false)
+  const [privacyOk, setPrivacyOk] = useState(false)
+  const [market, setMarket] = useState('BR')
   // cooldown do reenvio: o Supabase exige ~60s entre pedidos ao mesmo email
   const [cooldown, setCooldown] = useState(0)
   const isLogin = mode === 'login'
@@ -84,15 +83,27 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
       return
     }
 
-    if (mode === 'signup' && (!ageOk || !termsOk)) {
+    if (mode === 'signup' && (!ageOk || !termsOk || !privacyOk)) {
       setBusy(false)
-      setError('Para criar a conta, confirme que tem 18 anos ou mais e que aceita os Termos e a Política de Privacidade.')
+      setError('Para criar a conta, faça as três declarações obrigatórias.')
       return
     }
 
     const fn = isLogin
       ? supabase.auth.signInWithPassword({ email, password })
-      : supabase.auth.signUp({ email, password })
+      : supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              accept_terms: true,
+              acknowledge_privacy: true,
+              declare_age_18: true,
+              locale: market === 'PT_EU' ? 'pt-PT' : 'pt-BR',
+              market,
+            },
+          },
+        })
     const { data, error } = await fn
     if (error) {
       setBusy(false)
@@ -104,11 +115,8 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
       return
     }
     if (mode === 'signup' && data?.user) {
-      // regista a versão e o momento do aceite no perfil recém-criado
-      await supabase
-        .from('profiles')
-        .update({ terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() })
-        .eq('id', data.user.id)
+      // Os três registros append-only são criados pelo trigger de Auth com
+      // user ID, timestamp, versões e identificadores definidos no servidor.
       // dispara o convite para adicionar ao ecrã inicial (mostrado no telemóvel)
       localStorage.setItem('veleda_install_hint', '1')
     }
@@ -122,6 +130,7 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
     setNotice('')
     setAgeOk(false)
     setTermsOk(false)
+    setPrivacyOk(false)
     setCooldown(0)
   }
 
@@ -172,6 +181,13 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
             {mode === 'signup' && (
               <fieldset className="consent-fieldset">
                 <legend className="sr-only">Declarações obrigatórias</legend>
+                <div className="field">
+                  <label htmlFor="signup-market">Mercado da oferta</label>
+                  <select id="signup-market" value={market} onChange={(e) => setMarket(e.target.value)}>
+                    <option value="BR">Brasil</option>
+                    <option value="PT_EU">Portugal / União Europeia</option>
+                  </select>
+                </div>
                 <label className="consent-check">
                   <input type="checkbox" checked={ageOk} onChange={(e) => setAgeOk(e.target.checked)} required />
                   <span>Declaro ter 18 anos ou mais.</span>
@@ -179,8 +195,13 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
                 <label className="consent-check">
                   <input type="checkbox" checked={termsOk} onChange={(e) => setTermsOk(e.target.checked)} required />
                   <span>
-                    Li e aceito os <Link to="/termos" target="_blank">Termos de Uso</Link> e a{' '}
-                    <Link to="/privacidade" target="_blank">Política de Privacidade</Link>.
+                    Li e aceito os <Link to="/termos" target="_blank">Termos de Uso</Link>.
+                  </span>
+                </label>
+                <label className="consent-check">
+                  <input type="checkbox" checked={privacyOk} onChange={(e) => setPrivacyOk(e.target.checked)} required />
+                  <span>
+                    Li e estou ciente da <Link to="/privacidade" target="_blank">Política de Privacidade</Link>.
                   </span>
                 </label>
               </fieldset>
@@ -195,7 +216,7 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
             <button
               className="btn btn--wine auth-submit"
               type="submit"
-              disabled={busy || forgotBlocked || (mode === 'signup' && (!ageOk || !termsOk))}
+              disabled={busy || forgotBlocked || (mode === 'signup' && (!ageOk || !termsOk || !privacyOk))}
             >
               {submitLabel}
             </button>

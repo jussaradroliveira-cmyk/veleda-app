@@ -1,6 +1,7 @@
 // Teste E2E da Veleda — corre com: node e2e_veleda.mjs
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'fs'
+import { randomUUID } from 'crypto'
 
 const env = Object.fromEntries(
   readFileSync('/Users/jussaraoliveira/Desktop/veleda-secrets.env', 'utf8')
@@ -8,6 +9,18 @@ const env = Object.fromEntries(
 )
 const URL = env.VELEDA_SUPABASE_URL
 const ANON = env.VELEDA_SUPABASE_ANON_KEY
+
+// Guarda (VLT-016): o E2E cria contas e gera leituras (custo de IA) no ÚNICO
+// projeto Veleda (produção). Exige confirmação explícita para não correr por acidente.
+if (process.env.VELEDA_CONFIRM_E2E !== '1') {
+  console.error('Recusado: criaria contas e chamaria a IA no projeto real.')
+  console.error(`  Alvo: ${URL}`)
+  console.error('  Para confirmar: VELEDA_CONFIRM_E2E=1 node scripts/e2e.mjs')
+  process.exit(1)
+}
+
+// Aceites exigidos pelo trigger handle_new_user (Fase 1).
+const SIGNUP_META = { data: { accept_terms: true, acknowledge_privacy: true, declare_age_18: true } }
 
 let pass = 0, fail = 0
 function check(name, ok, extra = '') {
@@ -24,7 +37,7 @@ const password = 'veleda-teste-123'
 const sb = createClient(URL, ANON)
 
 // 1. signup
-const { data: su, error: suErr } = await sb.auth.signUp({ email, password })
+const { data: su, error: suErr } = await sb.auth.signUp({ email, password, options: SIGNUP_META })
 check('signup', !suErr && !!su.session, suErr?.message)
 const token = su.session.access_token
 const userId = su.user.id
@@ -43,7 +56,7 @@ async function callReading(tok, body) {
   const r = await fetch(`${URL}/functions/v1/generate-reading`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ idempotency_key: randomUUID(), ...body }),
   })
   return { status: r.status, body: await r.json().catch(() => ({})) }
 }
@@ -76,7 +89,7 @@ check('diário legível pelo dono', jList?.length === 1)
 
 // 9. RLS: outro utilizador não vê nada
 const sb2 = createClient(URL, ANON)
-const { data: su2 } = await sb2.auth.signUp({ email: email2, password })
+const { data: su2 } = await sb2.auth.signUp({ email: email2, password, options: SIGNUP_META })
 const { data: hist2 } = await sb2.from('readings').select('id')
 const { data: j2 } = await sb2.from('journal_entries').select('id')
 check('RLS: outro utilizador não vê leituras alheias', hist2?.length === 0)

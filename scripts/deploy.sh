@@ -6,6 +6,10 @@ cd "$(dirname "$0")/.."
 ROOT=$(pwd)
 COMMIT=$(git rev-parse --short HEAD)
 
+# CLI da Vercel FIXADA (VLT-016): sem pin, um `npx vercel` puxava a última versão
+# publicada no momento do deploy — não reprodutível. Sobreponível por env.
+VERCEL_CLI="${VERCEL_CLI:-vercel@58.1.0}"
+
 if [ -n "$(git status --porcelain)" ]; then
   echo "⚠️  Há alterações não commitadas — serão IGNORADAS. O deploy usa o commit $COMMIT."
 fi
@@ -18,5 +22,5 @@ git worktree add --detach "$TMP" HEAD >/dev/null
 # liga o worktree ao projeto Vercel (as env vars vivem na Vercel)
 cp -R "$ROOT/.vercel" "$TMP/.vercel"
 
-(cd "$TMP" && npx vercel deploy --prod --yes 2>&1 | tail -3)
+(cd "$TMP" && npx "$VERCEL_CLI" deploy --prod --yes 2>&1 | tail -3)
 echo "✦ publicado (commit $COMMIT): https://veledataro.com (e veleda-app.vercel.app)"

@@ -1,0 +1,132 @@
+# 1. Responsável pelo tratamento e âmbito
+
+O Veleda Tarô Simbólico (“Veleda” ou “Serviço”) é operado por Jussara Derly Rodrigues de Oliveira Grota, pessoa singular com atividade aberta em Portugal, NIF 302020250, com endereço profissional na Rua Comandante Manuel Freire, 8, 2655-443 Ericeira, Portugal (“Responsável” ou “Controladora”).
+
+Canal de privacidade: contact@veledataro.com. Não foi designado um encarregado de proteção de dados/DPO; este endereço funciona como ponto de contacto para titulares e autoridades.
+
+Esta Política aplica-se ao site, ao aplicativo web/PWA, ao cadastro, às leituras, ao diário, ao histórico, aos pagamentos, ao suporte e às comunicações do Veleda.
+
+Como a Responsável está estabelecida em Portugal, o Regulamento Geral sobre a Proteção de Dados (“RGPD/GDPR”) aplica-se ao tratamento efetuado no contexto da sua atividade. A Lei Geral de Proteção de Dados brasileira (“LGPD”) também se aplica quando o tratamento estiver relacionado à oferta do Serviço a pessoas localizadas no Brasil ou à coleta de dados no território brasileiro.
+
+# 2. Princípios de privacidade
+
+finalidade, adequação e transparência;
+
+minimização dos dados e limitação do acesso;
+
+exatidão e possibilidade de correção;
+
+limitação da conservação;
+
+segurança, confidencialidade e prevenção;
+
+responsabilização e proteção de dados desde a conceção e por padrão.
+
+# 3. Dados pessoais tratados
+
+Categoria — Exemplos
+Cadastro e conta — Nome ou forma de tratamento, e-mail, identificador interno, credenciais protegidas e estado da conta.
+Conteúdo do Usuário — Perguntas, cartas selecionadas, leituras geradas, entradas do diário, histórico e feedback.
+Assinatura e compras — Mercado, plano, moeda, valor, estado, datas, identificadores de cliente/assinatura/transação e dados fiscais necessários. O número completo do cartão não é armazenado pelo Veleda.
+Suporte e direitos — Mensagens, anexos, pedidos de acesso, correção, exportação, cancelamento ou exclusão.
+Dados técnicos e segurança — Endereço IP, data e hora, navegador, sistema operativo, dispositivo, registos de autenticação, erros, pedidos ao backend e eventos de segurança.
+Consentimentos e aceites — Versão e hash dos documentos, idioma, mercado, data/hora do servidor, origem do aceite e declaração de 18 anos ou mais.
+
+O Veleda não compra bancos de dados, não cria perfis ocultos para publicidade e não vende dados pessoais.
+
+# 4. Finalidades e bases jurídicas
+
+Finalidade — Base jurídica principal
+Criar e administrar a conta; autenticar; fornecer leituras, histórico e diário. — Execução do contrato e diligências pré-contratuais — RGPD art. 6.º, n.º 1, b); LGPD art. 7.º, V.
+Processar assinatura, pacote, faturação, cancelamento, reembolso e chargeback. — Execução do contrato, cumprimento de obrigação legal e exercício de direitos.
+Enviar pergunta e cartas ao fornecedor de IA para produzir a leitura solicitada. — Execução do contrato para dados comuns; consentimento explícito, específico e destacado quando a pergunta contiver dados sensíveis e essa base for necessária.
+Prevenir fraude, abuso, acesso indevido e incidentes. — Interesse legítimo em segurança, prevenção e defesa; obrigação legal quando aplicável.
+Responder suporte e exercer direitos dos titulares. — Execução do contrato, obrigação legal e interesse legítimo em atendimento e prova.
+Cumprir obrigações fiscais, contabilísticas, regulatórias e ordens válidas. — Cumprimento de obrigação legal ou regulatória.
+Enviar marketing opcional. — Consentimento ou outra base permitida, sempre com oposição/descadastramento.
+
+Quando o tratamento se basear em interesse legítimo, a Responsável avaliará finalidade, necessidade, proporcionalidade e impactos. Quando se basear em consentimento, o consentimento pode ser retirado a qualquer momento, sem afetar a licitude do tratamento anterior.
+
+# 5. Perguntas, dados sensíveis e inteligência artificial
+
+ATENÇÃO A DADOS ÍNTIMOS. Perguntas e diário podem revelar saúde, religião, sexualidade, opiniões políticas, origem racial ou étnica e outros aspetos íntimos. O Veleda não solicita que esses dados sejam incluídos.
+
+A pergunta e as cartas selecionadas são enviadas ao fornecedor de IA para gerar a resposta. O nome, o e-mail, o diário e o histórico não são enviados à IA. A própria pergunta, contudo, pode conter dados pessoais ou sensíveis voluntariamente inseridos pelo Usuário.
+
+Ao submeter uma pergunta que contenha dados sensíveis, o Usuário declara ter recebido aviso destacado e consente de forma específica com o tratamento estritamente necessário para gerar aquela leitura. O Usuário pode retirar o consentimento antes do envio, apagando ou reformulando a pergunta. O diário permanece armazenado no Veleda e não é utilizado como contexto para a IA.
+
+A IA não é utilizada para tomar decisões exclusivamente automatizadas que produzam efeitos jurídicos ou impacto semelhante sobre crédito, emprego, seguro, saúde, elegibilidade ou direitos do Usuário.
+
+# 6. Compartilhamento e destinatários
+
+Os dados são compartilhados apenas na medida necessária com fornecedores de infraestrutura, inteligência artificial, hospedagem e pagamentos descritos na Lista de Subprocessadores. Também podem ser comunicados a consultores sujeitos a confidencialidade, autoridades competentes, tribunais ou sucessores em reorganização, quando exista base jurídica.
+
+Processadores de pagamento podem atuar como responsáveis independentes para prevenção de fraude, cumprimento regulatório, gestão de disputas e operação financeira. Nesses casos, aplicam-se também os avisos de privacidade do próprio fornecedor.
+
+O Veleda não compartilha perguntas, leituras ou diário para publicidade comportamental de terceiros.
+
+# 7. Transferências internacionais
+
+Alguns fornecedores podem tratar dados fora de Portugal, do Espaço Económico Europeu ou do Brasil. Quando houver transferência internacional, a Responsável utilizará o mecanismo jurídico aplicável ao fluxo e ao fornecedor, incluindo decisão de adequação, cláusulas contratuais-padrão, cláusulas aprovadas pela ANPD, garantias adicionais ou outra hipótese legal válida.
+
+As garantias efetivamente utilizadas para cada fornecedor podem ser solicitadas pelo canal de privacidade, respeitados segredos comerciais e de segurança. A ativação de novo fornecedor depende de avaliação de privacidade, segurança e transferência internacional.
+
+# 8. Conservação e eliminação
+
+Tipo de dado — Prazo ou critério
+Conta e perfil — Durante a conta; após pedido de exclusão, remoção dos sistemas ativos normalmente em até 30 dias, salvo impedimento legal ou incidente.
+Perguntas, leituras, diário e histórico — Até o Usuário apagar ou encerrar a conta. Cópias residuais de backup são substituídas no ciclo técnico, normalmente em até 90 dias.
+Assinaturas, compras e eventos de pagamento — Pelo período necessário ao contrato, reembolsos, chargebacks, prevenção de fraude e obrigações legais.
+Documentos fiscais e contabilísticos — Pelo prazo obrigatório aplicável; em Portugal, geralmente até 10 anos.
+Aceites, consentimentos e pedidos de direitos — Enquanto necessários para demonstrar conformidade e durante os prazos legais de prescrição ou defesa.
+Registos técnicos e de segurança — Normalmente até 12 meses; por período superior quando relacionados a incidente, fraude ou litígio.
+Suporte — Até 24 meses após encerramento do pedido, salvo necessidade de defesa ou obrigação legal.
+Dados anonimizados — Podem ser mantidos por prazo indeterminado quando não permitam razoavelmente identificar uma pessoa.
+
+Uma solicitação de eliminação não alcança dados cuja conservação seja obrigatória ou necessária para exercício de direitos, prevenção de fraude, segurança ou defesa em processo. Nesses casos, o uso fica restrito à finalidade de retenção.
+
+# 9. Segurança
+
+São adotadas medidas técnicas e organizacionais proporcionais ao risco, incluindo autenticação, segregação por usuário, controle de acesso, criptografia em trânsito, validação server-side, sanitização de conteúdo, registos técnicos, gestão de vulnerabilidades, backups e resposta a incidentes.
+
+Nenhum sistema é absolutamente seguro. O Usuário deve utilizar senha exclusiva, proteger os dispositivos, encerrar sessões em equipamentos compartilhados e informar suspeitas de acesso indevido.
+
+# 10. Cookies e armazenamento local
+
+Na data desta versão, o Veleda utiliza apenas cookies ou mecanismos de armazenamento local estritamente necessários para autenticação, segurança, preferências e instalação da PWA. Não são utilizados cookies de publicidade comportamental ou analytics não essenciais.
+
+Tokens de autenticação são removidos ou invalidados no logout conforme o mecanismo do provedor. Preferências técnicas e avisos de instalação podem permanecer no navegador até expiração, limpeza manual ou redefinição do aplicativo.
+
+Se forem introduzidas tecnologias não essenciais, elas serão bloqueadas até escolha válida, e o Usuário receberá opções para aceitar, rejeitar ou configurar.
+
+# 11. Direitos dos titulares
+
+Dependendo da jurisdição e das condições legais, o titular pode solicitar: confirmação e acesso; correção; anonimização, bloqueio ou eliminação; portabilidade; informação sobre compartilhamentos; retirada de consentimento; oposição; limitação; revisão de decisões automatizadas; e explicação sobre critérios relevantes.
+
+Pedidos devem ser enviados a contact@veledataro.com. A Responsável pode solicitar informações proporcionais para confirmar a identidade e proteger a conta. Os pedidos serão respondidos nos prazos legais aplicáveis, normalmente em até um mês no RGPD e, para a declaração completa de acesso prevista na LGPD, em até 15 dias, ressalvadas hipóteses legais de extensão.
+
+O titular pode apresentar reclamação à Comissão Nacional de Proteção de Dados de Portugal (CNPD), à Autoridade Nacional de Proteção de Dados do Brasil (ANPD) ou à autoridade europeia competente do local onde reside, trabalha ou considera ter ocorrido a infração.
+
+# 12. Exclusão, exportação e cancelamento
+
+A exclusão da conta pode ser solicitada na área de privacidade, quando disponível, ou por e-mail. Antes da eliminação, assinaturas capazes de gerar cobrança devem ser canceladas ou regularizadas. A exclusão da conta não equivale automaticamente a reembolso.
+
+Quando tecnicamente aplicável, o Usuário poderá exportar leituras, histórico e diário em formato estruturado. A indisponibilidade temporária da ferramenta não impede o exercício do direito por solicitação escrita.
+
+# 13. Crianças e adolescentes
+
+O Serviço é destinado a maiores de 18 anos. A declaração de maioridade é contratual e não envolve prova documental. Não coletamos intencionalmente dados de menores. Pais ou responsáveis que identifiquem uma conta de menor podem contactar o canal de privacidade para investigação e eliminação, respeitadas obrigações legais.
+
+# 14. Incidentes de segurança
+
+Incidentes que possam gerar risco relevante serão investigados, contidos e documentados. Titulares e autoridades serão comunicados quando exigido, observados os critérios e prazos legais aplicáveis, incluindo o RGPD e as normas da ANPD.
+
+# 15. Alterações desta Política
+
+Alterações materiais serão comunicadas por meio adequado. Se uma nova finalidade exigir consentimento, o tratamento não será iniciado antes da obtenção do consentimento. A versão, a data de vigência e, quando possível, o histórico das versões anteriores serão mantidos.
+
+# 16. Contacto
+
+Responsável: Jussara Derly Rodrigues de Oliveira Grota · NIF 302020250 · Rua Comandante Manuel Freire, 8, 2655-443 Ericeira, Portugal · Canal de privacidade: contact@veledataro.com.
+
+Veleda Tarô Simbólico  |  Política de Privacidade  |  versão 2.1  |  29 de julho de 2026

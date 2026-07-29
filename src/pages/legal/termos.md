@@ -90,7 +90,7 @@ Não envie dados de terceiros sem autorização, documentos confidenciais, segre
 
 Evite incluir dados sobre saúde, genética, biometria, religião, opiniões políticas, sexualidade, origem racial ou étnica, crianças ou outros dados sensíveis.
 
-O Usuário é orientado a não incluir dados sensíveis na pergunta. Caso, por sua própria escolha, opte por incluí-los, esses dados são tratados apenas na medida estritamente necessária para gerar aquela leitura, ao abrigo do consentimento prestado no cadastro e nos termos desta Política, não sendo utilizados para qualquer outra finalidade. O diário não é enviado ao fornecedor de IA.
+O Usuário é orientado a não incluir dados sensíveis na pergunta. Caso, por sua própria escolha, opte por incluí-los, esses dados são tratados apenas na medida estritamente necessária para gerar aquela leitura, ao abrigo do consentimento prestado no cadastro e nos termos destes Termos, não sendo utilizados para qualquer outra finalidade. O diário não é enviado ao fornecedor de IA.
 
 É proibido conteúdo ilegal, fraudulento, ameaçador, discriminatório, abusivo, invasivo ou que viole direitos de terceiros.
 

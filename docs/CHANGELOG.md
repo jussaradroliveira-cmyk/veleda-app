@@ -32,6 +32,9 @@ Aplicado na ordem segura: migrations → Edge Functions → frontend. **Stripe i
   Verificado no live (transação revertida): conta 2.1 barrada→reaceita grava
   2.2+hash real; conta 2.2 entra direto; cadastro novo grava 2.2+hash; só BR no
   checkout. `npm test` 62/62.
+- **Correção de redação (mesmo dia)** nos Termos §9: "nos termos desta Política" →
+  "nos termos destes Termos". Feita **in-place na 2.2** (0 aceites reais no momento),
+  novo hash `sha256:3ac8169d…` — migration `20260729194500`. Frontend redeployado.
 
 ## 29 de julho de 2026 — Round 2: núcleo de pagamento (VLT2-001/002/003)
 

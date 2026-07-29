@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../App'
 import { supabase } from '../lib/supabase'
-import { fetchCards, shuffleDeck, generateReading, readingsThisWeek } from '../lib/api'
+import { fetchCards, shuffleDeck, generateReading, readingsThisWeek, shouldRenewIdempotencyKey } from '../lib/api'
 import FanSpread from '../components/FanSpread'
 import Paywall from '../components/Paywall'
 import StepIndicator from '../components/StepIndicator'
@@ -119,7 +119,12 @@ export default function NewReading() {
       if (err.code === 'quota_exceeded') setShowPaywall(true)
       else if (err.code === 'premium_daily_reached') setError(MSG_PREMIUM_DIA)
       else if (err.code === 'compound_question') setError(MSG_COMPOSTA)
-      else setError('O véu tremeu por um instante e a leitura não chegou. Suas cartas continuam escolhidas — toque em "Revelar a leitura" para tentar de novo.')
+      else {
+        // VLT2-005: se a reserva foi liberada no servidor, a chave atual já não
+        // serve — renova para que o próximo "Revelar" comece uma reserva nova.
+        if (shouldRenewIdempotencyKey(err.code)) setIdempotencyKey(crypto.randomUUID())
+        setError('O véu tremeu por um instante e a leitura não chegou. Suas cartas continuam escolhidas — toque em "Revelar a leitura" para tentar de novo.')
+      }
     } finally {
       setBusy(false)
     }

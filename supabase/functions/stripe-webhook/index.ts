@@ -100,12 +100,23 @@ Deno.serve(async (req) => {
       livemode_value: event.livemode,
     });
     if (error) throw error;
-    return data?.result ?? "processed";
+    const result = data?.result ?? "processed";
+    // VLT2-020: customer sem perfil mapeado não deve ser reconhecido em silêncio
+    // (200) — lança (→500) para a Stripe reenviar até o perfil aparecer.
+    if (result === "customer_not_mapped") {
+      throw Object.assign(new Error("customer_not_mapped"), { code: "customer_not_mapped" });
+    }
+    return result;
   }
 
   try {
     switch (event.type) {
-      case "checkout.session.completed": {
+      // VLT2-020: pagamentos assíncronos (ex.: Pix/boleto) só confirmam mais tarde.
+      // O checkout.session.completed inicial chega "unpaid" e é registado sem
+      // conceder; o async_payment_succeeded confirma e PARTILHA aqui o mesmo
+      // caminho de concessão (idempotente por PaymentIntent).
+      case "checkout.session.completed":
+      case "checkout.session.async_payment_succeeded": {
         const incoming = event.data.object as Stripe.Checkout.Session;
         const session = await stripe.checkout.sessions.retrieve(incoming.id, {
           expand: ["line_items.data.price"],
@@ -154,10 +165,36 @@ Deno.serve(async (req) => {
           break;
         }
 
-        const { data: profile, error: profileError } = await admin.from("profiles")
-          .select("id").eq("stripe_customer_id", session.customer).maybeSingle();
+        // Mapeia o customer ao perfil. 1º pela coluna stripe_customer_id; se não
+        // achar (corrida: a coluna pode ainda não estar preenchida) tenta pelo
+        // supabase_user_id dos metadados (definido pelo servidor no checkout, logo
+        // fiável) e faz backfill. Se não houver perfil de todo, NÃO reconhece:
+        // lança (→500) para a Stripe reenviar e o caso ficar visível — em vez de
+        // 200 silencioso que perderia o benefício pago (VLT2-020).
+        const metaUser = session.metadata?.supabase_user_id ?? null;
+        let { data: profile, error: profileError } = await admin.from("profiles")
+          .select("id, stripe_customer_id").eq("stripe_customer_id", session.customer).maybeSingle();
         if (profileError) throw profileError;
-        if (!profile || profile.id !== session.metadata?.supabase_user_id) {
+        if (!profile && metaUser) {
+          const byUser = await admin.from("profiles")
+            .select("id, stripe_customer_id").eq("id", metaUser).maybeSingle();
+          if (byUser.error) throw byUser.error;
+          profile = byUser.data;
+        }
+        if (!profile) {
+          throw Object.assign(new Error("customer_not_mapped"), { code: "customer_not_mapped" });
+        }
+        // Segurança: o utilizador dos metadados tem de ser o dono do perfil, e o
+        // customer tem de ser o deste perfil (ou ainda não atribuído → backfill).
+        if (profile.id !== metaUser) {
+          log(await record("pack_grant", session.id, "customer_user_mismatch"));
+          break;
+        }
+        if (!profile.stripe_customer_id) {
+          const upd = await admin.from("profiles")
+            .update({ stripe_customer_id: session.customer }).eq("id", profile.id);
+          if (upd.error) throw upd.error;
+        } else if (profile.stripe_customer_id !== session.customer) {
           log(await record("pack_grant", session.id, "customer_user_mismatch"));
           break;
         }
@@ -234,6 +271,12 @@ Deno.serve(async (req) => {
         });
         if (error) throw error;
         log(data?.result ?? "processed");
+        break;
+      }
+
+      case "checkout.session.async_payment_failed": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        log(await record("checkout_completed", session.id, "async_payment_failed"));
         break;
       }
 

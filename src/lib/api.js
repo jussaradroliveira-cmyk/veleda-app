@@ -16,6 +16,9 @@ export async function fetchCards() {
   return data
 }
 
+// VLT2-005: re-exportado a partir de um módulo sem dependências (testável em Node).
+export { shouldRenewIdempotencyKey } from './reading-retry'
+
 // chama a Edge Function; devolve {reading} ou lança erro com .code.
 // Em 5xx (ex.: worker do Supabase morto num arranque frio) tenta de novo
 // sozinha — um worker fresco costuma resolver sem a pessoa dar conta.

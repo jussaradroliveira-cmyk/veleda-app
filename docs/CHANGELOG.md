@@ -5,6 +5,21 @@ redeployadas, frontend publicado na Vercel). Referências = commits em `main`.
 
 ---
 
+## 29 de julho de 2026 — Auditoria Round 2, lote de médios (2/N: pagamento/quota)
+
+- **VLT2-005** Retry após falha da IA: quando o servidor libera a reserva, a UI
+  gera **nova** idempotency_key para o próximo "Revelar" (numa falha ambígua de
+  rede mantém a chave, preservando idempotência). `src/lib/reading-retry.js` + teste.
+- **VLT2-006** Teto operacional global (5000/24h) agora **atómico entre contas**
+  (advisory lock global, forma de 2 inteiros) — antes o count(*) só corria sob o
+  lock por-utilizador e N contas ultrapassavam por corrida. Provado com concorrência
+  real (sem lock→6, com lock→5). Migration `20260729202000`.
+- **VLT2-020** Webhook: pagamentos **assíncronos** (Pix/boleto) passam a conceder
+  via `checkout.session.async_payment_succeeded` (antes caíam em unsupported_event);
+  `async_payment_failed` registado. Customer não mapeado deixa de ser 200 silencioso
+  — mapeia por metadados+backfill e, se não houver perfil, lança (→500 p/ reenvio).
+  Webhooks live+teste com os 2 eventos async. Caminho Pix async a validar no teste real.
+
 ## 29 de julho de 2026 — Auditoria Round 2, lote de médios/baixos (1/N)
 
 Primeiro lote de correções dos achados Médios/Baixos (todos os Altos já fechados).

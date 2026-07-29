@@ -1,69 +1,86 @@
 # Veleda ✦ Tarot
 
-Leituras de tarot com IA — React + Vite + Supabase + Claude.
+Leituras de tarô simbólico com IA — React + Vite + Supabase + Claude. Em produção em **https://veledataro.com** (Vercel, PWA instalável).
 
 ## Correr localmente
 
 ```bash
 cd ~/Desktop/veleda-app
 npm install
-npm run dev
+npm run dev            # http://localhost:5173
 ```
-
-Abre http://localhost:5173
 
 ## Arquitetura
 
-- **Frontend** (`src/`): React + Vite. Páginas: landing, auth, nova leitura (pergunta → leque → leitura), histórico, detalhe com diário, diário livre.
-- **Base de dados** (Supabase, projeto `veleda`, ref `phixumwuktqabcngncrk`):
+- **Frontend** (`src/`): React + Vite. Páginas: landing, auth, nova leitura (pergunta → leque → leitura), histórico, detalhe com diário, diário livre, conta, assinatura, e páginas legais (/termos, /privacidade, /subprocessadores, /cookies).
+- **Base de dados** (Supabase, projeto `veleda`, ref `phixumwuktqabcngncrk`, região UE/Irlanda). RLS ativo em todas as tabelas:
   - `cards` — 78 cartas (22 maiores + 56 menores), leitura pública
-  - `profiles` — criado automaticamente no signup; `is_premium` controla a quota
-  - `readings` — só a Edge Function escreve; o dono lê (RLS)
-  - `journal_entries` — diário do utilizador (RLS total)
-  - Migration em `supabase/migrations/`
-- **Edge Function** `generate-reading` (`supabase/functions/generate-reading/`):
-  valida sessão → verifica quota semanal (1 grátis/semana, segunda-feira, hora de Lisboa) →
-  chama Claude (`claude-sonnet-5`) → guarda no histórico.
-  A `ANTHROPIC_API_KEY` vive só nos secrets do Supabase.
+  - `profiles` — criado no signup pelo trigger; `is_premium`, créditos e IDs Stripe (só o service role escreve estes; o dono só edita `display_name`)
+  - `readings` — só a Edge Function escreve; o dono lê
+  - `journal_entries` — diário (RLS total; FK composta garante que um diário ligado a leitura é do mesmo dono; limite de tamanho por entrada e por conta)
+  - `user_consents` — aceites append-only (Termos/Privacidade/18+): versão + **hash SHA-256** do texto + data-hora do servidor + idioma + mercado
+  - `reading_reservations` — reserva atómica de quota (grátis semanal, Premium diário, créditos), com idempotência e estorno
+  - `stripe_payment_purchases` / `processed_stripe_events` — pacotes avulsos e idempotência de eventos Stripe
+  - Migrations em `supabase/migrations/`
+- **Edge Functions** (`supabase/functions/`):
+  - `generate-reading` — valida sessão → reserva quota atómica → chama Claude (`claude-sonnet-5`) → grava. Prompt endurecido, pergunta delimitada como dado não confiável.
+  - `delete-account` — cancela assinaturas na Stripe antes de apagar (falha-fechada), reautenticação por senha, logs sem PII
+  - `export-data` — exportação server-side completa (conta + 6 tabelas), falha-fechada, inventário versionado
+  - `create-checkout` / `manage-subscription` — checkout e portal Stripe (catálogo regional server-side)
+  - `stripe-webhook` — RPCs transacionais, ordenação por `event.created`, refund/chargeback (deploy com `--no-verify-jwt`)
+  - `reconcile-stripe` — reconciliação Stripe → Supabase (preparada, **não ativada**)
+- A `ANTHROPIC_API_KEY` e as chaves Stripe/service-role vivem só nos secrets do Supabase.
+
+## Regras de negócio (quota)
+
+- **Grátis:** 1 leitura por semana civil (segunda-feira 00:00 **UTC** até à segunda seguinte).
+- **Premium:** até **10 leituras por dia**, com reset diário à meia-noite UTC. Não acumula para o dia seguinte.
+- **Pacote avulso:** 5 leituras, válidas 30 dias, sem renovação.
+- Tudo validado no servidor de forma atómica; falhas da IA libertam a reserva (não gastam a quota).
+
+## Segurança
+
+- RLS em todas as tabelas; RPCs de quota e financeiras exclusivas do `service_role`.
+- CSP + X-Frame-Options + nosniff + Referrer/Permissions-Policy + HSTS no `vercel.json`.
+- Markdown da IA sanitizado (DOMPurify), sem HTML bruto.
+- CORS por origem exata nas Edge Functions autenticadas.
+- Ver relatórios em `docs/auditoria-seguranca/` e o histórico em `docs/CHANGELOG.md`.
 
 ## Segredos
 
 - `.env` local (gitignored): URL + anon key do Supabase — só valores públicos de cliente.
-- `~/Desktop/veleda-secrets.env`: cópia de todas as chaves (Anthropic, service_role, senha da BD). **Não partilhar nem commitar.**
+- `~/Desktop/veleda-secrets.env`: cópia de todas as chaves (Anthropic, service_role, senha da BD, Stripe). **Não partilhar nem commitar.**
 
 ## Imagens das cartas
 
-As imagens ficam organizadas em `public/cards/`:
-- `verso.jpg` — verso da carta (usado no leque)
-- `maiores/<slug>.png` — 22 Arcanos Maiores
-- `copas/<slug>.png`, `ouros/<slug>.png`, `espadas/<slug>.png` e `paus/<slug>.png` — 56 Arcanos Menores
+Em `public/cards/` (WebP):
+- `verso.webp` — verso da carta (leque)
+- `maiores/<slug>.webp` — 22 Arcanos Maiores
+- `copas/`, `ouros/`, `espadas/`, `paus/` `<slug>.webp` — 56 Arcanos Menores
 
-Exemplos: `maiores/o-louco.png`, `copas/as-de-copas.png`.
-
-Enquanto não existirem, o app mostra placeholders com moldura dourada.
+O frontend deriva o caminho pelo `slug`; se a imagem falhar, mostra placeholder com moldura dourada.
 
 ## Testes
 
 ```bash
-node scripts/e2e.mjs   # e2e completo contra o backend real (cria e apaga utilizadores de teste)
+npm test          # suíte unitária (sanitização, catálogo, exclusão, quota, consentimentos, Stripe)
+npm run lint
+npm run build
+VELEDA_CONFIRM_E2E=1 node scripts/e2e.mjs   # e2e contra o backend real (cria/apaga contas de teste)
 ```
 
-## Site publicado
+Migrations testam-se num Postgres descartável antes de qualquer ambiente remoto:
+`docker run public.ecr.aws/supabase/postgres:<versão>` → aplicar todas as migrations → exercitar.
 
-**https://jussaradroliveira-cmyk.github.io/veleda-app/** (GitHub Pages)
+## Deploy
 
-Publicar alterações do frontend:
-
-```bash
-npm run deploy
-```
-
-Deploy de alterações nas funções:
+`scripts/deploy.sh` publica na Vercel **a partir do último commit** — commitar antes.
 
 ```bash
-supabase functions deploy generate-reading --project-ref phixumwuktqabcngncrk --use-api
-supabase functions deploy create-checkout --project-ref phixumwuktqabcngncrk --use-api
-supabase functions deploy stripe-webhook --project-ref phixumwuktqabcngncrk --use-api --no-verify-jwt
+git commit -am "…" && bash scripts/deploy.sh          # frontend (Vercel)
+supabase db push                                       # migrations (ordem: migrations → funções → frontend)
+supabase functions deploy generate-reading             # funções (JWT on por defeito)
+supabase functions deploy stripe-webhook --no-verify-jwt
 ```
 
 ## Stripe regional (configuração manual)
@@ -79,14 +96,14 @@ Variáveis server-side:
 STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET
 STRIPE_MODE=test                             # test ou live; deve corresponder à chave
-BILLING_MARKETS_ENABLED=BR                 # BR, PT_EU ou BR,PT_EU
+BILLING_MARKETS_ENABLED=BR                   # BR, PT_EU ou BR,PT_EU
 STRIPE_PRICE_ID_BR_MONTHLY
 STRIPE_PRICE_ID_BR_ANNUAL
 STRIPE_PRICE_ID_BR_AVULSO
 STRIPE_PRICE_ID_EU_MONTHLY
 STRIPE_PRICE_ID_EU_ANNUAL
 STRIPE_PRICE_ID_EU_AVULSO
-STRIPE_EU_MONTHLY_UNIT_AMOUNT              # cêntimos; sem valor padrão
+STRIPE_EU_MONTHLY_UNIT_AMOUNT                # cêntimos; sem valor padrão
 STRIPE_EU_ANNUAL_UNIT_AMOUNT
 STRIPE_EU_AVULSO_UNIT_AMOUNT
 RECONCILIATION_SECRET
@@ -99,10 +116,12 @@ o catálogo BR. Não há Price ID ou valor EUR inventado no repositório.
 Webhook do Stripe a apontar para:
 `https://phixumwuktqabcngncrk.supabase.co/functions/v1/stripe-webhook`
 (eventos: checkout concluído/expirado, ciclo de assinatura, invoice pago/falho,
-reembolso e disputa/chargeback; consultar o relatório da Fase 1)
+reembolso e disputa/chargeback).
 
-## Por fazer
+## Por fazer (não-código, decisões da Jussara)
 
-- Criar/confirmar produtos e Price IDs regionais no Stripe test
-- Aplicar e validar migrations num ambiente Supabase descartável antes de qualquer ambiente remoto
-- Imagens reais das cartas → `public/cards/` + `npm run deploy`
+- **E-mail fiável (VLT-012):** SMTP próprio / Resend para `veledataro.com` — recuperação de senha e confirmação de e-mail. É configuração de painel + secrets, não código.
+- **Go-live do Stripe:** chaves/produtos/webhook live, confirmar Pix, ativar Customer Portal.
+- **Supabase Pro:** sem pausa por inatividade, backups melhores.
+- **Revisão jurídica confirmada** dos textos v2.1 (já publicados, vigentes 29/07/2026).
+- Imagens reais das cartas em `public/cards/` quando definitivas.

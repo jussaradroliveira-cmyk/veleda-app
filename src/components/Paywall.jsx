@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { startCheckout } from '../lib/billing'
+import BillingOffers from './BillingOffers'
 
 // Paywall semanal — o botão abre o checkout Stripe quando as chaves estiverem
 // configuradas no servidor; até lá mostra "em breve".
@@ -7,11 +8,11 @@ export default function Paywall({ onClose }) {
   const [busy, setBusy] = useState('')
   const [notice, setNotice] = useState('')
 
-  async function subscribe(plan) {
+  async function subscribe(plan, market) {
     setBusy(plan)
     setNotice('')
     try {
-      const r = await startCheckout(plan)
+      const r = await startCheckout(plan, market)
       if (r.ok && r.url) {
         window.location.href = r.url
         return
@@ -34,30 +35,12 @@ export default function Paywall({ onClose }) {
           Você já usou sua leitura gratuita desta semana. As cartas se abrem de novo na segunda-feira —
           ou torne-se Premium e consulte a Veleda sempre que precisar.
         </p>
-        <div className="preco">R$ 39,90<span className="preco__periodo">/mês</span></div>
-        <p className="paywall__anual">✦ ou plano anual com <strong>20% de desconto</strong> — R$ 383,04/ano (sai a R$ 31,92/mês)</p>
         <ul>
-          <li>Leituras ilimitadas</li>
+          <li>Leituras sujeitas a uso razoável</li>
           <li>Histórico e diário sem limites</li>
           <li>Acesso antecipado a novas tiragens</li>
         </ul>
-        <div className="paywall__botoes">
-          <button className="btn btn--wine" onClick={() => subscribe('anual')} disabled={!!busy}>
-            {busy === 'anual' ? 'Preparando…' : 'Assinar anual · 20% off'}
-          </button>
-          <button className="btn ghost" onClick={() => subscribe('mensal')} disabled={!!busy}>
-            {busy === 'mensal' ? 'Preparando…' : 'Assinar mensal · R$ 39,90'}
-          </button>
-        </div>
-        <div className="paywall__avulso">
-          <p className="paywall__avulso-label">Sem compromisso?</p>
-          <p className="paywall__avulso-desc">
-            <strong>Consulta avulsa</strong> — 5 leituras por <strong>R$ 49,90</strong>, válidas por 30 dias.
-          </p>
-          <button className="btn ghost small" onClick={() => subscribe('avulso')} disabled={!!busy}>
-            {busy === 'avulso' ? 'Preparando…' : 'Comprar 5 leituras · R$ 49,90'}
-          </button>
-        </div>
+        <BillingOffers busy={busy} onCheckout={subscribe} />
         {notice && <p className="muted" style={{ marginTop: '0.8rem' }}>{notice}</p>}
         <p style={{ marginTop: '1rem' }}>
           <a href="#" onClick={(e) => { e.preventDefault(); onClose() }}>voltar</a>

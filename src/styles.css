@@ -1068,7 +1068,7 @@ main:not(.landing) {
 .btn.small { min-height: 2.5rem; padding: 0.55rem 1.15rem; font-size: 0.68rem; }
 .field { margin-bottom: 1rem; }
 .field label { display: block; margin-bottom: 0.35rem; color: var(--text-secondary); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
-input[type='email'], input[type='password'], input[type='text'], textarea {
+input[type='email'], input[type='password'], input[type='text'], select, textarea {
   width: 100%;
   border: 1px solid var(--rose-burnt);
   border-radius: 0.65rem;
@@ -1076,7 +1076,7 @@ input[type='email'], input[type='password'], input[type='text'], textarea {
   color: var(--text-primary);
   background: var(--ivory);
 }
-input:focus, textarea:focus { outline: 2px solid var(--gold-aged); border-color: var(--bronze); }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--gold-aged); border-color: var(--bronze); }
 textarea { min-height: 7rem; resize: vertical; }
 .card-panel {
   position: relative;

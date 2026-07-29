@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth-context'
 import { startCheckout, openBillingPortal } from '../lib/billing'
+import BillingOffers from '../components/BillingOffers'
 
 export default function Subscription() {
   const { user } = useAuth()
@@ -25,10 +26,10 @@ export default function Subscription() {
       })
   }, [user.id])
 
-  async function subscribe(plan) {
+  async function subscribe(plan, market) {
     setBusy(plan)
     setNotice('')
-    const r = await startCheckout(plan)
+    const r = await startCheckout(plan, market)
     setBusy('')
     if (r.ok && r.url) {
       window.location.href = r.url
@@ -64,14 +65,15 @@ export default function Subscription() {
             <>
               <h2>✦ Você é Premium</h2>
               <p className="muted subscription-lead">
-                Leituras ilimitadas e acesso contínuo ao seu ritual. Obrigada por caminhar com a Veleda.
+                Leituras sem limite comercial predeterminado, sujeitas a uso razoável e proteção contra abuso.
               </p>
               <button className="btn btn--wine" onClick={managePortal} disabled={!!busy}>
-                {busy === 'portal' ? 'Abrindo…' : 'Gerenciar ou cancelar assinatura'}
+                {busy === 'portal' ? 'Abrindo…' : 'Gerenciar renovação no Stripe'}
               </button>
               <p className="muted subscription-note">
                 Você será levada ao portal seguro do Stripe, onde pode trocar o cartão,
-                ver faturas ou cancelar quando quiser — sem perder seu histórico nem seu diário.
+                ver faturas ou solicitar o cancelamento da renovação. Isso não exclui sua
+                conta, não apaga histórico ou diário e não gera reembolso automático.
               </p>
             </>
           )}
@@ -79,40 +81,19 @@ export default function Subscription() {
           {isPremium === false && (
             <>
               <h2>✦ Veleda Premium</h2>
-              <div className="preco">R$ 39,90<span className="preco__periodo">/mês</span></div>
-              <p className="paywall__anual">✦ ou plano anual com <strong>20% de desconto</strong> — R$ 383,04/ano (sai a R$ 31,92/mês)</p>
               <ul className="subscription-list">
-                <li>Leituras ilimitadas</li>
+                <li>Leituras sujeitas a uso razoável</li>
                 <li>Histórico e diário sem limites</li>
                 <li>Acesso antecipado a novas tiragens</li>
               </ul>
-              <div className="paywall__botoes">
-                <button className="btn btn--wine" onClick={() => subscribe('anual')} disabled={!!busy}>
-                  {busy === 'anual' ? 'Preparando…' : 'Assinar anual · 20% off'}
-                </button>
-                <button className="btn ghost" onClick={() => subscribe('mensal')} disabled={!!busy}>
-                  {busy === 'mensal' ? 'Preparando…' : 'Assinar mensal · R$ 39,90'}
-                </button>
-              </div>
-            </>
-          )}
-
-          {isPremium === false && (
-            <div className="account-block avulso-block">
-              <h4>Consulta avulsa</h4>
               {credits > 0 && (
                 <p className="avulso-saldo">
-                  ✦ Você tem <strong>{credits} {credits === 1 ? 'leitura' : 'leituras'}</strong>
+                  ✦ Você tem <strong>{credits} {credits === 1 ? 'leitura avulsa' : 'leituras avulsas'}</strong>
                   {creditsExpire && <> · válidas até {new Date(creditsExpire).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}</>}
                 </p>
               )}
-              <p className="muted">
-                Prefere sem assinatura? <strong>5 leituras por R$ 49,90</strong>, válidas por 30 dias após a compra.
-              </p>
-              <button className="btn ghost small" onClick={() => subscribe('avulso')} disabled={!!busy}>
-                {busy === 'avulso' ? 'Preparando…' : credits > 0 ? 'Comprar mais 5 leituras' : 'Comprar 5 leituras · R$ 49,90'}
-              </button>
-            </div>
+              <BillingOffers busy={busy} onCheckout={subscribe} />
+            </>
           )}
 
           {notice && <p className="muted" role="status" style={{ marginTop: '0.9rem' }}>{notice}</p>}

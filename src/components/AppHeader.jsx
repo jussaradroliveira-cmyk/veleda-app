@@ -43,7 +43,12 @@ export default function AppHeader() {
   return (
     <header className="app-header">
       <div className="container app-header__inner">
-        <VeledaLogo />
+        <div className="app-header__brand">
+          <VeledaLogo />
+          <span className="app-header__tagline">
+            Ferramenta de reflexão de caráter simbólico. Não substitui aconselhamento profissional.
+          </span>
+        </div>
         <button
           ref={toggleRef}
           className="menu-toggle"

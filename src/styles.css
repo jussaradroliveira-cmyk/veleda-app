@@ -492,6 +492,31 @@ main:not(.landing) {
   gap: 2rem;
 }
 
+.billing-personal-note {
+  margin: 0.4rem 0 0.9rem;
+  font-size: 0.78rem;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.app-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+/* Aviso curto ao lado do nome — discreto, esbatido. Escondido no cabeçalho
+   estreito (≤900px, quando o menu vira hambúrguer) para não sobrecarregar. */
+.app-header__tagline {
+  max-width: 22rem;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  font-style: italic;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
 .veleda-logo {
   display: inline-flex;
   width: clamp(9rem, 14vw, 12.2rem);
@@ -596,6 +621,15 @@ main:not(.landing) {
   margin-top: 0.5rem;
   font-style: italic;
   opacity: 0.8;
+}
+
+/* Aviso padronizado em destaque nos documentos legais (Termos/Privacidade). */
+.disclaimer-note {
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--border-gold);
+  border-radius: 4px;
+  background: rgba(120, 90, 60, 0.05);
+  font-style: italic;
 }
 
 /* Nota de segurança na leitura — serena, junto ao resultado, sem chamar demasiado. */
@@ -1540,6 +1574,7 @@ textarea { min-height: 7rem; resize: vertical; }
 
 @media (max-width: 900px) {
   .app-header__inner { min-height: 5rem; }
+  .app-header__tagline { display: none; }
   .menu-toggle { display: block; flex: 0 0 auto; }
   .main-navigation {
     position: absolute;

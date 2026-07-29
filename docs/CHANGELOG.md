@@ -5,6 +5,27 @@ redeployadas, frontend publicado na Vercel). Referências = commits em `main`.
 
 ---
 
+## 29 de julho de 2026 — Round 2: núcleo de pagamento (VLT2-001/002/003)
+
+Correção na raiz dos 3 achados Altos de pagamento da segunda auditoria
+(`docs/auditoria-seguranca/VELEDA_SECURITY_AUDIT_ROUND_2.md`), com **evidência
+real** (Stripe test + Postgres real), não mocks. Aplicado: migration → redeploy
+`stripe-webhook`.
+
+- **VLT2-001** Premium só com correspondência **exata** ao catálogo (Price ID +
+  moeda + valor + intervalo + recorrência) e status elegível. Novo módulo
+  `_shared/entitlement.js` (`customerEntitlement`), usado pelo webhook e pela
+  reconciliação. Guarda fail-closed também no SQL (`premium_without_catalog_match`).
+  Provado com entrega real: assinatura de outro produto → **não** liga Premium.
+- **VLT2-002** Webhook/reconciliação decidem por **TODAS** as assinaturas do
+  customer (paginadas, filtradas pelo catálogo), regra determinística (maior
+  `current_period_end`), e **removem** Premium quando não há assinatura válida.
+- **VLT2-003** Tabela `stripe_payment_reversals` (tombstone por PaymentIntent):
+  reembolso/chargeback grava sempre; a concessão de crédito consulta e recusa
+  (`reversed_before_grant`) — independente da ordem dos eventos.
+- Suíte: `tests/entitlement.test.js` (fixtures fiéis) + correção do teste
+  obsoleto de consentimentos (VLT2-018). `npm test` 60/60.
+
 ## 28–29 de julho de 2026 — ronda de segurança e conformidade
 
 Correções da auditoria (VLT-001..017) e ajustes de produto. Ordem de aplicação

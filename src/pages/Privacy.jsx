@@ -1,394 +1,3 @@
-const BLOCOS = [
-  [
-    "h3",
-    "1. Identificação e âmbito"
-  ],
-  [
-    "p",
-    "O Veleda Tarô Simbólico (“Veleda”, “Aplicativo” ou “Serviço”) é operado por Jussara D R Oliveira, inscrita no NIF 302020250 sob o nº 302020250, com sede em Ericeira, Portugal, e contato geral em contact@veledataro.com."
-  ],
-  [
-    "p",
-    "Estes documentos aplicam-se ao site, aplicativo web/PWA, versões móveis, comunicações e funcionalidades relacionadas ao Veleda. Quando o Serviço for oferecido a pessoas no Brasil, aplica-se a legislação brasileira pertinente; quando oferecido a pessoas no Espaço Econômico Europeu, aplicam-se também as normas europeias obrigatórias."
-  ],
-  [
-    "h3",
-    "2. Quem é o controlador"
-  ],
-  [
-    "p",
-    "O controlador é Jussara D R Oliveira, NIF 302020250, com endereço em Ericeira, Portugal. Contato do encarregado/DPO ou canal de privacidade: contact@veledataro.com. Se houver representante na União Europeia ou no Brasil, seus dados serão indicados aqui: Não aplicável."
-  ],
-  [
-    "h3",
-    "3. Dados que podemos tratar"
-  ],
-  [
-    "h4",
-    "3.1 Dados fornecidos por você"
-  ],
-  [
-    "p",
-    "cadastro: nome ou forma de tratamento, e-mail, identificador de conta e senha protegida;"
-  ],
-  [
-    "p",
-    "perfil e preferências: idioma, país, moeda, plano e configurações;"
-  ],
-  [
-    "p",
-    "conteúdo: perguntas, cartas selecionadas, leituras, entradas do diário, histórico e feedback;"
-  ],
-  [
-    "p",
-    "suporte: mensagens, anexos e registros necessários para solucionar solicitações;"
-  ],
-  [
-    "p",
-    "compra: plano, valor, moeda, status, identificador da transação e dados fiscais necessários. O número completo do cartão é tratado pelo processador de pagamento."
-  ],
-  [
-    "h4",
-    "3.2 Dados coletados automaticamente"
-  ],
-  [
-    "p",
-    "endereço IP, data e hora, identificadores técnicos, navegador, sistema operacional e tipo de dispositivo;"
-  ],
-  [
-    "p",
-    "eventos de autenticação, páginas e funcionalidades utilizadas, falhas, desempenho e registros de segurança;"
-  ],
-  [
-    "p",
-    "cookies e armazenamento local estritamente necessários; analytics e marketing somente conforme consentimento ou outra base válida."
-  ],
-  [
-    "h4",
-    "3.3 Dados de terceiros"
-  ],
-  [
-    "p",
-    "Podemos receber confirmação de pagamento da Stripe/loja de aplicativos, informações de autenticação de provedores escolhidos pelo usuário e alertas de segurança/antifraude. Não compramos bancos de dados pessoais para criar perfis ocultos."
-  ],
-  [
-    "p",
-    "DADOS SENSÍVEIS. Perguntas e diário podem revelar saúde, religião, sexualidade, opiniões ou outros aspectos íntimos. Não solicitamos esses dados e recomendamos que você não os inclua. Se forem voluntariamente fornecidos, limitaremos o tratamento ao fornecimento solicitado, com salvaguardas e base jurídica adequada; poderemos remover ou bloquear conteúdo quando necessário para segurança e conformidade."
-  ],
-  [
-    "h3",
-    "4. Finalidades e bases legais"
-  ],
-  [
-    "p",
-    "Criar e administrar a conta; autenticar; fornecer leituras, histórico e diário. Base: Execução do contrato e medidas pré-contratuais."
-  ],
-  [
-    "p",
-    "Processar assinatura, faturamento, cancelamento, reembolso e prevenção de fraude. Base: Execução do contrato, obrigação legal e legítimo interesse em segurança."
-  ],
-  [
-    "p",
-    "Enviar perguntas e contexto ao provedor de IA para gerar a leitura solicitada. Base: Execução do contrato; consentimento explícito quando exigido para dados sensíveis."
-  ],
-  [
-    "p",
-    "Responder suporte e exercer direitos. Base: Execução do contrato e obrigação legal."
-  ],
-  [
-    "p",
-    "Manter segurança, detectar abuso, investigar incidentes e defender direitos. Base: Legítimo interesse, obrigação legal e exercício regular de direitos."
-  ],
-  [
-    "p",
-    "Melhorar estabilidade e experiência por métricas agregadas. Base: Legítimo interesse com minimização; consentimento quando cookies não essenciais forem utilizados."
-  ],
-  [
-    "p",
-    "Enviar marketing e novidades. Base: Consentimento ou legítimo interesse permitido, sempre com opção de oposição/descadastramento."
-  ],
-  [
-    "p",
-    "Cumprir obrigações fiscais, regulatórias e ordens válidas. Base: Obrigação legal/regulatória."
-  ],
-  [
-    "p",
-    "No Brasil, as bases serão interpretadas segundo os arts. 7º e 11 da LGPD; na União Europeia, segundo os arts. 6º e 9º do GDPR. Quando usarmos legítimo interesse, avaliaremos necessidade, proporcionalidade e impacto aos titulares. O consentimento poderá ser retirado sem afetar tratamento anterior lícito."
-  ],
-  [
-    "h3",
-    "5. Como funciona o processamento por IA"
-  ],
-  [
-    "p",
-    "A pergunta, as cartas, o nome de tratamento e contexto estritamente necessário podem ser enviados ao provedor Anthropic (Claude) para gerar a resposta. Configuraremos o serviço, sempre que disponível e contratualmente aplicável, para impedir treinamento geral com os dados do Veleda e limitar retenção do fornecedor."
-  ],
-  [
-    "p",
-    "Não utilizamos a leitura para tomar decisões exclusivamente automatizadas que produzam efeitos jurídicos ou impacto semelhante sobre você. A seleção e interpretação não definem crédito, emprego, seguro, saúde, elegibilidade ou direitos."
-  ],
-  [
-    "h3",
-    "6. Compartilhamento e operadores"
-  ],
-  [
-    "p",
-    "Compartilhamos somente o necessário com:"
-  ],
-  [
-    "p",
-    "Supabase ou equivalente: banco de dados, autenticação e funções de backend;"
-  ],
-  [
-    "p",
-    "Anthropic ou provedor equivalente: geração das leituras por IA;"
-  ],
-  [
-    "p",
-    "Stripe e/ou lojas de aplicativos: pagamento, assinatura, fraude e cobrança;"
-  ],
-  [
-    "p",
-    "hospedagem, CDN, monitoramento, e-mail transacional, atendimento e analytics aprovados;"
-  ],
-  [
-    "p",
-    "consultores, auditores e autoridades, quando necessário e permitido;"
-  ],
-  [
-    "p",
-    "adquirente ou sucessor em reorganização empresarial, com continuidade das proteções."
-  ],
-  [
-    "p",
-    "A lista nominal atualizada de fornecedores e seus países está publicada em veledataro.com/subprocessadores. Não vendemos dados pessoais. Não compartilhamos perguntas ou diário para publicidade comportamental de terceiros."
-  ],
-  [
-    "h3",
-    "7. Transferências internacionais"
-  ],
-  [
-    "p",
-    "Os fornecedores podem operar no Brasil, Estados Unidos, União Europeia e outros países. Adotaremos mecanismos válidos, como decisões de adequação, cláusulas-padrão contratuais, cláusulas-padrão da ANPD, regras corporativas ou outra hipótese legal, além de avaliação de segurança e minimização."
-  ],
-  [
-    "p",
-    "Para transferências sujeitas à LGPD, observaremos a Resolução CD/ANPD nº 19/2024 e normas posteriores. Para o GDPR, utilizaremos os mecanismos dos arts. 44 a 49, quando aplicáveis. Informações sobre a garantia utilizada poderão ser solicitadas ao canal de privacidade."
-  ],
-  [
-    "h3",
-    "8. Retenção e exclusão"
-  ],
-  [
-    "p",
-    "Guardamos dados somente pelo tempo necessário às finalidades, respeitando obrigações legais e defesa de direitos. A matriz definitiva deverá ser validada tecnicamente e juridicamente antes do lançamento:"
-  ],
-  [
-    "p",
-    "conta e perfil: durante a conta e até 30 dias após exclusão operacional, salvo obrigação ou disputa;"
-  ],
-  [
-    "p",
-    "perguntas, leituras, histórico e diário: até exclusão pelo usuário ou encerramento da conta, com ciclo técnico de remoção de backups de até 90 dias;"
-  ],
-  [
-    "p",
-    "registros de segurança: normalmente 6 a 12 meses, podendo ser ampliados em investigação;"
-  ],
-  [
-    "p",
-    "registros de suporte: até 24 meses após encerramento do caso;"
-  ],
-  [
-    "p",
-    "dados fiscais e de pagamento: pelo prazo legal aplicável;"
-  ],
-  [
-    "p",
-    "consentimentos e solicitações de direitos: pelo prazo necessário à comprovação de conformidade e defesa de direitos."
-  ],
-  [
-    "p",
-    "Dados podem ser anonimizados de modo razoavelmente irreversível e utilizados para estatísticas e melhoria. Uma solicitação de exclusão não alcança dados que devam ser mantidos por obrigação legal, prevenção de fraude ou exercício de direitos, mas seu uso ficará restrito."
-  ],
-  [
-    "h3",
-    "9. Segurança"
-  ],
-  [
-    "p",
-    "Adotamos medidas técnicas e organizacionais proporcionais, incluindo controle de acesso, autenticação, criptografia em trânsito, segregação por usuário, registros de auditoria, atualizações, backups, gestão de fornecedores e resposta a incidentes. Nenhum sistema é absolutamente seguro; use senha exclusiva e proteja seus dispositivos."
-  ],
-  [
-    "h3",
-    "10. Incidentes"
-  ],
-  [
-    "p",
-    "Em incidente que possa gerar risco ou dano relevante, investigaremos, mitigaremos e comunicaremos titulares e autoridades quando exigido. No Brasil, seguiremos as regras da ANPD; na União Europeia, os arts. 33 e 34 do GDPR, inclusive o prazo de 72 horas à autoridade quando aplicável."
-  ],
-  [
-    "h3",
-    "11. Cookies e tecnologias semelhantes"
-  ],
-  [
-    "p",
-    "Utilizamos cookies ou armazenamento local estritamente necessários para login, segurança, preferências e funcionamento. Na primeira visita, o Veleda exibirá um painel de cookies com opções igualmente acessíveis para “Aceitar todos”, “Rejeitar não essenciais” e “Configurar”. Cookies de analytics, personalização ou marketing permanecerão bloqueados até uma escolha válida. O usuário poderá rever ou retirar o consentimento a qualquer momento em “Privacidade” → “Preferências de cookies”, sem prejuízo das funções essenciais."
-  ],
-  [
-    "p",
-    "A Política de Cookies deverá listar nome, fornecedor, finalidade e duração de cada tecnologia após auditoria do aplicativo. Não devem ser inseridos rastreadores não documentados."
-  ],
-  [
-    "h3",
-    "12. Direitos dos titulares"
-  ],
-  [
-    "p",
-    "Dependendo da jurisdição, você pode solicitar:"
-  ],
-  [
-    "p",
-    "confirmação e acesso;"
-  ],
-  [
-    "p",
-    "correção;"
-  ],
-  [
-    "p",
-    "anonimização, bloqueio ou eliminação;"
-  ],
-  [
-    "p",
-    "portabilidade, quando aplicável;"
-  ],
-  [
-    "p",
-    "informação sobre compartilhamentos;"
-  ],
-  [
-    "p",
-    "retirada de consentimento;"
-  ],
-  [
-    "p",
-    "oposição e restrição do tratamento;"
-  ],
-  [
-    "p",
-    "revisão de decisão exclusivamente automatizada;"
-  ],
-  [
-    "p",
-    "explicação sobre critérios e consequências relevantes;"
-  ],
-  [
-    "p",
-    "reclamação à ANPD, à CNPD portuguesa ou à autoridade competente;"
-  ],
-  [
-    "p",
-    "não discriminação pelo exercício de direitos."
-  ],
-  [
-    "p",
-    "Solicitações devem ser enviadas a contact@veledataro.com. Poderemos confirmar identidade de forma proporcional. Responderemos nos prazos legais; pedidos complexos poderão exigir extensão permitida, com justificativa. Se negarmos total ou parcialmente, explicaremos a razão e os meios de recurso."
-  ],
-  [
-    "h3",
-    "13. Crianças e adolescentes"
-  ],
-  [
-    "p",
-    "O Serviço é destinado a maiores de 18 anos. Não coletamos intencionalmente dados de crianças ou adolescentes. Pais ou responsáveis que identifiquem uso por menor devem contatar contact@veledataro.com para investigação e exclusão."
-  ],
-  [
-    "h3",
-    "14. Privacidade por padrão"
-  ],
-  [
-    "p",
-    "Diário e histórico serão privados por padrão e não indexados publicamente."
-  ],
-  [
-    "p",
-    "A equipe não acessará conteúdo íntimo salvo necessidade autorizada e registrada de suporte, segurança ou obrigação legal."
-  ],
-  [
-    "p",
-    "Ambientes de desenvolvimento e demonstração não deverão usar conteúdo real identificável."
-  ],
-  [
-    "p",
-    "Novos fornecedores, analytics ou usos de IA exigirão avaliação de privacidade e atualização deste aviso."
-  ],
-  [
-    "h3",
-    "15. Alterações desta Política"
-  ],
-  [
-    "p",
-    "Atualizações materiais serão comunicadas por meio adequado. Se uma nova finalidade exigir consentimento, ele será solicitado antes do tratamento. Manteremos data e versão e, quando viável, histórico das versões anteriores."
-  ],
-  [
-    "h3",
-    "16. Contato e autoridades"
-  ],
-  [
-    "p",
-    "Controlador: Jussara D R Oliveira · NIF 302020250 · Ericeira, Portugal · Privacidade/DPO: contact@veledataro.com. Brasil: Autoridade Nacional de Proteção de Dados — ANPD. Portugal: Comissão Nacional de Proteção de Dados — CNPD. O titular também pode procurar a autoridade do país europeu onde reside, trabalha ou considera ter ocorrido violação."
-  ],
-  [
-    "p",
-    "Anexo A — fornecedores a confirmar antes da publicação"
-  ],
-  [
-    "p",
-    "Supabase: confirmar região do projeto, suboperadores e retenção de logs."
-  ],
-  [
-    "p",
-    "Anthropic: confirmar produto/API, política de retenção e cláusula de não treinamento."
-  ],
-  [
-    "p",
-    "Stripe: confirmar entidade contratante, países e dados fiscais processados."
-  ],
-  [
-    "p",
-    "Hospedagem/Vercel ou equivalente: confirmar região, logs e CDN."
-  ],
-  [
-    "p",
-    "E-mail, analytics, monitoramento de erros e suporte: listar ou remover se não utilizados."
-  ],
-  [
-    "p",
-    "Anexo B — referências regulatórias para revisão jurídica"
-  ],
-  [
-    "p",
-    "Lei nº 13.709/2018 — Lei Geral de Proteção de Dados Pessoais (LGPD)."
-  ],
-  [
-    "p",
-    "Resolução CD/ANPD nº 19/2024 — Transferência Internacional de Dados."
-  ],
-  [
-    "p",
-    "Regulamento (UE) 2016/679 — General Data Protection Regulation (GDPR)."
-  ],
-  [
-    "p",
-    "Código de Defesa do Consumidor brasileiro e Decreto nº 7.962/2013."
-  ],
-  [
-    "p",
-    "Diretiva 2011/83/UE sobre direitos dos consumidores e normas nacionais de transposição."
-  ]
-]
-
 export default function Privacy() {
   return (
     <main className="internal-page legal-page">
@@ -396,16 +5,147 @@ export default function Privacy() {
         <div className="card-panel ornate-panel legal-panel">
           <p className="internal-kicker">Transparência</p>
           <h2>Política de Privacidade</h2>
-          <p className="muted">Como o Veleda coleta, utiliza, compartilha e protege dados pessoais</p>
-          <p className="legal-draft-notice" role="note">
-            Documento provisório em preparação. Versão preliminar, sujeita a revisão jurídica antes do lançamento comercial.
-          </p>
+          <p className="muted">Versão privacy-2026-07-28 · vigente desde 28 de julho de 2026</p>
+
           <div className="legal-content">
-            {BLOCOS.map(([tag, texto], i) => {
-              if (tag === 'h3') return <h3 key={i}>{texto}</h3>
-              if (tag === 'h4') return <h4 key={i}>{texto}</h4>
-              return <p key={i}>{texto}</p>
-            })}
+            <h3>Identificação da responsável</h3>
+            <p>
+              O Veleda Tarô é um serviço operado por <strong>Jussara D R Oliveira</strong>,
+              pessoa singular com atividade estabelecida em Portugal, NIF 302020250,
+              em Ericeira, Portugal. O contato geral e de privacidade é{' '}
+              <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>.
+            </p>
+
+            <h3>Regras gerais</h3>
+            <h4>Âmbito e dados tratados</h4>
+            <p>
+              Esta Política vale para o mesmo aplicativo e domínio quando a oferta é
+              dirigida a Portugal/União Europeia ou ao Brasil. A seção territorial
+              aplicável considera o mercado selecionado e a oferta apresentada; o
+              simples acesso a partir de outro país não altera automaticamente o contrato.
+            </p>
+            <p>
+              Tratamos e-mail, credenciais por meio do Supabase Auth, nome de tratamento
+              opcional, identificadores técnicos, mercado selecionado, aceites contratuais,
+              plano e estado de pagamento. Também armazenamos as perguntas, cartas,
+              interpretações, histórico e entradas que você decide escrever no diário.
+              Fornecedores de infraestrutura podem tratar IP, navegador, data, hora e
+              registros técnicos necessários à segurança e operação.
+            </p>
+            <p>
+              Perguntas e diário podem conter informações íntimas, inclusive dados de
+              saúde, religião, sexualidade ou vida pessoal. Não precisamos desses detalhes:
+              evite incluir dados sensíveis ou dados de terceiros que não sejam necessários.
+            </p>
+
+            <h4>Inteligência artificial</h4>
+            <p>
+              Para gerar uma leitura, enviamos à <strong>Anthropic (Claude)</strong> a
+              pergunta e as três cartas, incluindo posição, orientação e palavras-chave.
+              Não enviamos à IA seu e-mail, nome de tratamento, UUID, histórico ou diário.
+              O diário permanece no Supabase e não integra a solicitação à Anthropic.
+            </p>
+            <p>
+              A resposta é probabilística e pode conter erros. Ela serve para reflexão e
+              entretenimento e não é usada pelo Veleda para decisões automatizadas que
+              produzam efeitos jurídicos sobre você.
+            </p>
+
+            <h4>Finalidades e bases</h4>
+            <p>
+              Usamos os dados para criar e proteger a conta, prestar leituras, manter
+              histórico e diário, processar pagamentos, aplicar limites de uso, responder
+              solicitações, prevenir abuso, cumprir obrigações legais e defender direitos.
+              As bases aplicáveis incluem execução do contrato, medidas pré-contratuais,
+              obrigação legal e interesse legítimo em segurança. Se uma finalidade ou
+              categoria exigir consentimento específico, ele será solicitado separadamente.
+            </p>
+            <p>
+              No cadastro registramos, no servidor e de forma versionada, o aceite dos
+              Termos, a ciência desta Política e a declaração “Declaro ter 18 anos ou mais.”.
+              Essa declaração não verifica identidade ou idade e não envolve documento,
+              data de nascimento, fotografia ou biometria.
+            </p>
+
+            <h4>Fornecedores confirmados</h4>
+            <p>
+              Usamos Supabase para banco, autenticação e funções de servidor; Vercel para
+              hospedar e entregar o frontend; Anthropic para gerar as interpretações; e
+              Stripe para checkout, assinatura, prevenção de fraude e pagamentos. O Veleda
+              não armazena o número completo do cartão. A lista detalhada está na página de{' '}
+              <a href="/subprocessadores">Subprocessadores</a>.
+            </p>
+
+            <h4>Transferências internacionais</h4>
+            <p>
+              O banco principal do projeto Supabase está na União Europeia, mas Vercel,
+              Anthropic e Stripe podem processar dados internacionalmente, inclusive fora
+              do Espaço Econômico Europeu e do Brasil. Aplicamos minimização e adotamos os
+              mecanismos contratuais e legais exigidos para a transferência aplicável.
+              Informações sobre as garantias podem ser solicitadas no canal de privacidade.
+            </p>
+
+            <h4>Retenção, segurança e eliminação</h4>
+            <p>
+              Mantemos dados enquanto a conta estiver ativa e pelo tempo necessário para
+              prestar o serviço, cumprir obrigações legais, prevenir fraude e exercer
+              direitos. Ao excluir a conta, os dados ativos do aplicativo são removidos
+              depois que a Stripe confirma o encerramento de assinaturas capazes de gerar
+              cobrança. Registros legalmente exigidos e cópias de segurança seguem os
+              ciclos do fornecedor e ficam com uso restrito; a eliminação não é instantânea
+              em todos os sistemas.
+            </p>
+            <p>
+              Usamos conexão cifrada, autenticação, isolamento por usuário, permissões de
+              banco, sanitização de conteúdo e controles de abuso. Nenhum sistema é
+              absolutamente seguro. Use senha exclusiva e proteja o dispositivo.
+            </p>
+
+            <h4>Armazenamento local e cookies</h4>
+            <p>
+              O navegador usa armazenamento local essencial para sessão, recuperação de
+              senha e preferências de instalação. Não há scripts de analytics, publicidade
+              ou cookies de marketing no aplicativo atual. Cookies necessários do Stripe
+              podem ser usados na página de pagamento hospedada por ele. A adoção futura de
+              tecnologia não essencial exigirá atualização das políticas e, quando
+              aplicável, consentimento prévio.
+            </p>
+
+            <h4>Seus controles e direitos</h4>
+            <p>
+              Na conta você pode exportar os principais dados e solicitar exclusão. Para
+              acesso, correção, exportação, oposição, restrição, retirada de consentimento
+              ou eliminação, escreva para{' '}
+              <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>. Podemos
+              confirmar a identidade de forma proporcional e responderemos nos prazos legais.
+            </p>
+
+            <h3>Portugal e União Europeia</h3>
+            <p>
+              Quando a oferta Portugal/UE for selecionada, aplicam-se o RGPD/GDPR e as
+              normas obrigatórias de consumo pertinentes. Você pode pedir acesso,
+              retificação, apagamento, portabilidade, limitação e oposição, e apresentar
+              reclamação à Comissão Nacional de Proteção de Dados ou à autoridade de
+              controle competente do seu local de residência, trabalho ou alegada infração.
+            </p>
+
+            <h3>Brasil</h3>
+            <p>
+              Quando a oferta brasileira for selecionada, aplicam-se a LGPD e as normas
+              brasileiras obrigatórias de defesa do consumidor e comércio eletrônico.
+              Você pode pedir confirmação, acesso, correção, informação sobre
+              compartilhamento, portabilidade quando regulamentada, anonimização,
+              bloqueio ou eliminação nos casos legais e reclamar à ANPD ou aos órgãos de
+              defesa do consumidor competentes.
+            </p>
+
+            <h3>Alterações e contato</h3>
+            <p>
+              Mudanças materiais serão comunicadas por meio adequado. Se uma nova finalidade
+              exigir consentimento, ela não será iniciada antes da escolha. Contato:
+              Jussara D R Oliveira · Ericeira, Portugal ·{' '}
+              <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>.
+            </p>
           </div>
         </div>
       </div>

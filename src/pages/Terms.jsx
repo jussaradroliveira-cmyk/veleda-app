@@ -1,326 +1,3 @@
-const BLOCOS = [
-  [
-    "h3",
-    "1. Identificação e âmbito"
-  ],
-  [
-    "p",
-    "O Veleda Tarô Simbólico (“Veleda”, “Aplicativo” ou “Serviço”) é operado por Jussara D R Oliveira, inscrita no NIF 302020250 sob o nº 302020250, com sede em Ericeira, Portugal, e contato geral em contact@veledataro.com."
-  ],
-  [
-    "p",
-    "Estes documentos aplicam-se ao site, aplicativo web/PWA, versões móveis, comunicações e funcionalidades relacionadas ao Veleda. Quando o Serviço for oferecido a pessoas no Brasil, aplica-se a legislação brasileira pertinente; quando oferecido a pessoas no Espaço Econômico Europeu, aplicam-se também as normas europeias obrigatórias."
-  ],
-  [
-    "h3",
-    "2. Aceitação e capacidade"
-  ],
-  [
-    "p",
-    "Ao criar uma conta, acessar uma leitura, contratar um plano ou utilizar qualquer funcionalidade, você declara que leu e aceita estes Termos e a Política de Privacidade. Se não concordar, não utilize o Serviço."
-  ],
-  [
-    "p",
-    "O Veleda destina-se exclusivamente a pessoas com 18 anos ou mais. Ao criar a conta, o usuário declara possuir pelo menos 18 anos. O Serviço não afirma realizar verificação documental ou técnica de idade, salvo se esse mecanismo vier a ser implementado e informado. Não coletamos intencionalmente dados de menores. Caso identifiquemos conta de menor, poderemos suspendê-la e excluir os dados, observadas as obrigações legais."
-  ],
-  [
-    "h3",
-    "3. Natureza do Serviço"
-  ],
-  [
-    "p",
-    "O Veleda oferece experiências de tarô simbólico, reflexão pessoal, registro em diário e histórico de leituras, com auxílio de inteligência artificial. As interpretações são geradas para entretenimento, autoconhecimento e reflexão, sem promessa de prever o futuro ou produzir resultados determinados."
-  ],
-  [
-    "p",
-    "AVISO ESSENCIAL. O Veleda não presta serviços médicos, psicológicos, psiquiátricos, jurídicos, financeiros, religiosos ou profissionais. Nenhuma leitura deve substituir avaliação, diagnóstico, tratamento ou aconselhamento de profissional qualificado. Em situação de emergência ou risco à vida, procure imediatamente os serviços de emergência de sua localidade."
-  ],
-  [
-    "p",
-    "Não tome decisões relevantes sobre saúde, segurança, relacionamentos, trabalho, investimentos, crédito ou processos judiciais com base exclusiva em uma leitura."
-  ],
-  [
-    "p",
-    "As respostas podem conter erros, ambiguidades ou interpretações inadequadas. Use seu julgamento e confira informações importantes em fontes independentes."
-  ],
-  [
-    "p",
-    "O Serviço não garante disponibilidade contínua, precisão, compatibilidade ou um resultado emocional específico."
-  ],
-  [
-    "h3",
-    "4. Inteligência artificial e conteúdo gerado"
-  ],
-  [
-    "p",
-    "As leituras podem ser produzidas ou auxiliadas por modelos de inteligência artificial de terceiros, incluindo Anthropic (Claude). Ao enviar uma pergunta, você reconhece que o texto poderá ser processado por esses fornecedores conforme contratos e salvaguardas aplicáveis."
-  ],
-  [
-    "p",
-    "A IA não possui consciência, intuição, poderes espirituais ou conhecimento pessoal sobre você além das informações enviadas no contexto da interação. O resultado é probabilístico e pode variar mesmo quando perguntas semelhantes são feitas."
-  ],
-  [
-    "p",
-    "Podemos estabelecer regras de segurança e recusar conteúdo manifestamente relacionado a violência, exploração, ilegalidade, assédio ou outras situações de risco. O Veleda não promete monitoramento contínuo, detecção automática de crises ou intervenção em tempo real. Se mecanismos de moderação ou detecção forem implementados, eles serão auxiliares e não substituirão serviços de emergência nem profissionais qualificados."
-  ],
-  [
-    "h3",
-    "5. Conta e segurança"
-  ],
-  [
-    "p",
-    "Você deve fornecer informações verdadeiras e manter seus dados atualizados."
-  ],
-  [
-    "p",
-    "A conta é pessoal e intransferível; você é responsável por proteger senha e dispositivos."
-  ],
-  [
-    "p",
-    "Comunique imediatamente suspeita de acesso não autorizado a contact@veledataro.com."
-  ],
-  [
-    "p",
-    "Podemos exigir verificação, redefinir credenciais ou suspender acessos para proteger usuários e o Serviço."
-  ],
-  [
-    "h3",
-    "6. Leituras gratuitas e planos Premium"
-  ],
-  [
-    "p",
-    "Salvo indicação promocional diferente, cada pessoa elegível poderá realizar 1 (uma) leitura gratuita por semana. A segunda leitura dentro da mesma semana exige assinatura Premium ativa. A semana e o momento de renovação do benefício serão calculados conforme a regra informada na interface e o fuso horário operacional do Serviço."
-  ],
-  [
-    "p",
-    "O plano Premium oferece leituras ilimitadas sujeitas a uso razoável, limites técnicos, prevenção de abuso e disponibilidade do Serviço. “Ilimitado” não autoriza automação, revenda, compartilhamento de conta, extração em massa ou uso que prejudique a plataforma."
-  ],
-  [
-    "p",
-    "Preço-base previsto para o Brasil: R$ 39,90 por mês. O plano anual, com desconto de 20% sobre doze mensalidades, é de R$ 383,04 por ano. Eventual preço promocional — inclusive desconto no primeiro mês — somente será aplicável quando exibido de forma clara antes da compra, com indicação do preço promocional, duração e valor recorrente posterior. Os preços para a União Europeia ainda não estão definidos e serão informados antes do lançamento nessa região. Impostos, moeda, período, benefícios e condições efetivamente aplicáveis serão apresentados de maneira clara antes da confirmação da compra, respeitada a oferta e a legislação."
-  ],
-  [
-    "p",
-    "Consulta avulsa (pagamento único, sem assinatura): por R$ 49,90 você adquire um pacote de 5 (cinco) leituras, válido por 30 (trinta) dias a contar da data da compra. As leituras não utilizadas nesse prazo expiram. O preço, a quantidade e o prazo de validade são exibidos de forma clara antes da confirmação da compra. A consulta avulsa não renova automaticamente e é independente da assinatura Premium."
-  ],
-  [
-    "h3",
-    "7. Pagamento, renovação e cancelamento"
-  ],
-  [
-    "p",
-    "Pagamentos poderão ser processados pela Stripe ou pelas lojas de aplicativos. O Veleda não armazena o número completo do cartão."
-  ],
-  [
-    "p",
-    "A assinatura renova-se automaticamente pelo mesmo período até ser cancelada, conforme informação exibida na compra."
-  ],
-  [
-    "p",
-    "Você poderá cancelar a renovação a qualquer momento em “Minha conta” → “Assinatura” → “Cancelar assinatura”. O cancelamento deverá ser confirmado na tela e por e-mail. O acesso permanece até o fim do período já pago, salvo direito legal mais favorável."
-  ],
-  [
-    "p",
-    "O cancelamento da renovação não implica reembolso automático do período iniciado. Reembolsos obrigatórios serão respeitados; pedidos adicionais serão avaliados segundo a oferta e a legislação aplicável."
-  ],
-  [
-    "p",
-    "Podemos ajustar preços para períodos futuros mediante aviso prévio e, quando exigido, novo consentimento. O usuário poderá cancelar antes da vigência do novo preço."
-  ],
-  [
-    "p",
-    "No Brasil, respeitamos o Código de Defesa do Consumidor, inclusive o direito de arrependimento aplicável às contratações à distância. No Espaço Econômico Europeu, o consumidor dispõe, em regra, de 14 dias para desistir de contratos à distância, observadas as exceções e o consentimento expresso para início imediato de conteúdo ou serviço digital."
-  ],
-  [
-    "h3",
-    "8. Diário, perguntas e conteúdo do usuário"
-  ],
-  [
-    "p",
-    "Você mantém os direitos que possua sobre perguntas, registros e demais conteúdos enviados. Concede ao Veleda licença limitada, não exclusiva e pelo prazo necessário para hospedar, processar, exibir, proteger e fornecer o Serviço solicitado."
-  ],
-  [
-    "p",
-    "Não envie dados de terceiros sem autorização, segredos, documentos confidenciais ou informações que não sejam necessárias à leitura."
-  ],
-  [
-    "p",
-    "Evite inserir dados sensíveis, especialmente informações médicas, biométricas, genéticas, políticas, religiosas, sexuais ou sobre crianças."
-  ],
-  [
-    "p",
-    "Não é permitido conteúdo ilegal, ameaçador, discriminatório, abusivo, invasivo, fraudulento ou que viole direitos de terceiros."
-  ],
-  [
-    "p",
-    "O diário é privado por padrão, mas nenhum serviço digital pode prometer sigilo absoluto. Adotamos medidas de segurança razoáveis e recomendamos que o usuário não registre informações cuja exposição possa causar dano grave."
-  ],
-  [
-    "h3",
-    "9. Uso aceitável"
-  ],
-  [
-    "p",
-    "É proibido:"
-  ],
-  [
-    "p",
-    "usar robôs, scripts ou métodos automatizados sem autorização;"
-  ],
-  [
-    "p",
-    "contornar limites, criar contas múltiplas para obter benefícios ou compartilhar acesso Premium;"
-  ],
-  [
-    "p",
-    "copiar, raspar, revender ou explorar comercialmente o Serviço ou suas respostas em escala;"
-  ],
-  [
-    "p",
-    "tentar acessar sistemas, contas ou dados de terceiros;"
-  ],
-  [
-    "p",
-    "introduzir malware, realizar ataques, testes de intrusão não autorizados ou sobrecarregar a infraestrutura;"
-  ],
-  [
-    "p",
-    "usar o Serviço para fraude, perseguição, coerção, exploração ou decisões automatizadas sobre terceiros;"
-  ],
-  [
-    "p",
-    "remover marcas, avisos ou mecanismos de proteção."
-  ],
-  [
-    "h3",
-    "10. Propriedade intelectual"
-  ],
-  [
-    "p",
-    "O nome Veleda, logotipos, identidade visual, cartas, ilustrações, textos editoriais, software, interfaces e demais materiais são protegidos por direitos autorais, marcas e outras normas. Nenhuma licença é concedida além do uso pessoal do Serviço."
-  ],
-  [
-    "p",
-    "O usuário não poderá imprimir, fabricar, comercializar, tokenizar, licenciar ou criar produtos derivados das cartas ou artes sem autorização escrita. A compra de um baralho físico não transfere direitos de reprodução."
-  ],
-  [
-    "h3",
-    "11. Serviços de terceiros"
-  ],
-  [
-    "p",
-    "O Serviço depende de provedores como Supabase (banco de dados e autenticação), Anthropic ou equivalente (IA), Stripe (pagamentos), hospedagem e serviços de e-mail/monitoramento. Esses terceiros podem ter termos e avisos próprios. O Veleda responde por suas obrigações legais, mas não controla interrupções ou atos independentes de terceiros."
-  ],
-  [
-    "h3",
-    "12. Disponibilidade, atualizações e alterações"
-  ],
-  [
-    "p",
-    "Podemos corrigir, atualizar, substituir ou descontinuar funcionalidades por razões técnicas, jurídicas, de segurança ou comerciais. Quando uma alteração material prejudicar uma assinatura paga, forneceremos aviso e os direitos previstos em lei."
-  ],
-  [
-    "p",
-    "Manutenções, falhas de rede, força maior, ataques e serviços externos podem causar indisponibilidade. Não garantimos operação ininterrupta ou compatibilidade permanente com todo dispositivo."
-  ],
-  [
-    "h3",
-    "13. Suspensão e encerramento"
-  ],
-  [
-    "p",
-    "Podemos advertir, limitar ou suspender a conta em caso de violação, risco de segurança, fraude, chargeback abusivo, exigência legal ou dano ao Serviço. Sempre que adequado, permitiremos esclarecimento. Violações graves podem resultar em encerramento imediato."
-  ],
-  [
-    "p",
-    "Você pode excluir a conta em “Minha conta” → “Privacidade” → “Excluir minha conta”. Antes da confirmação, o Veleda informará as consequências, solicitará nova autenticação e oferecerá a exportação dos dados quando aplicável. A exclusão encerrará o acesso e iniciará a eliminação dos dados nos prazos da Política de Privacidade. Se houver assinatura ativa, o fluxo deverá exigir seu cancelamento ou confirmar expressamente como a cobrança será encerrada, evitando renovação posterior. O pedido também poderá ser feito por contact@veledataro.com. O encerramento não elimina obrigações anteriores nem dados cuja retenção seja exigida ou permitida por lei."
-  ],
-  [
-    "h3",
-    "14. Isenções e limitação de responsabilidade"
-  ],
-  [
-    "p",
-    "Na máxima extensão permitida, o Serviço é fornecido conforme disponível. Não garantimos que leituras sejam verdadeiras, completas ou adequadas a uma decisão específica. O Veleda não responde por decisões tomadas exclusivamente com base no conteúdo simbólico, por perda indireta ou expectativa subjetiva, sem prejuízo das responsabilidades que não possam ser afastadas por lei, incluindo direitos do consumidor, dolo, culpa grave e danos à integridade pessoal."
-  ],
-  [
-    "h3",
-    "15. Indenização"
-  ],
-  [
-    "p",
-    "Na medida permitida, o usuário deverá ressarcir prejuízos razoáveis decorrentes de uso ilegal, violação destes Termos ou de direitos de terceiros, assegurados contraditório e proporcionalidade. Esta cláusula não limita direitos obrigatórios do consumidor."
-  ],
-  [
-    "h3",
-    "16. Comunicações"
-  ],
-  [
-    "p",
-    "Mensagens transacionais sobre conta, segurança, pagamento e mudanças essenciais poderão ser enviadas independentemente de marketing. Comunicações promocionais dependerão da base legal aplicável e conterão mecanismo de descadastramento."
-  ],
-  [
-    "h3",
-    "17. Alterações dos Termos"
-  ],
-  [
-    "p",
-    "Podemos atualizar estes Termos. Alterações materiais serão comunicadas com antecedência razoável por e-mail ou aviso no Serviço. Quando a lei exigir, solicitaremos nova aceitação. A versão e a data estarão sempre indicadas."
-  ],
-  [
-    "h3",
-    "18. Lei aplicável e resolução de conflitos"
-  ],
-  [
-    "p",
-    "Para consumidores, aplicam-se as normas obrigatórias do local de residência. Sem afastar essas proteções, os Termos serão regidos pelas leis de Portugal. O foro será a Comarca de Lisboa, Portugal, salvo foro legalmente assegurado ao consumidor."
-  ],
-  [
-    "p",
-    "Antes de processo judicial, incentivamos contato por contact@veledataro.com. Consumidores europeus podem recorrer às entidades de resolução alternativa de litígios aplicáveis no país da empresa e de sua residência."
-  ],
-  [
-    "h3",
-    "19. Contato"
-  ],
-  [
-    "p",
-    "Operadora: Jussara D R Oliveira · NIF 302020250 · Ericeira, Portugal · Suporte: contact@veledataro.com · Privacidade: contact@veledataro.com."
-  ],
-  [
-    "p",
-    "Anexo — dados a preencher antes da publicação"
-  ],
-  [
-    "p",
-    "Razão social, número fiscal e endereço da operadora."
-  ],
-  [
-    "p",
-    "País da empresa, lei e foro principal."
-  ],
-  [
-    "p",
-    "E-mails de suporte, privacidade e cobrança."
-  ],
-  [
-    "p",
-    "Data exata de vigência e regra de contagem da leitura semanal."
-  ],
-  [
-    "p",
-    "Provedor final de IA, hospedagem, analytics, e-mail e suporte."
-  ],
-  [
-    "p",
-    "Fluxo real de cancelamento, reembolso e exclusão da conta."
-  ],
-  [
-    "p",
-    "Entidade de resolução alternativa de litígios aplicável em Portugal/UE."
-  ]
-]
-
 export default function Terms() {
   return (
     <main className="internal-page legal-page">
@@ -328,16 +5,142 @@ export default function Terms() {
         <div className="card-panel ornate-panel legal-panel">
           <p className="internal-kicker">Transparência</p>
           <h2>Termos de Uso</h2>
-          <p className="muted">Regras para acesso e utilização do aplicativo Veleda Tarô Simbólico</p>
-          <p className="legal-draft-notice" role="note">
-            Documento provisório em preparação. Versão preliminar, sujeita a revisão jurídica antes do lançamento comercial.
-          </p>
+          <p className="muted">Versão terms-2026-07-28 · vigente desde 28 de julho de 2026</p>
+
           <div className="legal-content">
-            {BLOCOS.map(([tag, texto], i) => {
-              if (tag === 'h3') return <h3 key={i}>{texto}</h3>
-              if (tag === 'h4') return <h4 key={i}>{texto}</h4>
-              return <p key={i}>{texto}</p>
-            })}
+            <h3>Identificação</h3>
+            <p>
+              O Veleda Tarô é operado por <strong>Jussara D R Oliveira</strong>, pessoa
+              singular com atividade estabelecida em Portugal, NIF 302020250, em Ericeira,
+              Portugal. Contato: <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>.
+            </p>
+
+            <h3>Regras gerais</h3>
+            <h4>Aceitação e idade</h4>
+            <p>
+              Para criar conta, você deve aceitar estes Termos, confirmar ciência da Política
+              de Privacidade e marcar a declaração obrigatória “Declaro ter 18 anos ou mais.”.
+              O Veleda não realiza comprovação documental de idade ou identidade e não pede
+              documento, data de nascimento, fotografia ou biometria para essa finalidade.
+            </p>
+
+            <h4>Natureza do serviço e aviso sobre IA</h4>
+            <p>
+              O Veleda oferece tarô simbólico com interpretação gerada por inteligência
+              artificial, histórico e diário. As leituras destinam-se a reflexão e
+              entretenimento, podem conter erros e não preveem resultados garantidos.
+            </p>
+            <p>
+              O serviço não oferece aconselhamento médico, psicológico, psiquiátrico,
+              jurídico ou financeiro. Não tome decisões relevantes exclusivamente com base
+              em uma leitura. O Veleda não é serviço de emergência e não monitora crises em
+              tempo real; em risco ou emergência, procure os serviços locais adequados.
+            </p>
+            <p>
+              Para gerar a interpretação, a pergunta e as cartas são enviadas à Anthropic.
+              O diário não é enviado à IA. Evite inserir dados íntimos desnecessários ou
+              dados de terceiros sem autorização.
+            </p>
+
+            <h4>Conta e uso aceitável</h4>
+            <p>
+              A conta é pessoal. Proteja senha e dispositivo. É proibido automatizar
+              leituras, contornar quotas, compartilhar ou revender acesso, raspar conteúdo,
+              atacar a infraestrutura, acessar conta alheia ou usar o serviço para atividade
+              ilegal, abusiva ou que viole direitos de terceiros.
+            </p>
+
+            <h4>Leitura gratuita e Premium</h4>
+            <p>
+              A conta gratuita recebe 1 leitura por semana civil, de segunda-feira às
+              00:00 UTC até a segunda seguinte. A reserva é feita no servidor antes da
+              chamada à IA; falhas liberam a reserva. O Premium pode ser apresentado
+              comercialmente como ilimitado, mas permanece sujeito a uso razoável, limites
+              técnicos de concorrência e frequência e proteção contra automação e abuso.
+            </p>
+
+            <h4>Mercados, preços e pagamento</h4>
+            <p>
+              O mesmo aplicativo pode oferecer um catálogo para Brasil em BRL e outro para
+              Portugal/União Europeia em EUR. A oferta aplicável depende do mercado
+              selecionado e habilitado. O servidor escolhe o Price ID fixo correspondente;
+              o cliente não define preço, moeda ou Price ID e o Veleda não usa conversão
+              automática quando existe preço regional fixo.
+            </p>
+            <p>
+              Na oferta brasileira atualmente configurada, o mensal é R$ 39,90, o anual é
+              R$ 383,04 e a compra avulsa é R$ 49,90 por 5 leituras válidas durante 30 dias.
+              Uma oferta só pode ser contratada quando o checkout exibir novamente mercado,
+              moeda, valor, periodicidade e total antes da confirmação. A compra avulsa não
+              renova automaticamente.
+            </p>
+            <p>
+              O Stripe processa pagamentos, assinaturas e dados de cartão. O Veleda recebe
+              apenas identificadores e estado necessários e não armazena o número completo
+              do cartão.
+            </p>
+
+            <h4>Renovação, cancelamento, exclusão e reembolso</h4>
+            <p>
+              Assinaturas renovam pelo período informado até o cancelamento. No portal
+              Stripe acessível em “Minha conta” → “Assinatura”, você pode cancelar a
+              renovação; em regra, isso mantém a conta e o acesso até o fim do período pago.
+              “Cancelar renovação”, “encerrar assinatura” e “excluir conta” são ações distintas.
+            </p>
+            <p>
+              Ao confirmar a exclusão com sua senha, o Veleda consulta o customer diretamente
+              na Stripe e encerra todas as assinaturas que ainda possam manter cobrança.
+              Se a Stripe não confirmar, nenhum perfil ou identificador Stripe é apagado.
+              Após a confirmação, a conta, o histórico e o diário ativos são eliminados e o
+              acesso termina.
+            </p>
+            <p>
+              Cancelamento ou exclusão não geram reembolso automático. Direitos obrigatórios,
+              inclusive arrependimento quando aplicável, não são limitados por estes Termos.
+              Pedidos de reembolso ou arrependimento devem ser enviados separadamente a{' '}
+              <a href="mailto:contact@veledataro.com">contact@veledataro.com</a> com os dados
+              mínimos para localizar a compra.
+            </p>
+
+            <h4>Conteúdo, disponibilidade e responsabilidade</h4>
+            <p>
+              Você mantém os direitos sobre perguntas e diário e permite o tratamento
+              limitado necessário para prestar e proteger o serviço. A disponibilidade
+              depende de fornecedores como Supabase, Vercel, Anthropic e Stripe. Podemos
+              suspender abuso, fraude ou risco técnico e realizar manutenção.
+            </p>
+            <p>
+              Nada nestes Termos exclui direitos obrigatórios do consumidor nem
+              responsabilidade que a lei não permita limitar.
+            </p>
+
+            <h3>Portugal e União Europeia</h3>
+            <p>
+              Esta seção se aplica quando a oferta Portugal/UE for selecionada. Aplicam-se
+              as regras obrigatórias de defesa do consumidor, incluindo informação
+              pré-contratual e o direito de livre resolução de contratos à distância
+              quando cabível. O início de serviço ou conteúdo digital durante o prazo legal
+              e eventual perda do direito exigem as informações e manifestações previstas
+              na lei. As leis de Portugal regem o contrato sem afastar proteções obrigatórias
+              do país de residência do consumidor.
+            </p>
+
+            <h3>Brasil</h3>
+            <p>
+              Esta seção se aplica quando a oferta brasileira for selecionada. Aplicam-se o
+              Código de Defesa do Consumidor, as regras de comércio eletrônico e o direito
+              de arrependimento nas hipóteses e prazos legais, além de informação clara
+              sobre fornecedor, preço, moeda, renovação, cancelamento e atendimento.
+            </p>
+
+            <h3>Alterações, conflitos e contato</h3>
+            <p>
+              Alterações materiais serão comunicadas e não afetam direitos já adquiridos.
+              Antes de disputa, entre em contato para tentativa de solução. Permanecem
+              disponíveis os tribunais e meios de resolução assegurados ao consumidor.
+              Contato: Jussara D R Oliveira · Ericeira, Portugal ·{' '}
+              <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>.
+            </p>
           </div>
         </div>
       </div>

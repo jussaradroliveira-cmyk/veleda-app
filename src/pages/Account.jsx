@@ -62,9 +62,12 @@ export default function Account() {
       const body = await resp.json().catch(() => ({}))
       if (!resp.ok) {
         setDeleting(false)
-        setDeleteError(body.error === 'invalid_password'
-          ? 'Senha incorreta — confirme sua senha atual para excluir a conta.'
-          : 'Não consegui concluir a exclusão. Tente de novo em instantes.')
+        const messages = {
+          invalid_password: 'Senha incorreta — confirme sua senha atual para excluir a conta.',
+          billing_cancellation_failed: 'A Stripe não confirmou o encerramento da assinatura. Nada foi excluído; tente novamente mais tarde.',
+          billing_cancellation_unavailable: 'Não foi possível verificar a assinatura agora. Nada foi excluído; tente novamente mais tarde.',
+        }
+        setDeleteError(messages[body.error] ?? 'Não consegui concluir a exclusão. Tente de novo em instantes.')
         return
       }
       // a sessão no servidor morreu com a conta; o signOut do supabase-js
@@ -90,7 +93,10 @@ export default function Account() {
 
         <section className="card-panel ornate-panel account-section" aria-labelledby="conta-assinatura">
           <h3 id="conta-assinatura">Assinatura</h3>
-          <p className="muted">Veja seu plano, assine o Premium ou gerencie a renovação.</p>
+          <p className="muted">
+            Cancelar a renovação mantém a conta e, em regra, o acesso até o fim do período pago.
+            Excluir a conta é uma ação diferente e encerra o acesso.
+          </p>
           <Link to="/assinatura" className="btn small">Ver minha assinatura</Link>
         </section>
 
@@ -113,7 +119,8 @@ export default function Account() {
             {!deleteOpen ? (
               <>
                 <p className="muted">
-                  Apaga definitivamente sua conta e todos os seus dados.
+                  Encerra assinaturas que ainda possam cobrar e, somente após a confirmação da Stripe,
+                  apaga a conta e os dados ativos do aplicativo.
                 </p>
                 <button className="btn small btn--danger" onClick={() => setDeleteOpen(true)}>
                   Excluir minha conta
@@ -125,8 +132,9 @@ export default function Account() {
                 <ul>
                   <li>Suas <strong>leituras</strong>, seu <strong>diário</strong> e seu <strong>perfil</strong> serão apagados definitivamente — não há como recuperar.</li>
                   <li>Seu <strong>login</strong> será removido e você será desconectada.</li>
-                  <li>Se tiver assinatura ativa, a <strong>renovação será cancelada</strong> — não haverá nova cobrança.</li>
-                  <li>Cópias em backups de segurança expiram automaticamente em até 30 dias.</li>
+                  <li>Antes da exclusão, todas as assinaturas vinculadas ao customer serão <strong>encerradas na Stripe</strong>. Se isso falhar, nenhum dado será apagado.</li>
+                  <li><strong>Excluir a conta não gera reembolso automático.</strong> Reembolso e direito de arrependimento são pedidos separados, avaliados conforme a oferta e a lei aplicável.</li>
+                  <li>Fornecedores e cópias de segurança podem manter dados pelo prazo técnico ou legal aplicável; os prazos ainda dependem da configuração contratada.</li>
                 </ul>
                 <p className="muted">
                   Dica: se quiser guardar suas leituras e seu diário, use <em>Exportar meus dados</em> antes.

@@ -5,7 +5,7 @@ export default function Cookies() {
         <div className="card-panel ornate-panel legal-panel">
           <p className="internal-kicker">Transparência</p>
           <h2>Política de Cookies</h2>
-          <p className="muted">Última atualização: 17 de julho de 2026</p>
+          <p className="muted">Última atualização: 28 de julho de 2026</p>
 
           <div className="legal-content">
             <h3>O essencial, sem rodeios</h3>
@@ -16,8 +16,8 @@ export default function Cookies() {
             </p>
 
             <p>
-              O site também não carrega scripts, fontes ou recursos de outros
-              servidores: tudo é servido pela própria Veleda. Por isso,{' '}
+              Os scripts, fontes e imagens do aplicativo são servidos pela própria Veleda.
+              O aplicativo se conecta aos fornecedores descritos na Política de Privacidade.{' '}
               <strong>não há cookies não essenciais para aceitar ou recusar</strong> —
               e não mostramos aviso de consentimento, porque não haveria escolha real a fazer.
             </p>
@@ -42,13 +42,28 @@ export default function Cookies() {
                     <td>Essencial</td>
                     <td>Até você sair da conta</td>
                   </tr>
+                  <tr>
+                    <td><code>veleda_recovery_pending</code></td>
+                    <td>Veleda</td>
+                    <td>Manter o fluxo de redefinição de senha restrito até sua conclusão</td>
+                    <td>Essencial</td>
+                    <td>Até concluir, sair ou a sessão terminar</td>
+                  </tr>
+                  <tr>
+                    <td><code>veleda_install_hint</code></td>
+                    <td>Veleda</td>
+                    <td>Lembrar que o convite de instalação do PWA pode ser mostrado</td>
+                    <td>Preferência funcional</td>
+                    <td>Até instalar ou limpar os dados locais</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
             <p>
               Essas informações ficam no seu aparelho, servem apenas para a sua
               experiência no app e desaparecem se você sair da conta ou limpar os
-              dados do navegador.
+              dados do navegador. Limpar o armazenamento local não elimina os dados
+              que continuam associados à conta no servidor.
             </p>
 
             <h3>Pagamentos</h3>
@@ -56,7 +71,7 @@ export default function Cookies() {
               A assinatura Premium é processada pelo <strong>Stripe</strong>, em página
               própria e segura do Stripe, que usa os cookies necessários ao
               processamento do pagamento. Consulte a{' '}
-              <a href="https://stripe.com/br/privacy" target="_blank" rel="noreferrer">política de privacidade do Stripe</a>.
+              <a href="https://stripe.com/privacy" target="_blank" rel="noreferrer">política de privacidade do Stripe</a>.
             </p>
 
             <h3>Como controlar</h3>
@@ -68,7 +83,7 @@ export default function Cookies() {
 
             <h3>Dúvidas</h3>
             <p>
-              Escreva para nós: <a href="mailto:jussaradroliveira@gmail.com">jussaradroliveira@gmail.com</a>.
+              Escreva para nós: <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>.
             </p>
           </div>
         </div>

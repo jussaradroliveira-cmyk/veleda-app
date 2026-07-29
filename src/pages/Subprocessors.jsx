@@ -14,25 +14,13 @@ const SUBPROCESSADORES = [
   {
     nome: 'Anthropic (Claude)',
     finalidade: 'Geração das interpretações de tarô por inteligência artificial.',
-    dados: 'A pergunta, as cartas sorteadas, o nome de tratamento e o contexto estritamente necessário à leitura.',
-    local: 'Estados Unidos',
+    dados: 'A pergunta e as cartas sorteadas, incluindo posição, orientação e palavras-chave. Nome, email, histórico e diário não são enviados.',
+    local: 'Processamento internacional; armazenamento da API comercial pode ocorrer nos Estados Unidos conforme a configuração contratada.',
   },
   {
     nome: 'Stripe',
     finalidade: 'Processamento de pagamentos da assinatura e da consulta avulsa.',
     dados: 'Email, identificador de cliente e transação, dados de pagamento. O número completo do cartão é tratado pela Stripe — o Veleda não o armazena.',
-    local: 'Estados Unidos / União Europeia',
-  },
-  {
-    nome: 'EBANX',
-    finalidade: 'Processamento de pagamentos por Pix (parceiro da Stripe para o Brasil).',
-    dados: 'Dados da transação necessários para concluir e confirmar o pagamento por Pix.',
-    local: 'Brasil',
-  },
-  {
-    nome: 'Resend',
-    finalidade: 'Envio de emails transacionais (recuperação de senha e confirmações da conta).',
-    dados: 'Email do destinatário e conteúdo do email transacional.',
     local: 'Estados Unidos / União Europeia',
   },
 ]
@@ -44,10 +32,7 @@ export default function Subprocessors() {
         <div className="card-panel ornate-panel legal-panel">
           <p className="internal-kicker">Transparência</p>
           <h2>Subprocessadores</h2>
-          <p className="muted">Última atualização: 24 de julho de 2026</p>
-          <p className="legal-draft-notice" role="note">
-            Documento provisório em preparação. Versão preliminar, sujeita a revisão jurídica antes do lançamento comercial.
-          </p>
+          <p className="muted">Última atualização: 28 de julho de 2026</p>
 
           <div className="legal-content">
             <p>
@@ -83,6 +68,12 @@ export default function Subprocessors() {
             <p>
               Esta lista pode ser atualizada quando adicionarmos, substituirmos ou removermos um
               fornecedor. Dúvidas sobre o tratamento de dados: <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>.
+            </p>
+            <p>
+              Alguns fornecedores operam globalmente. Transferências para fora do Espaço
+              Econômico Europeu ou do Brasil dependem dos mecanismos legais e contratuais
+              aplicáveis. O Veleda não utiliza atualmente fornecedores confirmados de
+              analytics ou publicidade, nem envia o diário ao provedor de IA.
             </p>
           </div>
         </div>

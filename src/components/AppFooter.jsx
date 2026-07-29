@@ -5,7 +5,11 @@ export default function AppFooter() {
     <footer className="app-footer">
       <div className="container app-footer__inner">
         <p><strong>Veleda Tarô</strong> — as cartas escutam você</p>
-        <small>Para reflexão e inspiração. Não substitui orientação profissional.</small>
+        <small>
+          Operado por Jussara D R Oliveira, pessoa singular estabelecida em Portugal.
+          Ofertas para Portugal/UE e Brasil conforme o mercado selecionado.
+          Para reflexão e entretenimento; não substitui orientação profissional nem serviços de emergência.
+        </small>
         <nav className="app-footer__links" aria-label="Documentos legais">
           <Link to="/termos">Termos de Uso</Link>
           <span aria-hidden="true">·</span>

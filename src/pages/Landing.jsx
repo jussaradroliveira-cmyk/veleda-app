@@ -103,8 +103,8 @@ export default function Landing() {
               <span aria-hidden="true">❀</span>
               <div>
                 <h3>Veleda Premium</h3>
-                <p>Leituras ilimitadas e acesso contínuo ao seu ritual.</p>
-                <p className="benefits-price">R$ 39,90/mês · plano anual com 20% de desconto</p>
+                <p>Leituras sujeitas a uso razoável e acesso contínuo ao seu ritual.</p>
+                <p className="benefits-price">Preço e moeda conforme o mercado selecionado.</p>
               </div>
             </article>
             <Link to={readingPath} state={!session ? { from: '/leitura' } : undefined} className="btn btn--gold">

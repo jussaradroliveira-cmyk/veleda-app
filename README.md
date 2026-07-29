@@ -66,24 +66,43 @@ supabase functions deploy create-checkout --project-ref phixumwuktqabcngncrk --u
 supabase functions deploy stripe-webhook --project-ref phixumwuktqabcngncrk --use-api --no-verify-jwt
 ```
 
-## Stripe (pronto a ligar)
+## Stripe regional (configuração manual)
 
-O código completo já está no ar: `create-checkout` (abre o Checkout de subscrição),
-`stripe-webhook` (liga/desliga `profiles.is_premium`). Sem chaves configuradas, o
-botão Premium mostra "quase a chegar" e nada rebenta.
+O servidor mantém um catálogo fixo por mercado. O frontend envia somente
+`market` (`BR` ou `PT_EU`) e `plan` (`mensal`, `anual` ou `avulso`); moeda,
+valor e Price ID são resolvidos e revalidados no servidor. Adaptive Pricing
+não está habilitado.
 
-Para ativar, definir os secrets no projeto Supabase:
+Variáveis server-side:
 
-```bash
-supabase secrets set --project-ref phixumwuktqabcngncrk \
-  STRIPE_SECRET_KEY=sk_test_... STRIPE_PRICE_ID=price_... STRIPE_WEBHOOK_SECRET=whsec_...
+```text
+STRIPE_SECRET_KEY
+STRIPE_WEBHOOK_SECRET
+STRIPE_MODE=test                             # test ou live; deve corresponder à chave
+BILLING_MARKETS_ENABLED=BR                 # BR, PT_EU ou BR,PT_EU
+STRIPE_PRICE_ID_BR_MONTHLY
+STRIPE_PRICE_ID_BR_ANNUAL
+STRIPE_PRICE_ID_BR_AVULSO
+STRIPE_PRICE_ID_EU_MONTHLY
+STRIPE_PRICE_ID_EU_ANNUAL
+STRIPE_PRICE_ID_EU_AVULSO
+STRIPE_EU_MONTHLY_UNIT_AMOUNT              # cêntimos; sem valor padrão
+STRIPE_EU_ANNUAL_UNIT_AMOUNT
+STRIPE_EU_AVULSO_UNIT_AMOUNT
+RECONCILIATION_SECRET
 ```
+
+Os nomes legados `STRIPE_PRICE_ID_MONTHLY`, `STRIPE_PRICE_ID_ANNUAL`,
+`STRIPE_PRICE_ID_AVULSO` e `STRIPE_PRICE_ID` continuam aceitos somente para
+o catálogo BR. Não há Price ID ou valor EUR inventado no repositório.
 
 Webhook do Stripe a apontar para:
 `https://phixumwuktqabcngncrk.supabase.co/functions/v1/stripe-webhook`
-(eventos: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`)
+(eventos: checkout concluído/expirado, ciclo de assinatura, invoice pago/falho,
+reembolso e disputa/chargeback; consultar o relatório da Fase 1)
 
 ## Por fazer
 
-- Colar as chaves Stripe (ver acima) — o resto já está feito
+- Criar/confirmar produtos e Price IDs regionais no Stripe test
+- Aplicar e validar migrations num ambiente Supabase descartável antes de qualquer ambiente remoto
 - Imagens reais das cartas → `public/cards/` + `npm run deploy`

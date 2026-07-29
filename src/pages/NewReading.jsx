@@ -42,6 +42,7 @@ export default function NewReading() {
   const [isPremium, setIsPremium] = useState(false)
   const [credits, setCredits] = useState(0)
   const [idempotencyKey, setIdempotencyKey] = useState('')
+  const [showDisclaimer, setShowDisclaimer] = useState(false)
 
   useEffect(() => {
     readingsThisWeek(user.id).then(setUsedThisWeek).catch(() => {})
@@ -105,6 +106,13 @@ export default function NewReading() {
     try {
       const r = await generateReading(question, picked, idempotencyKey)
       setReading(r)
+      // Nota de segurança completa: visível uma única vez, na primeira leitura.
+      let primeiraLeitura = false
+      try {
+        primeiraLeitura = !localStorage.getItem('veleda_disclaimer_seen')
+        if (primeiraLeitura) localStorage.setItem('veleda_disclaimer_seen', '1')
+      } catch { primeiraLeitura = false }
+      setShowDisclaimer(primeiraLeitura)
       setStep('leitura')
     } catch (err) {
       if (err.code === 'quota_exceeded') setShowPaywall(true)
@@ -206,6 +214,14 @@ export default function NewReading() {
               })}
             </div>
             <SafeMarkdown>{reading.reading_text}</SafeMarkdown>
+            {showDisclaimer && (
+              <aside className="reading-disclaimer" role="note" aria-label="Sobre as leituras da Veleda">
+                A Veleda é uma ferramenta de reflexão e autoconhecimento, de caráter simbólico.
+                As leituras não preveem o futuro nem substituem aconselhamento profissional —
+                médico, psicológico, jurídico ou financeiro. Se estiver passando por um momento
+                difícil, procure apoio de um profissional qualificado.
+              </aside>
+            )}
             <div style={{ marginTop: '1.8rem', display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
               <Link to="/diario" className="btn">Escrever no diário</Link>
               <Link to="/historico" className="btn ghost">Ver histórico</Link>

@@ -591,6 +591,26 @@ main:not(.landing) {
   font-size: 0.72rem;
 }
 
+.app-footer__disclaimer {
+  display: block;
+  margin-top: 0.5rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Nota de segurança na leitura — serena, junto ao resultado, sem chamar demasiado. */
+.reading-disclaimer {
+  display: block;
+  margin-top: 1.6rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 2px solid var(--border-gold);
+  border-radius: 4px;
+  background: rgba(120, 90, 60, 0.05);
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
 .app-footer__links {
   display: flex;
   gap: 1.2rem;

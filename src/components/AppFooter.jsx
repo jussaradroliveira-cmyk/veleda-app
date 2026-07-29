@@ -8,7 +8,9 @@ export default function AppFooter() {
         <small>
           Operado por Jussara D R Oliveira, pessoa singular estabelecida em Portugal.
           Ofertas para Portugal/UE e Brasil conforme o mercado selecionado.
-          Para reflexão e entretenimento; não substitui orientação profissional nem serviços de emergência.
+        </small>
+        <small className="app-footer__disclaimer">
+          Ferramenta de reflexão de caráter simbólico. Não substitui aconselhamento profissional.
         </small>
         <nav className="app-footer__links" aria-label="Documentos legais">
           <Link to="/termos">Termos de Uso</Link>

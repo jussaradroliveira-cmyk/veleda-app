@@ -5,7 +5,8 @@ import { createHash } from 'node:crypto'
 
 const migration = fs.readFileSync('supabase/migrations/20260728120000_phase1_security_integrity.sql', 'utf8')
 const publishV22 = fs.readFileSync('supabase/migrations/20260729190000_publish_legal_v22.sql', 'utf8')
-const fixTermsV22 = fs.readFileSync('supabase/migrations/20260729194500_fix_terms_v22_wording.sql', 'utf8')
+// fingerprint vigente da 2.2 dos Termos (última correção in-place: preço §6)
+const fixTermsV22 = fs.readFileSync('supabase/migrations/20260729200000_fix_terms_v22_price.sql', 'utf8')
 const auth = fs.readFileSync('src/pages/Auth.jsx', 'utf8')
 const sha256File = (f) => createHash('sha256').update(fs.readFileSync(f)).digest('hex')
 

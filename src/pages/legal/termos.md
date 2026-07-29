@@ -52,7 +52,7 @@ O pacote avulso inclui 5 (cinco) leituras, não constitui assinatura, não se re
 
 # 6. Preços, promoções e formação do contrato
 
-No mercado brasileiro, os preços vigentes são de R$ 39,90 por mês, R$ 399,00 por ano e R$ 49,90 pelo pacote avulso de 5 leituras. O primeiro mês da assinatura mensal poderá ser oferecido por R$ 29,90 quando a promoção estiver expressamente ativa no checkout, com indicação clara do preço de renovação.
+No mercado brasileiro, os preços vigentes são de R$ 39,90 por mês, R$ 383,04 por ano e R$ 49,90 pelo pacote avulso de 5 leituras. O primeiro mês da assinatura mensal poderá ser oferecido por R$ 29,90 quando a promoção estiver expressamente ativa no checkout, com indicação clara do preço de renovação.
 
 Em Portugal/EEE, os preços são apresentados em euros. Em qualquer mercado, prevalecem o preço, a moeda, os impostos, o período, os benefícios e as condições exibidas imediatamente antes da confirmação da compra.
 

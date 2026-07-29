@@ -17,7 +17,10 @@ const FORBIDDEN_TAGS = [
   'picture', 'img',
 ]
 
-const SAFE_URL = /^(?:(?:https?|mailto):|[#/])/i
+// VLT2-013: aceitar http(s)/mailto, âncoras (#) e caminhos internos (/algo),
+// mas NÃO URLs protocol-relative (//host) nem o truque //-por-barra-invertida
+// (/\host, que alguns browsers normalizam para //host) — vetores de phishing.
+const SAFE_URL = /^(?:(?:https?|mailto):|#|\/(?![/\\]))/i
 const markdownParser = new Marked({
   gfm: true,
   breaks: false,

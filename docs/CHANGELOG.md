@@ -5,6 +5,25 @@ redeployadas, frontend publicado na Vercel). Referências = commits em `main`.
 
 ---
 
+## 29 de julho de 2026 — Auditoria Round 2, lote de médios/baixos (1/N)
+
+Primeiro lote de correções dos achados Médios/Baixos (todos os Altos já fechados).
+Ordem: migrations → frontend. **Stripe intocado.**
+
+- **VLT2-008** Preço anual nos Termos corrigido de R$ 399,00 → **R$ 383,04** (bate com
+  catálogo e Stripe live/teste = 38304). Fingerprint da 2.2 dos Termos atualizado
+  in-place (0 aceites reais). Novo teste de consistência catálogo↔Termos.
+- **VLT2-013** Sanitizador de markdown deixa de aceitar `//host` (protocol-relative)
+  e o truque `/\host`; mantém http(s)/mailto, âncoras e caminhos internos. +Testes.
+- **VLT2-016** Política de Cookies passa a listar `veleda_install_dismissed` e
+  `veleda_disclaimer_seen`. Teste que falha se uma chave `veleda_*` ficar por documentar.
+- **VLT2-017** `deploy.sh` exige `VELEDA_CONFIRM_DEPLOY=1`, mostra alvo/commit, valida
+  o projeto Vercel (allowlist) e não faz fetch remoto da CLI (`npx --no-install`).
+- **VLT2-019** `display_name` com CHECK de 60 no banco (inescapável pela Data API);
+  cap de 2000 do diário agora atómico (advisory lock por utilizador) — provado com
+  duas ligações concorrentes (final 2000, não 2001). Migrations `20260729200000`,
+  `20260729201000`. `npm test` 67/67.
+
 ## 29 de julho de 2026 — Lançamento só-BR, legais v2.2 e reaceite genérico (VLT2-007/009/010)
 
 Aplicado na ordem segura: migrations → Edge Functions → frontend. **Stripe intocado.**

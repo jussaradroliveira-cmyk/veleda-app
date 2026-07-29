@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import fs from 'node:fs'
 import {
   assertStripeMode,
   getCatalogItem,
@@ -8,6 +9,22 @@ import {
 } from '../supabase/functions/_shared/billing-config.js'
 
 const env = (values) => ({ get: (key) => values[key] })
+
+const brl = (cents) => `R$ ${Math.floor(cents / 100)},${String(cents % 100).padStart(2, '0')}`
+
+test('VLT2-008: preços do catálogo BR batem com o texto dos Termos', () => {
+  const termos = fs.readFileSync('src/pages/legal/termos.md', 'utf8')
+  const catalog = loadBillingCatalog(env({
+    STRIPE_PRICE_ID_MONTHLY: 'a', STRIPE_PRICE_ID_ANNUAL: 'b', STRIPE_PRICE_ID_AVULSO: 'c',
+  }))
+  for (const plan of ['mensal', 'anual', 'avulso']) {
+    const item = getCatalogItem(catalog, 'BR', plan)
+    assert.ok(termos.includes(brl(item.unitAmount)),
+      `Termos deveriam conter ${brl(item.unitAmount)} (${plan})`)
+  }
+  // e não devem conter o preço anual antigo/divergente
+  assert.ok(!termos.includes('R$ 399,00'), 'Termos ainda têm o preço anual antigo R$ 399,00')
+})
 
 test('preserves confirmed BR fixed values and server-side Price IDs', () => {
   const catalog = loadBillingCatalog(env({

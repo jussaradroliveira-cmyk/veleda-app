@@ -30,6 +30,27 @@ test('remove javascript links', () => {
   assert.match(output, /clique/)
 })
 
+test('VLT2-013: bloqueia link protocol-relative //host', () => {
+  const output = clean('[phish](//evil.example/path)')
+  assert.match(output, /phish/)
+  assert.doesNotMatch(output, /evil\.example|href=/i)
+})
+
+test('VLT2-013: truque /\\host não vira link externo/protocol-relative', () => {
+  const output = clean('[phish](/\\evil.example)')
+  assert.match(output, /phish/)
+  // no máximo um caminho same-origin (o \\ vira %5C); nunca // nem esquema
+  assert.doesNotMatch(output, /href="\/\//)
+  assert.doesNotMatch(output, /href="[a-z]+:/i)
+})
+
+test('VLT2-013: mantém https e caminho interno legítimos', () => {
+  const https = clean('[CAUAL](https://arbitragem.grupoautonoma.pt)')
+  assert.match(https, /href="https:\/\/arbitragem\.grupoautonoma\.pt"/)
+  const interno = clean('[Termos](/termos)')
+  assert.match(interno, /href="\/termos"/)
+})
+
 test('remove event handler from allowed element', () => {
   const output = clean('<p onclick="alert(1)">texto</p>')
   assert.equal(output.trim(), '<p>texto</p>')

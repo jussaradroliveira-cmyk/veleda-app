@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "oxlint",
     "test": "node --test tests/*.test.js",
+    "test:db": "bash scripts/db-integration-test.sh",
     "preview": "vite preview",
     "deploy": "bash scripts/deploy.sh"
   },

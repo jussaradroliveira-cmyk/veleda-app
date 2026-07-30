@@ -15,8 +15,9 @@ export default function Account() {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
 
-  // Exportação server-side, completa e falha-fechada: só gera o ficheiro se o
-  // servidor devolver o inventário íntegro (nada de download parcial).
+  // Exportação server-side falha-fechada: só gera o ficheiro se o servidor
+  // devolver o inventário íntegro (nada de download parcial). É o download
+  // self-service; a resposta integral de acesso é por pedido (VLT2-014).
   async function exportData() {
     setExporting(true)
     setExportNotice('')
@@ -109,8 +110,10 @@ export default function Account() {
           <div className="account-block">
             <h4>Exportar meus dados</h4>
             <p className="muted">
-              Baixe um arquivo completo com seus dados: conta, perfil, leituras, diário,
-              consentimentos e histórico de compras — eles são seus.
+              Baixe os dados que a Veleda guarda no app: conta, perfil, leituras, diário,
+              consentimentos, compras e eventos de pagamento — eles são seus. Para uma
+              resposta integral de acesso (incluindo dados retidos por terceiros), escreva
+              para <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>.
             </p>
             <button className="btn small" onClick={exportData} disabled={exporting}>
               {exporting ? 'Gerando…' : 'Exportar meus dados'}

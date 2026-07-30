@@ -5,6 +5,20 @@ redeployadas, frontend publicado na Vercel). Referências = commits em `main`.
 
 ---
 
+## 30 de julho de 2026 — Auditoria Round 2: exportação + harness de testes (VLT2-014/018)
+
+- **VLT2-014** Exportação de dados (`export-data`) v2: inclui **metadados/identidades
+  Auth** do titular, **eventos Stripe** correlacionados (por PaymentIntent das compras
+  e customer do perfil) e **reversões**. Rótulo honesto: `tipo:"download_self_service"`
+  + nota distinguindo do pedido de **resposta integral** (contact@veledataro.com); UI
+  do `Account.jsx` atualizada. Provado no live (correlação de evento+reversão; zero rasto).
+- **VLT2-018** Harness de testes reais versionado: `scripts/db-integration-test.sh`
+  (+ `npm run test:db`) sobe a imagem de produção, **aplica todas as migrações desde
+  zero** e corre asserções de **invariantes** (`tests/db/assertions.sql`: RLS ligado,
+  SECURITY DEFINER com search_path, grants de crédito não-públicos, versão vigente 2.2)
+  e **comportamentais** (`tests/db/behavioral.sql`: ledger FIFO/estorno, reaceite, cap
+  do diário). Substitui a confiança em regex sobre SQL por Postgres real.
+
 ## 30 de julho de 2026 — Auditoria Round 2: segurança da IA (VLT2-015)
 
 - **VLT2-015** Fronteira pergunta↔IA endurecida. Módulo partilhado

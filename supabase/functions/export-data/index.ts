@@ -88,13 +88,48 @@ Deno.serve(async (req) => {
       take("purchases", admin.from("stripe_payment_purchases").select("*").eq("user_id", user.id).order("created_at")),
     ]);
 
+    // VLT2-014: correlaciona os eventos Stripe do titular. processed_stripe_events
+    // não tem user_id — liga-se pelos identificadores do titular: os PaymentIntents
+    // das suas compras e o seu customer da Stripe (no perfil).
+    const paymentIntentIds = (purchases ?? [])
+      .map((p: { payment_intent_id?: string }) => p.payment_intent_id)
+      .filter((v: unknown): v is string => typeof v === "string");
+    const customerId = (profile as { stripe_customer_id?: string } | null)?.stripe_customer_id ?? null;
+    const eventObjectIds = [...new Set([...paymentIntentIds, ...(customerId ? [customerId] : [])])];
+
+    const stripeEvents = eventObjectIds.length
+      ? await take("stripe_events", admin.from("processed_stripe_events")
+          .select("*").in("object_id", eventObjectIds).order("processed_at"))
+      : [];
+    const reversals = paymentIntentIds.length
+      ? await take("reversals", admin.from("stripe_payment_reversals")
+          .select("*").in("payment_intent_id", paymentIntentIds).order("recorded_at"))
+      : [];
+
     const dump = {
-      export_version: "1",
+      export_version: "2",
       exportado_em: new Date().toISOString(),
+      // Distinção honesta: este é o download self-service dos dados guardados no
+      // app. Não é a "resposta integral" formal de acesso (VLT2-014).
+      tipo: "download_self_service",
+      nota:
+        "Este arquivo reúne os dados que a Veleda guarda no aplicativo sobre a sua conta. " +
+        "Para uma resposta integral de acesso (incluindo dados retidos por terceiros como a " +
+        "Stripe, ou registos de infraestrutura, quando aplicável e exigível), solicite por " +
+        "contact@veledataro.com.",
       conta: {
         id: user.id,
         email: user.email ?? null,
+        telefone: user.phone ?? null,
         criada_em: user.created_at ?? null,
+        ultimo_acesso: user.last_sign_in_at ?? null,
+        metadados_conta: user.user_metadata ?? null,
+        metadados_app: user.app_metadata ?? null,
+        identidades: (user.identities ?? []).map((i) => ({
+          provedor: i.provider,
+          criada_em: i.created_at ?? null,
+          ultimo_acesso: i.last_sign_in_at ?? null,
+        })),
       },
       perfil: profile ?? null,
       leituras: readings ?? [],
@@ -102,6 +137,8 @@ Deno.serve(async (req) => {
       consentimentos: consents ?? [],
       reservas_de_leitura: reservations ?? [],
       compras_stripe: purchases ?? [],
+      eventos_stripe: stripeEvents ?? [],
+      reversoes_stripe: reversals ?? [],
       inventario: {
         perfil: profile ? 1 : 0,
         leituras: readings?.length ?? 0,
@@ -109,10 +146,13 @@ Deno.serve(async (req) => {
         consentimentos: consents?.length ?? 0,
         reservas_de_leitura: reservations?.length ?? 0,
         compras_stripe: purchases?.length ?? 0,
+        eventos_stripe: stripeEvents?.length ?? 0,
+        reversoes_stripe: reversals?.length ?? 0,
         nao_incluido:
-          "Este arquivo contém os dados guardados no aplicativo. Registos técnicos de " +
-          "infraestrutura (Supabase, Vercel), dados retidos pela Stripe e cópias de segurança " +
-          "não fazem parte deste ficheiro; consulte a Política de Privacidade.",
+          "Registos técnicos de infraestrutura (Supabase, Vercel), o conteúdo mantido " +
+          "diretamente pela Stripe e cópias de segurança não fazem parte deste ficheiro. " +
+          "Eventos Stripe identificados apenas por assinatura podem exigir a resposta integral " +
+          "por pedido. Consulte a Política de Privacidade.",
       },
     };
 
@@ -120,6 +160,7 @@ Deno.serve(async (req) => {
       leituras: readings?.length ?? 0,
       diario: journal?.length ?? 0,
       consentimentos: consents?.length ?? 0,
+      eventos_stripe: stripeEvents?.length ?? 0,
     });
     return json(dump);
   } catch (error) {

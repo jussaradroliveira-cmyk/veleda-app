@@ -73,14 +73,16 @@ As garantias efetivamente utilizadas para cada fornecedor podem ser solicitadas 
 
 # 8. Conservação e eliminação
 
+A Veleda conserva cada categoria de dados apenas enquanto necessária para a finalidade que a justifica e pelos prazos legais aplicáveis. Terminada a finalidade e esgotados os prazos legais, os dados são eliminados ou anonimizados.
+
 Tipo de dado — Prazo ou critério
-Conta e perfil — Durante a conta; após pedido de exclusão, remoção dos sistemas ativos normalmente em até 30 dias, salvo impedimento legal ou incidente.
-Perguntas, leituras, diário e histórico — Até o Usuário apagar ou encerrar a conta. Cópias residuais de backup são substituídas no ciclo técnico, normalmente em até 90 dias.
-Assinaturas, compras e eventos de pagamento — Pelo período necessário ao contrato, reembolsos, chargebacks, prevenção de fraude e obrigações legais.
-Documentos fiscais e contabilísticos — Pelo prazo obrigatório aplicável; em Portugal, geralmente até 10 anos.
-Aceites, consentimentos e pedidos de direitos — Enquanto necessários para demonstrar conformidade e durante os prazos legais de prescrição ou defesa.
-Registos técnicos e de segurança — Normalmente até 12 meses; por período superior quando relacionados a incidente, fraude ou litígio.
-Suporte — Até 24 meses após encerramento do pedido, salvo necessidade de defesa ou obrigação legal.
+Conta e perfil — Enquanto a conta existir. Quando o Usuário solicita a exclusão, os dados são removidos dos sistemas ativos no processamento do pedido (em regra, de imediato; em qualquer caso, em prazo não superior a 30 dias), salvo impedimento legal ou incidente de segurança em curso.
+Perguntas, leituras, diário e histórico — Enquanto a conta existir ou até o Usuário os apagar. A eliminação nos sistemas ativos ocorre no processamento do pedido; as cópias de segurança deixam de os conter no decurso do ciclo de backup descrito na secção "Segurança".
+Assinaturas, compras e eventos de pagamento — Pelo período necessário à execução do contrato e, depois, pelos prazos de prevenção de fraude, gestão de reembolsos/chargebacks e obrigações legais aplicáveis. O processador de pagamento conserva os próprios registos segundo os termos dele.
+Documentos fiscais e contabilísticos — Pelo prazo obrigatório aplicável; em Portugal, em regra, 10 anos.
+Aceites, consentimentos e pedidos de direitos — Enquanto necessários para demonstrar conformidade e durante os prazos legais de prescrição ou de defesa.
+Registos técnicos e de segurança — Pelo tempo necessário às finalidades de segurança, deteção e prevenção de fraude e diagnóstico, e pelos prazos legais aplicáveis. Parte destes registos é conservada pelos subcontratantes de infraestrutura (por exemplo, Supabase e Vercel) segundo os ciclos e planos deles. Podem ser conservados por mais tempo quando associados a incidente, fraude ou litígio.
+Suporte — Pelo tempo necessário ao atendimento e, depois, enquanto necessário para prova, exercício de direitos ou cumprimento de obrigação legal.
 Dados anonimizados — Podem ser mantidos por prazo indeterminado quando não permitam razoavelmente identificar uma pessoa.
 
 Uma solicitação de eliminação não alcança dados cuja conservação seja obrigatória ou necessária para exercício de direitos, prevenção de fraude, segurança ou defesa em processo. Nesses casos, o uso fica restrito à finalidade de retenção.
@@ -88,6 +90,8 @@ Uma solicitação de eliminação não alcança dados cuja conservação seja ob
 # 9. Segurança
 
 São adotadas medidas técnicas e organizacionais proporcionais ao risco, incluindo autenticação, segregação por usuário, controle de acesso, criptografia em trânsito, validação server-side, sanitização de conteúdo, registos técnicos, gestão de vulnerabilidades, backups e resposta a incidentes.
+
+As cópias de segurança (backups) da base de dados são geridas pelo subcontratante de infraestrutura (Supabase). No plano contratado existem backups automáticos diários e recuperação a um ponto no tempo (point-in-time recovery), com retenção de curto prazo definida pelo plano; as cópias mais antigas são sobrescritas automaticamente segundo esse ciclo. Por esse motivo, após a eliminação de dados dos sistemas ativos, as cópias de segurança deixam de os conter no decurso do ciclo de retenção do fornecedor.
 
 Nenhum sistema é absolutamente seguro. O Usuário deve utilizar senha exclusiva, proteger os dispositivos, encerrar sessões em equipamentos compartilhados e informar suspeitas de acesso indevido.
 
@@ -129,4 +133,4 @@ Alterações materiais serão comunicadas por meio adequado. Se uma nova finalid
 
 Responsável: Jussara Derly Rodrigues de Oliveira Grota · NIF 302020250 · Rua Comandante Manuel Freire, 8, 2655-443 Ericeira, Portugal · Canal de privacidade: contact@veledataro.com.
 
-Veleda Tarô Simbólico  |  Política de Privacidade  |  versão 2.2  |  29 de julho de 2026
+Veleda Tarô Simbólico  |  Política de Privacidade  |  versão 2.3  |  30 de julho de 2026

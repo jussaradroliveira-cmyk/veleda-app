@@ -5,6 +5,20 @@ redeployadas, frontend publicado na Vercel). Referências = commits em `main`.
 
 ---
 
+## 30 de julho de 2026 — Privacidade v2.3: retenção + backups (VLT2-012)
+
+- **VLT2-012** Política de Privacidade **v2.3** (revisão jurídica aprovada). §8
+  Conservação reformulada por **critério/finalidade** (deixa de publicar prazos-limite
+  automáticos — 90d/12m/24m — que não havia rotina a cumprir); mantém 30 dias para
+  exclusão de conta (a função já apaga de imediato) e 10 anos fiscais. §9 acrescenta
+  a descrição real dos **backups** (Supabase Pro: diário + PITR, sobrescrita automática).
+  Fonte da proposta: `docs/juridico/VLT2-012_proposta_retencao_backups.md`. Migration
+  `20260730140000` publica a 2.3 (só a Privacidade; Termos ficam 2.2) → o reaceite
+  genérico pede às contas que só têm a Privacidade 2.2. Novo hash
+  `sha256:e6bc65fe…`. Verificado no live (só a Privacidade pende; grava 2.3+hash;
+  Termos não pedem nada; zero rasto). `npm test` 76/76.
+  Dependência operacional: ativar o **Supabase Pro** (torna a frase dos backups plena).
+
 ## 30 de julho de 2026 — Auditoria Round 2: exportação + harness de testes (VLT2-014/018)
 
 - **VLT2-014** Exportação de dados (`export-data`) v2: inclui **metadados/identidades

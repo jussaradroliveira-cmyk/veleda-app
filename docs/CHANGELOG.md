@@ -5,6 +5,19 @@ redeployadas, frontend publicado na Vercel). Referências = commits em `main`.
 
 ---
 
+## 30 de julho de 2026 — Auditoria Round 2: ledger de créditos (VLT2-004)
+
+- **VLT2-004** Créditos de pacote avulso passam a **ledger por lote**. Cada compra
+  (`stripe_payment_purchases`) tem saldo (`credits_remaining`) e validade
+  (`expires_at`) próprios. `profiles.reading_credits`/`_expire_at` viram cache
+  derivada. Regras: **consumo FIFO por validade**; **estorno (opção A)** remove só
+  os créditos NÃO usados daquele lote (`credits_remaining:=0`), sem tocar noutros
+  lotes nem em créditos já gastos. `reading_reservations.credit_purchase_id` lembra
+  o lote consumido, para a devolução (falha da IA / reserva expirada) voltar ao
+  lote certo. Corrige: (1) nova compra ressuscitava créditos expirados; (2) estorno
+  atingia o lote errado. Migration `20260730120000`. Provado no Postgres descartável
+  (bug1: 5≠10; FIFO; opção A; release ao lote). `npm test` 69/69. Stripe intocado.
+
 ## 29 de julho de 2026 — Auditoria Round 2, lote de médios (2/N: pagamento/quota)
 
 - **VLT2-005** Retry após falha da IA: quando o servidor libera a reserva, a UI

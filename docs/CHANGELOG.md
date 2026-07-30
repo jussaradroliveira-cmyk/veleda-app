@@ -5,6 +5,19 @@ redeployadas, frontend publicado na Vercel). Referências = commits em `main`.
 
 ---
 
+## 30 de julho de 2026 — Auditoria Round 2: segurança da IA (VLT2-015)
+
+- **VLT2-015** Fronteira pergunta↔IA endurecida. Módulo partilhado
+  `_shared/ai-safety.js` (edge + frontend): (1) **escape do delimitador** — a
+  pergunta já não consegue fechar `</PERGUNTA_NAO_CONFIAVEL>` e passar como
+  instrução (prompt injection); aplicado à entrada e à saída (remove tags ecoadas).
+  (2) **Aviso antes do envio** — nota de reflexão/entretenimento sempre visível no
+  passo da pergunta. (3) **Deteção de crise** (pt-BR): quando a pergunta sugere
+  risco à vida ou violência, mostra acolhimento com **CVV 188** e emergência (192/190),
+  e reforça o system prompt para responder com cuidado e apontar apoio (sem registar
+  o conteúdo da pergunta). `crisis` sinalizado na resposta. `npm test` 76/76.
+  Redeploy `generate-reading` + frontend. Stripe intocado.
+
 ## 30 de julho de 2026 — Auditoria Round 2: ledger de créditos (VLT2-004)
 
 - **VLT2-004** Créditos de pacote avulso passam a **ledger por lote**. Cada compra

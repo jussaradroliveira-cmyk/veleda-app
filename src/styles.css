@@ -654,6 +654,38 @@ main:not(.landing) {
   color: var(--text-secondary);
 }
 
+/* VLT2-015: nota curta sempre visível antes de enviar a pergunta */
+.pre-send-note {
+  margin: 0 0 1.1rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  opacity: 0.9;
+}
+
+/* VLT2-015: acolhimento quando a pergunta sugere crise */
+.crisis-notice {
+  margin: 0 0 1.3rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border-gold);
+  border-left: 4px solid var(--wine-deep);
+  border-radius: 8px;
+  background: rgba(120, 40, 55, 0.06);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+.crisis-notice__headline {
+  margin: 0 0 0.4rem;
+  font-weight: 600;
+  color: var(--wine-deep);
+}
+.crisis-notice__list {
+  margin: 0.6rem 0 0;
+  padding-left: 1.1rem;
+}
+.crisis-notice__list li { margin: 0.25rem 0; }
+
 .app-footer__links {
   display: flex;
   gap: 1.2rem;

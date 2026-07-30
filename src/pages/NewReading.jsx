@@ -8,6 +8,7 @@ import Paywall from '../components/Paywall'
 import StepIndicator from '../components/StepIndicator'
 import { CardFront } from '../components/TarotCard'
 import SafeMarkdown from '../components/SafeMarkdown'
+import { detectCrisis, CRISIS_RESOURCES } from '../../supabase/functions/_shared/ai-safety.js'
 
 const FREE_READINGS_PER_WEEK = 1
 
@@ -44,6 +45,8 @@ export default function NewReading() {
   const [credits, setCredits] = useState(0)
   const [idempotencyKey, setIdempotencyKey] = useState('')
   const [showDisclaimer, setShowDisclaimer] = useState(false)
+  // VLT2-015: pergunta com sinais de crise → mostrar acolhimento antes da leitura.
+  const [crisis, setCrisis] = useState(false)
 
   useEffect(() => {
     readingsThisWeek(user.id).then(setUsedThisWeek).catch(() => {})
@@ -90,6 +93,9 @@ export default function NewReading() {
       setError(MSG_COMPOSTA)
       return
     }
+    // VLT2-015: deteção de crise ANTES de enviar — o acolhimento fica visível
+    // enquanto a pessoa escolhe as cartas e antes de revelar a leitura.
+    setCrisis(detectCrisis(question))
     try {
       const cards = await fetchCards()
       setDeck(shuffleDeck(cards))
@@ -130,6 +136,16 @@ export default function NewReading() {
     }
   }
 
+  const crisisNotice = crisis && (
+    <aside className="crisis-notice" role="alert" aria-label="Apoio e acolhimento">
+      <p className="crisis-notice__headline">{CRISIS_RESOURCES.headline}</p>
+      <p>{CRISIS_RESOURCES.body}</p>
+      <ul className="crisis-notice__list">
+        {CRISIS_RESOURCES.lines.map((line) => <li key={line}>{line}</li>)}
+      </ul>
+    </aside>
+  )
+
   return (
     <main className={`internal-page reading-page reading-page--${step}`}>
       <div className="container">
@@ -153,6 +169,13 @@ export default function NewReading() {
             <p className="muted" style={{ margin: '0.5rem 0 1.2rem' }}>
               Escreva sua pergunta com calma — uma só por leitura. Quanto mais concreta, mais clara será a resposta.
             </p>
+            {/* VLT2-015: aviso ANTES do envio, sempre visível. */}
+            <p className="pre-send-note" role="note">
+              A Veleda é reflexão simbólica e entretenimento — não prevê o futuro nem substitui
+              apoio profissional (médico, psicológico, jurídico ou financeiro). Em emergência,
+              procure ajuda imediata.
+            </p>
+            {crisisNotice}
             <form onSubmit={startSpread}>
               <textarea
                 value={question}
@@ -184,6 +207,7 @@ export default function NewReading() {
             <p className="internal-kicker">O chamado das cartas</p>
             <h2>✦ Escolha 3 cartas</h2>
             <p className="muted">Deixe a intuição guiar sua mão. {3 - picked.length > 0 ? `Faltam ${3 - picked.length}.` : 'Tiragem completa.'}</p>
+            {crisisNotice}
             <FanSpread deck={deck} picked={picked} onPick={(c) => setPicked((p) => [...p, c])} />
             {busy ? (
               <div className="reading-loading" role="status">
@@ -220,6 +244,7 @@ export default function NewReading() {
                 )
               })}
             </div>
+            {crisisNotice}
             <SafeMarkdown>{reading.reading_text}</SafeMarkdown>
             {showDisclaimer && (
               <aside className="reading-disclaimer" role="note" aria-label="Sobre as leituras da Veleda">

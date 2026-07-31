@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../App'
 import { CardFront } from '../components/TarotCard'
 import SafeMarkdown from '../components/SafeMarkdown'
+import { useI18n } from '../lib/i18n-context'
 
 // Espelha a constraint journal_entries_content_len no banco (VLT-011).
 const MAX_JOURNAL_CHARS = 8000
@@ -11,6 +12,7 @@ const MAX_JOURNAL_CHARS = 8000
 export default function ReadingDetail() {
   const { id } = useParams()
   const { user } = useAuth()
+  const { t, dateLocale } = useI18n()
   const [reading, setReading] = useState(null)
   const [cardsFull, setCardsFull] = useState([])
   const [note, setNote] = useState('')
@@ -55,30 +57,31 @@ export default function ReadingDetail() {
     }
     setBusy(false)
     if (saveError) {
-      setError('Não consegui guardar. Tente encurtar o texto.')
+      setError(t('detail.saveError'))
       return
     }
     setSaved(true)
     setTimeout(() => setSaved(false), 2500)
   }
 
-  if (!reading) return <main className="internal-page"><div className="container"><p className="muted">Abrindo a leitura…</p></div></main>
+  if (!reading) return <main className="internal-page"><div className="container"><p className="muted">{t('detail.opening')}</p></div></main>
 
   return (
     <main className="internal-page reading-detail-page">
       <div className="container" style={{ maxWidth: 720 }}>
-        <p><Link to="/historico">← histórico</Link></p>
+        <p><Link to="/historico">{t('detail.backHistory')}</Link></p>
         <div className="card-panel ornate-panel" style={{ marginTop: '0.8rem' }}>
           <p className="muted">
-            {new Date(reading.created_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
+            {new Date(reading.created_at).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
           <h2 style={{ margin: '0.3rem 0 1.2rem' }}>“{reading.question}”</h2>
           <div className="spread-slots" style={{ marginBottom: '1.5rem' }}>
             {reading.cards.map((c) => {
               const full = cardsFull.find((k) => k.id === c.card_id) ?? {}
+              const posKey = { passado: 'reading.posPast', presente: 'reading.posPresent', futuro: 'reading.posFuture' }[c.position]
               return (
                 <div className="slot" key={c.position}>
-                  <div className="slot-label">{c.position}</div>
+                  <div className="slot-label">{posKey ? t(posKey) : c.position}</div>
                   <CardFront card={{ ...full, ...c }} />
                 </div>
               )
@@ -88,16 +91,16 @@ export default function ReadingDetail() {
         </div>
 
         <div className="card-panel ornate-panel" style={{ marginTop: '1.5rem' }}>
-          <h3 style={{ color: 'var(--dourado)', marginBottom: '0.6rem' }}>✦ Seu diário</h3>
+          <h3 style={{ color: 'var(--dourado)', marginBottom: '0.6rem' }}>{t('detail.journalTitle')}</h3>
           <p className="muted" style={{ marginBottom: '0.8rem' }}>
-            O que você sentiu com esta leitura? O que reconhece na sua vida?
+            {t('detail.journalPrompt')}
           </p>
-          <textarea value={note} maxLength={MAX_JOURNAL_CHARS} onChange={(e) => setNote(e.target.value)} placeholder="Escreva aqui suas reflexões…" />
+          <textarea value={note} maxLength={MAX_JOURNAL_CHARS} onChange={(e) => setNote(e.target.value)} placeholder={t('detail.notePlaceholder')} />
           <div style={{ marginTop: '0.8rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button className="btn small" onClick={saveNote} disabled={busy || !note.trim()}>
-              {busy ? 'Guardando…' : 'Guardar'}
+              {busy ? t('detail.saving') : t('detail.save')}
             </button>
-            {saved && <span className="muted">guardado ✦</span>}
+            {saved && <span className="muted">{t('detail.saved')}</span>}
           </div>
           {error && <p className="error-msg" role="alert">{error}</p>}
         </div>

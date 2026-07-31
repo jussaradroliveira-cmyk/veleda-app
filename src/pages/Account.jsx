@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth-context'
+import { useI18n } from '../lib/i18n-context'
 
 export default function Account() {
   const { user } = useAuth()
+  const { t } = useI18n()
   const [exporting, setExporting] = useState(false)
   const [exportNotice, setExportNotice] = useState('')
 
@@ -31,7 +33,7 @@ export default function Account() {
         },
       })
       if (!resp.ok) {
-        setExportNotice('Não consegui gerar o arquivo agora. Nada foi baixado — tente de novo em instantes.')
+        setExportNotice(t('account.exportError'))
         return
       }
       const dump = await resp.json()
@@ -41,9 +43,9 @@ export default function Account() {
       a.download = `veleda-meus-dados-${new Date().toISOString().slice(0, 10)}.json`
       a.click()
       URL.revokeObjectURL(a.href)
-      setExportNotice('✦ Arquivo gerado — confira sua pasta de downloads.')
+      setExportNotice(t('account.exportOk'))
     } catch {
-      setExportNotice('Não consegui gerar o arquivo agora. Nada foi baixado — tente de novo em instantes.')
+      setExportNotice(t('account.exportError'))
     } finally {
       setExporting(false)
     }
@@ -67,11 +69,11 @@ export default function Account() {
       if (!resp.ok) {
         setDeleting(false)
         const messages = {
-          invalid_password: 'Senha incorreta — confirme sua senha atual para excluir a conta.',
-          billing_cancellation_failed: 'A Stripe não confirmou o encerramento da assinatura. Nada foi excluído; tente novamente mais tarde.',
-          billing_cancellation_unavailable: 'Não foi possível verificar a assinatura agora. Nada foi excluído; tente novamente mais tarde.',
+          invalid_password: t('account.errInvalidPassword'),
+          billing_cancellation_failed: t('account.errBillingFailed'),
+          billing_cancellation_unavailable: t('account.errBillingUnavailable'),
         }
-        setDeleteError(messages[body.error] ?? 'Não consegui concluir a exclusão. Tente de novo em instantes.')
+        setDeleteError(messages[body.error] ?? t('account.errDeleteGeneric'))
         return
       }
       // a sessão no servidor morreu com a conta; o signOut do supabase-js
@@ -83,7 +85,7 @@ export default function Account() {
       window.location.assign(import.meta.env.BASE_URL)
     } catch {
       setDeleting(false)
-      setDeleteError('Não consegui concluir a exclusão. Tente de novo em instantes.')
+      setDeleteError(t('account.errDeleteGeneric'))
     }
   }
 
@@ -91,63 +93,58 @@ export default function Account() {
     <main className="internal-page account-page">
       <div className="container" style={{ maxWidth: 640 }}>
         <header className="account-header">
-          <p className="internal-kicker">Minha conta</p>
+          <p className="internal-kicker">{t('nav.account')}</p>
           <h2>✦ {user.email}</h2>
         </header>
 
         <section className="card-panel ornate-panel account-section" aria-labelledby="conta-assinatura">
-          <h3 id="conta-assinatura">Assinatura</h3>
+          <h3 id="conta-assinatura">{t('account.subTitle')}</h3>
           <p className="muted">
-            Cancelar a renovação mantém a conta e, em regra, o acesso até o fim do período pago.
-            Excluir a conta é uma ação diferente e encerra o acesso.
+            {t('account.subLead')}
           </p>
-          <Link to="/assinatura" className="btn small">Ver minha assinatura</Link>
+          <Link to="/assinatura" className="btn small">{t('account.viewSub')}</Link>
         </section>
 
         <section className="card-panel ornate-panel account-section" aria-labelledby="conta-privacidade">
-          <h3 id="conta-privacidade">Privacidade</h3>
+          <h3 id="conta-privacidade">{t('footer.privacy')}</h3>
 
           <div className="account-block">
-            <h4>Exportar meus dados</h4>
+            <h4>{t('account.exportTitle')}</h4>
             <p className="muted">
-              Baixe os dados que a Veleda guarda no app: conta, perfil, leituras, diário,
-              consentimentos, compras e eventos de pagamento — eles são seus. Para uma
-              resposta integral de acesso (incluindo dados retidos por terceiros), escreva
-              para <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>.
+              {t('account.exportLeadBefore')} <a href="mailto:contact@veledataro.com">contact@veledataro.com</a>.
             </p>
             <button className="btn small" onClick={exportData} disabled={exporting}>
-              {exporting ? 'Gerando…' : 'Exportar meus dados'}
+              {exporting ? t('account.exporting') : t('account.exportTitle')}
             </button>
             {exportNotice && <p className="muted" role="status">{exportNotice}</p>}
           </div>
 
           <div className="account-block account-block--danger">
-            <h4>Excluir minha conta</h4>
+            <h4>{t('account.deleteTitle')}</h4>
             {!deleteOpen ? (
               <>
                 <p className="muted">
-                  Encerra assinaturas que ainda possam cobrar e, somente após a confirmação da Stripe,
-                  apaga a conta e os dados ativos do aplicativo.
+                  {t('account.deleteLead')}
                 </p>
                 <button className="btn small btn--danger" onClick={() => setDeleteOpen(true)}>
-                  Excluir minha conta
+                  {t('account.deleteTitle')}
                 </button>
               </>
             ) : (
               <form onSubmit={confirmDelete} className="delete-confirm">
-                <p><strong>Antes de confirmar, saiba o que acontece:</strong></p>
+                <p><strong>{t('account.deleteConseqTitle')}</strong></p>
                 <ul>
-                  <li>Suas <strong>leituras</strong>, seu <strong>diário</strong> e seu <strong>perfil</strong> serão apagados definitivamente — não há como recuperar.</li>
-                  <li>Seu <strong>login</strong> será removido e você será desconectada.</li>
-                  <li>Antes da exclusão, todas as assinaturas vinculadas ao customer serão <strong>encerradas na Stripe</strong>. Se isso falhar, nenhum dado será apagado.</li>
-                  <li><strong>Excluir a conta não gera reembolso automático.</strong> Reembolso e direito de arrependimento são pedidos separados, avaliados conforme a oferta e a lei aplicável.</li>
-                  <li>Fornecedores e cópias de segurança podem manter dados pelo prazo técnico ou legal aplicável; os prazos ainda dependem da configuração contratada.</li>
+                  <li>{t('account.deleteC1')}</li>
+                  <li>{t('account.deleteC2')}</li>
+                  <li>{t('account.deleteC3')}</li>
+                  <li>{t('account.deleteC4')}</li>
+                  <li>{t('account.deleteC5')}</li>
                 </ul>
                 <p className="muted">
-                  Dica: se quiser guardar suas leituras e seu diário, use <em>Exportar meus dados</em> antes.
+                  {t('account.deleteTip')}
                 </p>
                 <div className="field">
-                  <label htmlFor="delete-password">Confirme sua senha</label>
+                  <label htmlFor="delete-password">{t('account.confirmPassword')}</label>
                   <input
                     id="delete-password"
                     type="password"
@@ -163,7 +160,7 @@ export default function Account() {
                     checked={understood}
                     onChange={(e) => setUnderstood(e.target.checked)}
                   />
-                  <span>Entendo que a exclusão é definitiva e irreversível.</span>
+                  <span>{t('account.deleteUnderstand')}</span>
                 </label>
                 {deleteError && <p className="error-msg" role="alert">{deleteError}</p>}
                 <div className="delete-actions">
@@ -173,10 +170,10 @@ export default function Account() {
                     onClick={() => { setDeleteOpen(false); setPassword(''); setUnderstood(false); setDeleteError('') }}
                     disabled={deleting}
                   >
-                    Voltar
+                    {t('account.back')}
                   </button>
                   <button className="btn small btn--danger" type="submit" disabled={deleting || !understood || !password}>
-                    {deleting ? 'Excluindo…' : 'Confirmar exclusão definitiva'}
+                    {deleting ? t('account.deleting') : t('account.confirmDelete')}
                   </button>
                 </div>
               </form>

@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getBillingCatalog } from '../lib/billing'
-
-const MARKET_LABELS = {
-  BR: 'Brasil',
-  PT_EU: 'Portugal / União Europeia',
-}
+import { useI18n } from '../lib/i18n-context'
 
 function money(item, locale) {
   return new Intl.NumberFormat(locale, {
@@ -14,32 +10,34 @@ function money(item, locale) {
 }
 
 export default function BillingOffers({ busy, onCheckout, includePack = true }) {
+  const { t } = useI18n()
   const [catalog, setCatalog] = useState(null)
   const [market, setMarket] = useState('')
   const [error, setError] = useState('')
+  const marketLabel = (code) => t(code === 'BR' ? 'billing.marketBR' : 'billing.marketPT')
 
   useEffect(() => {
     let active = true
     getBillingCatalog().then((result) => {
       if (!active) return
       if (!result.ok) {
-        setError('As ofertas não estão disponíveis neste momento.')
+        setError('unavailable')
         return
       }
       setCatalog(result)
       const codes = Object.keys(result.markets ?? {})
       setMarket(codes.includes('BR') ? 'BR' : (codes[0] ?? ''))
-    }).catch(() => active && setError('As ofertas não estão disponíveis neste momento.'))
+    }).catch(() => active && setError('unavailable'))
     return () => { active = false }
   }, [])
 
   const selected = useMemo(() => catalog?.markets?.[market] ?? null, [catalog, market])
-  if (error) return <p className="muted" role="status">{error}</p>
-  if (!catalog) return <p className="muted">Consultando as ofertas disponíveis…</p>
+  if (error) return <p className="muted" role="status">{t('billing.unavailable')}</p>
+  if (!catalog) return <p className="muted">{t('billing.loading')}</p>
   if (!selected) {
     return (
       <p className="muted">
-        Nenhum mercado está habilitado para contratação. O uso gratuito continua disponível.
+        {t('billing.noMarket')}
       </p>
     )
   }
@@ -51,51 +49,48 @@ export default function BillingOffers({ busy, onCheckout, includePack = true }) 
     <>
       {Object.keys(catalog.markets).length > 1 && (
         <div className="field">
-          <label htmlFor="billing-market">Mercado da oferta</label>
+          <label htmlFor="billing-market">{t('billing.marketLabel')}</label>
           <select id="billing-market" value={market} onChange={(event) => setMarket(event.target.value)}>
             {Object.keys(catalog.markets).map((code) => (
-              <option value={code} key={code}>{MARKET_LABELS[code]}</option>
+              <option value={code} key={code}>{marketLabel(code)}</option>
             ))}
           </select>
         </div>
       )}
-      <p className="muted">Oferta para {MARKET_LABELS[market]}. A cobrança será feita em {selected.currency.toUpperCase()}.</p>
+      <p className="muted">{t('billing.offerFor').replace('{market}', marketLabel(market)).replace('{currency}', selected.currency.toUpperCase())}</p>
       <div className="preco">
         {money(monthly, selected.locale)}
-        <span className="preco__periodo">/mês</span>
+        <span className="preco__periodo">{t('billing.perMonth')}</span>
       </div>
       <p className="paywall__anual">
-        ✦ plano anual: <strong>{money(annual, selected.locale)}/ano</strong>
+        {t('billing.annualPlan')} <strong>{money(annual, selected.locale)}{t('billing.perYear')}</strong>
       </p>
       <p className="muted billing-personal-note">
-        Sua assinatura é pessoal e intransferível. As leituras são para seu uso próprio
-        e não podem ser partilhadas ou revendidas.
+        {t('billing.personalNote')}
       </p>
       <div className="paywall__botoes">
         <button className="btn btn--wine" onClick={() => onCheckout('anual', market)} disabled={!!busy}>
-          {busy === 'anual' ? 'Preparando…' : `Assinar anual · ${money(annual, selected.locale)}`}
+          {busy === 'anual' ? t('billing.preparing') : `${t('billing.subscribeAnnual')} · ${money(annual, selected.locale)}`}
         </button>
         <button className="btn ghost" onClick={() => onCheckout('mensal', market)} disabled={!!busy}>
-          {busy === 'mensal' ? 'Preparando…' : `Assinar mensal · ${money(monthly, selected.locale)}`}
+          {busy === 'mensal' ? t('billing.preparing') : `${t('billing.subscribeMonthly')} · ${money(monthly, selected.locale)}`}
         </button>
       </div>
       {includePack && (
         <div className="paywall__avulso">
-          <p className="paywall__avulso-label">Sem renovação automática?</p>
+          <p className="paywall__avulso-label">{t('billing.packLabel')}</p>
           <p className="paywall__avulso-desc">
-            <strong>Consulta avulsa</strong> — {pack.quantity} leituras por{' '}
-            <strong>{money(pack, selected.locale)}</strong>, válidas por {pack.valid_days} dias.
+            <strong>{t('billing.packName')}</strong>{' '}
+            {t('billing.packDesc').replace('{qty}', pack.quantity).replace('{price}', money(pack, selected.locale)).replace('{days}', pack.valid_days)}
           </p>
           <button className="btn ghost small" onClick={() => onCheckout('avulso', market)} disabled={!!busy}>
-            {busy === 'avulso' ? 'Preparando…' : `Comprar ${pack.quantity} leituras · ${money(pack, selected.locale)}`}
+            {busy === 'avulso' ? t('billing.preparing') : `${t('billing.buyPack').replace('{qty}', pack.quantity)} · ${money(pack, selected.locale)}`}
           </button>
         </div>
       )}
       <p className="muted">
-        Antes de pagar, o Stripe exibirá o valor total e a moeda. Assinaturas
-        renovam até o cancelamento da renovação; a compra avulsa não renova.
-        Cancelamento e exclusão não geram reembolso automático. Consulte os{' '}
-        <a href="/termos" target="_blank" rel="noreferrer">Termos de Uso</a>.
+        {t('billing.footerText')}{' '}
+        <a href="/termos" target="_blank" rel="noreferrer">{t('footer.terms')}</a>.
       </p>
     </>
   )

@@ -23,8 +23,11 @@ export function I18nProvider({ children }) {
     return dict[key] ?? translations[DEFAULT_LOCALE][key] ?? key
   }, [locale])
 
+  // BCP47 para formatação de datas (Intl): pt→pt-BR, en→en, fr→fr.
+  const dateLocale = HTML_LANG[locale] ?? locale
+
   return (
-    <I18nContext.Provider value={{ locale, setLocale, t }}>
+    <I18nContext.Provider value={{ locale, setLocale, t, dateLocale }}>
       {children}
     </I18nContext.Provider>
   )

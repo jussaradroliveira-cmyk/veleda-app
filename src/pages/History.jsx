@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../App'
+import { useI18n } from '../lib/i18n-context'
 
 export default function History() {
   const { user } = useAuth()
+  const { t, dateLocale } = useI18n()
   const [readings, setReadings] = useState(null)
 
   useEffect(() => {
@@ -19,19 +21,19 @@ export default function History() {
   return (
     <main className="internal-page history-page">
       <div className="container" style={{ maxWidth: 720 }}>
-        <h2 style={{ marginBottom: '1.2rem' }}>✦ Seu histórico</h2>
-        {readings === null && <p className="muted">Relembrando suas leituras…</p>}
+        <h2 style={{ marginBottom: '1.2rem' }}>{t('history.title')}</h2>
+        {readings === null && <p className="muted">{t('history.loading')}</p>}
         {readings?.length === 0 && (
           <div className="card-panel" style={{ textAlign: 'center' }}>
-            <p className="muted">Você ainda não tem leituras guardadas.</p>
-            <Link to="/leitura" className="btn" style={{ marginTop: '1rem' }}>Fazer a primeira leitura</Link>
+            <p className="muted">{t('history.empty')}</p>
+            <Link to="/leitura" className="btn" style={{ marginTop: '1rem' }}>{t('history.first')}</Link>
           </div>
         )}
         {readings?.map((r) => (
           <Link to={`/historico/${r.id}`} className="history-item" key={r.id}>
             <div className="q">“{r.question}”</div>
             <div className="meta">
-              {new Date(r.created_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
+              {new Date(r.created_at).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' })}
               {' ✦ '}
               {r.cards.map((c) => c.name).join(' · ')}
             </div>

@@ -3,9 +3,11 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth-context'
 import { startCheckout, openBillingPortal } from '../lib/billing'
 import BillingOffers from '../components/BillingOffers'
+import { useI18n } from '../lib/i18n-context'
 
 export default function Subscription() {
   const { user } = useAuth()
+  const { t, dateLocale } = useI18n()
   const [isPremium, setIsPremium] = useState(null)
   const [credits, setCredits] = useState(0)
   const [creditsExpire, setCreditsExpire] = useState(null)
@@ -36,8 +38,8 @@ export default function Subscription() {
       return
     }
     setNotice(r.error === 'stripe_not_configured'
-      ? 'A assinatura Premium está chegando ✦ volte em breve.'
-      : 'Não consegui abrir o pagamento. Tente outra vez daqui a pouco.')
+      ? t('paywall.comingSoon')
+      : t('paywall.error'))
   }
 
   async function managePortal() {
@@ -50,46 +52,44 @@ export default function Subscription() {
       return
     }
     setNotice(r.error === 'stripe_not_configured' || r.error === 'no_subscription'
-      ? 'O portal da assinatura está chegando ✦ por enquanto, fale conosco para qualquer alteração.'
-      : 'Não consegui abrir o portal. Tente outra vez daqui a pouco.')
+      ? t('subscription.portalNotice')
+      : t('subscription.portalError'))
   }
 
   return (
     <main className="internal-page subscription-page">
       <div className="container" style={{ maxWidth: 560 }}>
         <div className="card-panel ornate-panel subscription-panel">
-          <p className="internal-kicker">Sua assinatura</p>
-          {isPremium === null && <p className="muted">Consultando sua assinatura…</p>}
+          <p className="internal-kicker">{t('subscription.kicker')}</p>
+          {isPremium === null && <p className="muted">{t('subscription.loading')}</p>}
 
           {isPremium === true && (
             <>
-              <h2>✦ Você é Premium</h2>
+              <h2>{t('subscription.premiumTitle')}</h2>
               <p className="muted subscription-lead">
-                Até 10 leituras por dia, com reset diário e acesso contínuo ao seu ritual.
+                {t('subscription.premiumLead')}
               </p>
               <button className="btn btn--wine" onClick={managePortal} disabled={!!busy}>
-                {busy === 'portal' ? 'Abrindo…' : 'Gerenciar renovação no Stripe'}
+                {busy === 'portal' ? t('subscription.opening') : t('subscription.managePortal')}
               </button>
               <p className="muted subscription-note">
-                Você será levada ao portal seguro do Stripe, onde pode trocar o cartão,
-                ver faturas ou solicitar o cancelamento da renovação. Isso não exclui sua
-                conta, não apaga histórico ou diário e não gera reembolso automático.
+                {t('subscription.portalNote')}
               </p>
             </>
           )}
 
           {isPremium === false && (
             <>
-              <h2>✦ Veleda Premium</h2>
+              <h2>{t('subscription.offerTitle')}</h2>
               <ul className="subscription-list">
-                <li>Até 10 leituras por dia</li>
-                <li>Histórico e diário sem limites</li>
-                <li>Acesso antecipado a novas tiragens</li>
+                <li>{t('paywall.feat1')}</li>
+                <li>{t('paywall.feat2')}</li>
+                <li>{t('paywall.feat3')}</li>
               </ul>
               {credits > 0 && (
                 <p className="avulso-saldo">
-                  ✦ Você tem <strong>{credits} {credits === 1 ? 'leitura avulsa' : 'leituras avulsas'}</strong>
-                  {creditsExpire && <> · válidas até {new Date(creditsExpire).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}</>}
+                  ✦ {t('reading.creditsBefore')} <strong>{credits} {credits === 1 ? t('reading.creditUnitOne') : t('reading.creditUnitMany')}</strong>
+                  {creditsExpire && <> · {t('subscription.creditsValidUntil')} {new Date(creditsExpire).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long' })}</>}
                 </p>
               )}
               <BillingOffers busy={busy} onCheckout={subscribe} />

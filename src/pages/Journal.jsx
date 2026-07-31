@@ -2,12 +2,14 @@ import { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../App'
+import { useI18n } from '../lib/i18n-context'
 
 // Espelha a constraint journal_entries_content_len no banco (VLT-011).
 const MAX_JOURNAL_CHARS = 8000
 
 export default function Journal() {
   const { user } = useAuth()
+  const { t, dateLocale } = useI18n()
   const [entries, setEntries] = useState(null)
   const [draft, setDraft] = useState('')
   const [busy, setBusy] = useState(false)
@@ -32,7 +34,7 @@ export default function Journal() {
       .insert({ user_id: user.id, content: draft.slice(0, MAX_JOURNAL_CHARS) })
     setBusy(false)
     if (insertError) {
-      setError('Não consegui guardar esta entrada. Tente encurtar o texto.')
+      setError(t('journal.saveError'))
       return
     }
     setDraft('')
@@ -48,36 +50,36 @@ export default function Journal() {
     <main className="internal-page journal-page">
       <div className="container">
         <header className="journal-hero">
-          <p className="internal-kicker">Seu caderno íntimo</p>
-          <h1>Diário de reflexão</h1>
+          <p className="internal-kicker">{t('journal.kicker')}</p>
+          <h1>{t('journal.title')}</h1>
           <p className="muted journal-hero__lead">
-            Um lugar privado para reconhecer padrões, guardar sonhos e escutar o que permanece.
+            {t('journal.lead')}
           </p>
         </header>
         <section className="card-panel ornate-panel journal-compose">
           <form onSubmit={(event) => { event.preventDefault(); addEntry() }}>
-            <label className="journal-compose__label" htmlFor="journal-draft">Um pensamento, um sonho, um sinal</label>
-            <textarea id="journal-draft" value={draft} maxLength={MAX_JOURNAL_CHARS} onChange={(e) => setDraft(e.target.value)} placeholder="Hoje senti…" />
+            <label className="journal-compose__label" htmlFor="journal-draft">{t('journal.label')}</label>
+            <textarea id="journal-draft" value={draft} maxLength={MAX_JOURNAL_CHARS} onChange={(e) => setDraft(e.target.value)} placeholder={t('journal.placeholder')} />
             <button className="btn btn--wine" type="submit" disabled={busy || !draft.trim()}>
-              {busy ? 'Guardando…' : 'Guardar entrada'}
+              {busy ? t('journal.saving') : t('journal.save')}
             </button>
             {error && <p className="error-msg" role="alert">{error}</p>}
           </form>
         </section>
         <div className="journal-entries">
-        {entries === null && <p className="muted">Folheando seu diário…</p>}
-        {entries?.length === 0 && <p className="muted">Ainda não há entradas no diário.</p>}
+        {entries === null && <p className="muted">{t('journal.loading')}</p>}
+        {entries?.length === 0 && <p className="muted">{t('journal.empty')}</p>}
         {entries?.map((e) => (
           <div className="history-item" key={e.id}>
             <div className="meta">
-              {new Date(e.created_at).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
+              {new Date(e.created_at).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' })}
               {e.reading_id && e.readings && (
-                <> ✦ sobre a leitura <Link to={`/historico/${e.reading_id}`}>“{e.readings.question}”</Link></>
+                <> ✦ {t('journal.aboutReading')} <Link to={`/historico/${e.reading_id}`}>“{e.readings.question}”</Link></>
               )}
             </div>
             <p style={{ marginTop: '0.4rem', whiteSpace: 'pre-wrap' }}>{e.content}</p>
             <p style={{ marginTop: '0.4rem' }}>
-              <a href="#" onClick={(ev) => { ev.preventDefault(); removeEntry(e.id) }} style={{ fontSize: '0.75rem', color: 'var(--tinta-suave)' }}>apagar</a>
+              <a href="#" onClick={(ev) => { ev.preventDefault(); removeEntry(e.id) }} style={{ fontSize: '0.75rem', color: 'var(--tinta-suave)' }}>{t('journal.delete')}</a>
             </p>
           </div>
         ))}

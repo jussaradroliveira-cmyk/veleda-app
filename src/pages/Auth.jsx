@@ -203,7 +203,7 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
             {emailSent && (
               <div className="sent-notice" role="status">
                 <p className="sent-notice__title">📧 Vá ao seu email</p>
-                <p>Enviamos um link para o seu e-mail. Confirme sua caixa de entrada e o Spam.</p>
+                <p>Enviamos um link para o seu e-mail — confira a caixa de entrada.</p>
               </div>
             )}
             <button

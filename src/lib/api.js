@@ -22,7 +22,7 @@ export { shouldRenewIdempotencyKey } from './reading-retry'
 // chama a Edge Function; devolve {reading} ou lança erro com .code.
 // Em 5xx (ex.: worker do Supabase morto num arranque frio) tenta de novo
 // sozinha — um worker fresco costuma resolver sem a pessoa dar conta.
-export async function generateReading(question, chosen, idempotencyKey) {
+export async function generateReading(question, chosen, idempotencyKey, locale = 'pt') {
   const { data: { session } } = await supabase.auth.getSession()
   const payload = {
     method: 'POST',
@@ -34,6 +34,7 @@ export async function generateReading(question, chosen, idempotencyKey) {
       question,
       cards: chosen.map((c) => ({ card_id: c.id, reversed: c.reversed })),
       idempotency_key: idempotencyKey,
+      locale,
     }),
   }
 

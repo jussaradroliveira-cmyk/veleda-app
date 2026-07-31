@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { escapeUntrustedText, detectCrisis, CRISIS_RESOURCES } from '../supabase/functions/_shared/ai-safety.js'
+import { escapeUntrustedText, detectCrisis, getCrisisResources } from '../supabase/functions/_shared/ai-safety.js'
 
 // VLT2-015: escape do delimitador — a pergunta não pode "fechar a caixa".
 test('neutraliza a tag de fecho do delimitador', () => {
@@ -34,12 +34,26 @@ test('deteta violência/abuso', () => {
   }
 })
 
+test('deteta sinais de risco em inglês e francês', () => {
+  for (const q of ['I want to kill myself', "I don't want to live anymore", 'domestic violence at home']) {
+    assert.equal(detectCrisis(q), true, q)
+  }
+  for (const q of ['je veux me suicider', "je n'ai plus envie de vivre", 'je subis des violences conjugales']) {
+    assert.equal(detectCrisis(q), true, q)
+  }
+})
+
 test('não dispara em perguntas comuns', () => {
-  for (const q of ['vou mudar de emprego?', 'como está o meu relacionamento?', 'devo viajar este mês?']) {
+  for (const q of ['vou mudar de emprego?', 'como está o meu relacionamento?', 'devo viajar este mês?',
+    'should I change jobs?', 'quel avenir pour ma carrière ?']) {
     assert.equal(detectCrisis(q), false, q)
   }
 })
 
-test('recursos de crise incluem o CVV 188', () => {
-  assert.match(CRISIS_RESOURCES.lines.join(' '), /188/)
+test('recursos de crise por idioma (pt=CVV 188, fr=3114, en=Samaritans)', () => {
+  assert.match(getCrisisResources('pt').lines.join(' '), /188/)
+  assert.match(getCrisisResources('fr').lines.join(' '), /3114/)
+  assert.match(getCrisisResources('en').lines.join(' '), /116 123/)
+  // locale desconhecido cai no pt
+  assert.match(getCrisisResources('xx').lines.join(' '), /188/)
 })

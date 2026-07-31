@@ -9,7 +9,7 @@ import StepIndicator from '../components/StepIndicator'
 import { CardFront } from '../components/TarotCard'
 import SafeMarkdown from '../components/SafeMarkdown'
 import { useI18n } from '../lib/i18n-context'
-import { detectCrisis, CRISIS_RESOURCES } from '../../supabase/functions/_shared/ai-safety.js'
+import { detectCrisis, getCrisisResources } from '../../supabase/functions/_shared/ai-safety.js'
 
 const FREE_READINGS_PER_WEEK = 1
 
@@ -29,9 +29,10 @@ function isCompoundQuestion(q) {
 
 export default function NewReading() {
   const { user } = useAuth()
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const MSG_COMPOSTA = t('reading.compound')
   const MSG_PREMIUM_DIA = t('reading.premiumDaily')
+  const crisisResources = getCrisisResources(locale)
   const [step, setStep] = useState(null) // null (a carregar) | nome | pergunta | tiragem | leitura
   const [displayName, setDisplayName] = useState('')
   const [question, setQuestion] = useState('')
@@ -112,7 +113,7 @@ export default function NewReading() {
     setBusy(true)
     setError('')
     try {
-      const r = await generateReading(question, picked, idempotencyKey)
+      const r = await generateReading(question, picked, idempotencyKey, locale)
       setReading(r)
       // Nota de segurança completa: visível uma única vez, na primeira leitura.
       let primeiraLeitura = false
@@ -139,10 +140,10 @@ export default function NewReading() {
 
   const crisisNotice = crisis && (
     <aside className="crisis-notice" role="alert" aria-label={t('reading.crisisAria')}>
-      <p className="crisis-notice__headline">{CRISIS_RESOURCES.headline}</p>
-      <p>{CRISIS_RESOURCES.body}</p>
+      <p className="crisis-notice__headline">{crisisResources.headline}</p>
+      <p>{crisisResources.body}</p>
       <ul className="crisis-notice__list">
-        {CRISIS_RESOURCES.lines.map((line) => <li key={line}>{line}</li>)}
+        {crisisResources.lines.map((line) => <li key={line}>{line}</li>)}
       </ul>
     </aside>
   )

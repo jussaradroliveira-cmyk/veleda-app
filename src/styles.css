@@ -544,6 +544,25 @@ main:not(.landing) {
   gap: clamp(0.75rem, 1.8vw, 1.55rem);
 }
 
+/* Menu de idiomas */
+.lang-menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.lang-menu__globe { font-size: 0.9rem; line-height: 1; }
+.lang-menu__select {
+  border: 1px solid var(--gold-aged);
+  border-radius: 6px;
+  padding: 0.3rem 0.4rem;
+  background: transparent;
+  color: var(--plum-brown);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
 .main-navigation a,
 .main-navigation button {
   border: 0;

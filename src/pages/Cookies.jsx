@@ -70,6 +70,13 @@ export default function Cookies() {
                     <td>Preferência funcional</td>
                     <td>Até limpar os dados locais</td>
                   </tr>
+                  <tr>
+                    <td><code>veleda_lang</code></td>
+                    <td>Veleda</td>
+                    <td>Lembrar o idioma escolhido (português, inglês ou francês)</td>
+                    <td>Preferência funcional</td>
+                    <td>Até limpar os dados locais</td>
+                  </tr>
                 </tbody>
               </table>
             </div>

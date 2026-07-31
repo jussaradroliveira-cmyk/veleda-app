@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../App'
+import { useI18n } from '../lib/i18n-context'
 import { CardFront } from '../components/TarotCard'
 
 const heroCards = [
@@ -10,42 +11,43 @@ const heroCards = [
 
 export default function Landing() {
   const { session } = useAuth()
+  const { t } = useI18n()
   const readingPath = session ? '/leitura' : '/auth'
 
   return (
     <main className="landing">
       {!session && (
-        <section className="welcome-hero" aria-label="Boas-vindas">
+        <section className="welcome-hero" aria-label={t('landing.welcomeAria')}>
           <div className="welcome-hero__inner">
-            <p className="welcome-hero__kicker">✦ Tarô simbólico com alma ✦</p>
-            <h1>Bem-vinda ao<br />Tarô Veleda</h1>
-            <p className="welcome-hero__lead">As cartas escutam você.</p>
+            <p className="welcome-hero__kicker">{t('landing.heroKicker')}</p>
+            <h1>{t('landing.welcomeTitle1')}<br />Tarô Veleda</h1>
+            <p className="welcome-hero__lead">{t('landing.welcomeLead')}</p>
             <div className="welcome-hero__actions">
-              <Link to="/auth" className="btn btn--wine">Faça seu login</Link>
-              <Link to="/auth" state={{ signup: true }} className="btn ghost">Cadastre-se</Link>
+              <Link to="/auth" className="btn btn--wine">{t('landing.login')}</Link>
+              <Link to="/auth" state={{ signup: true }} className="btn ghost">{t('landing.signup')}</Link>
             </div>
-            <a className="welcome-hero__scroll" href="#ritual-title">conheça o ritual ↓</a>
+            <a className="welcome-hero__scroll" href="#ritual-title">{t('landing.scroll')}</a>
           </div>
         </section>
       )}
       <section className="landing-hero">
         <div className="container landing-hero__grid">
           <div className="landing-hero__copy">
-            <p className="eyebrow">Tarô simbólico</p>
-            <h1>Um instante<br />de clareza,<br /><em>inteiramente seu.</em></h1>
+            <p className="eyebrow">{t('landing.eyebrow')}</p>
+            <h1>{t('landing.heroTitle1')}<br /><em>{t('landing.heroTitle2')}</em></h1>
             <div className="ornamental-rule" aria-hidden="true"><span>✦</span></div>
             <p className="landing-hero__lead">
-              Tarô simbólico com inteligência artificial para iluminar escolhas e revelar caminhos.
+              {t('landing.heroLead')}
             </p>
             <div className="landing-hero__actions">
               <Link to={readingPath} state={!session ? { from: '/leitura' } : undefined} className="btn btn--wine">
-                Fazer uma leitura
+                {t('landing.makeReading')}
               </Link>
-              <p><span aria-hidden="true">☾</span><strong> Seu guia pessoal</strong><small>Sempre que você precisar</small></p>
+              <p><span aria-hidden="true">☾</span><strong> {t('landing.guideStrong')}</strong><small>{t('landing.guideSmall')}</small></p>
             </div>
           </div>
 
-          <div className="landing-hero__visual" aria-label="As cartas A Lua, O Sol e O Mundo">
+          <div className="landing-hero__visual" aria-label={t('landing.heroCardsLabel')}>
             <div className="hero-cards">
               {heroCards.map((card) => <CardFront key={card.name} card={card} />)}
             </div>
@@ -56,28 +58,28 @@ export default function Landing() {
       <section className="ritual-section" aria-labelledby="ritual-title">
         <div className="container">
           <header className="section-heading">
-            <p className="eyebrow">Seu ritual</p>
-            <h2 id="ritual-title">Escute o que já vive dentro de você</h2>
-            <p>Três gestos simples. Um espaço seguro para olhar com mais delicadeza para o seu momento.</p>
+            <p className="eyebrow">{t('landing.ritualEyebrow')}</p>
+            <h2 id="ritual-title">{t('landing.ritualTitle')}</h2>
+            <p>{t('landing.ritualLead')}</p>
           </header>
           <div className="ritual-grid">
             <article className="ritual-card">
               <span className="ritual-card__number">01</span>
               <span className="ritual-card__symbol" aria-hidden="true">☾</span>
-              <h3>Faça sua pergunta</h3>
-              <p>Traga o tema que pede presença e formule-o com calma.</p>
+              <h3>{t('landing.step1Title')}</h3>
+              <p>{t('landing.step1Text')}</p>
             </article>
             <article className="ritual-card">
               <span className="ritual-card__number">02</span>
               <span className="ritual-card__symbol" aria-hidden="true">✦</span>
-              <h3>Escolha as cartas</h3>
-              <p>Deixe a intuição conduzir sua tiragem de passado, presente e futuro.</p>
+              <h3>{t('landing.step2Title')}</h3>
+              <p>{t('landing.step2Text')}</p>
             </article>
             <article className="ritual-card">
               <span className="ritual-card__number">03</span>
               <span className="ritual-card__symbol" aria-hidden="true">❀</span>
-              <h3>Receba e guarde</h3>
-              <p>Leia a interpretação, volte ao histórico e escreva em seu diário privado.</p>
+              <h3>{t('landing.step3Title')}</h3>
+              <p>{t('landing.step3Text')}</p>
             </article>
           </div>
         </div>
@@ -86,29 +88,29 @@ export default function Landing() {
       <section className="benefits-section" aria-labelledby="benefits-title">
         <div className="container benefits-section__grid">
           <div className="benefits-section__statement">
-            <p className="eyebrow eyebrow--gold">Um espaço que cresce com você</p>
-            <h2 id="benefits-title">As cartas abrem uma conversa.<br />O diário guarda o caminho.</h2>
+            <p className="eyebrow eyebrow--gold">{t('landing.benefitsEyebrow')}</p>
+            <h2 id="benefits-title">{t('landing.benefitsTitle1')}<br />{t('landing.benefitsTitle2')}</h2>
             <div className="benefits-sun" aria-hidden="true">☼</div>
           </div>
           <div className="benefits-list">
             <article>
               <span aria-hidden="true">☼</span>
-              <div><h3>Leitura com IA</h3><p>Simbólica, acolhedora e não fatalista.</p></div>
+              <div><h3>{t('landing.benefit1Title')}</h3><p>{t('landing.benefit1Text')}</p></div>
             </article>
             <article>
               <span aria-hidden="true">☾</span>
-              <div><h3>Memória pessoal</h3><p>Histórico e reflexões reunidos em um só lugar.</p></div>
+              <div><h3>{t('landing.benefit2Title')}</h3><p>{t('landing.benefit2Text')}</p></div>
             </article>
             <article>
               <span aria-hidden="true">❀</span>
               <div>
-                <h3>Veleda Premium</h3>
-                <p>Até 10 leituras por dia e acesso contínuo ao seu ritual.</p>
-                <p className="benefits-price">Preço e moeda conforme o mercado selecionado.</p>
+                <h3>{t('landing.benefit3Title')}</h3>
+                <p>{t('landing.benefit3Text')}</p>
+                <p className="benefits-price">{t('landing.benefit3Price')}</p>
               </div>
             </article>
             <Link to={readingPath} state={!session ? { from: '/leitura' } : undefined} className="btn btn--gold">
-              Começar agora
+              {t('landing.startNow')}
             </Link>
           </div>
         </div>

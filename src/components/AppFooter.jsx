@@ -1,25 +1,22 @@
 import { Link } from 'react-router-dom'
+import { useI18n } from '../lib/i18n-context'
 
 export default function AppFooter() {
+  const { t } = useI18n()
   return (
     <footer className="app-footer">
       <div className="container app-footer__inner">
-        <p><strong>Veleda Tarô</strong> — as cartas escutam você</p>
-        <small>
-          Operado por Jussara D R Oliveira, pessoa singular estabelecida em Portugal.
-          Ofertas para Portugal/UE e Brasil conforme o mercado selecionado.
-        </small>
-        <small className="app-footer__disclaimer">
-          Ferramenta de reflexão de caráter simbólico. Não substitui aconselhamento profissional.
-        </small>
-        <nav className="app-footer__links" aria-label="Documentos legais">
-          <Link to="/termos">Termos de Uso</Link>
+        <p><strong>Veleda Tarô</strong> — {t('footer.brandTagline')}</p>
+        <small>{t('footer.operator')}</small>
+        <small className="app-footer__disclaimer">{t('brand.tagline')}</small>
+        <nav className="app-footer__links" aria-label={t('footer.legalNav')}>
+          <Link to="/termos">{t('footer.terms')}</Link>
           <span aria-hidden="true">·</span>
-          <Link to="/privacidade">Privacidade</Link>
+          <Link to="/privacidade">{t('footer.privacy')}</Link>
           <span aria-hidden="true">·</span>
-          <Link to="/subprocessadores">Subprocessadores</Link>
+          <Link to="/subprocessadores">{t('footer.subprocessors')}</Link>
           <span aria-hidden="true">·</span>
-          <Link to="/cookies">Cookies</Link>
+          <Link to="/cookies">{t('footer.cookies')}</Link>
         </nav>
       </div>
     </footer>

@@ -2,10 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth-context'
+import { useI18n } from '../lib/i18n-context'
 import VeledaLogo from './VeledaLogo'
+import LanguageMenu from './LanguageMenu'
 
 export default function AppHeader() {
   const { session } = useAuth()
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
@@ -46,7 +49,7 @@ export default function AppHeader() {
         <div className="app-header__brand">
           <VeledaLogo />
           <span className="app-header__tagline">
-            Ferramenta de reflexão de caráter simbólico. Não substitui aconselhamento profissional.
+            {t('brand.tagline')}
           </span>
         </div>
         <button
@@ -55,7 +58,7 @@ export default function AppHeader() {
           type="button"
           aria-expanded={open}
           aria-controls="main-navigation"
-          aria-label={open ? 'Fechar menu' : 'Abrir menu'}
+          aria-label={open ? t('nav.closeMenu') : t('nav.openMenu')}
           onClick={() => setOpen((value) => !value)}
         >
           <span />
@@ -65,20 +68,21 @@ export default function AppHeader() {
         <nav
           id="main-navigation"
           className={`main-navigation ${open ? 'is-open' : ''}`}
-          aria-label="Navegação principal"
+          aria-label={t('nav.main')}
           onClick={(event) => {
             if (event.target.closest('a')) setOpen(false)
           }}
         >
-          <AppLink to="/leitura">Nova leitura</AppLink>
-          <AppLink to="/historico">Histórico</AppLink>
-          <AppLink to="/diario">Diário</AppLink>
-          {session && <NavLink to="/conta">Minha conta</NavLink>}
+          <AppLink to="/leitura">{t('nav.newReading')}</AppLink>
+          <AppLink to="/historico">{t('nav.history')}</AppLink>
+          <AppLink to="/diario">{t('nav.journal')}</AppLink>
+          {session && <NavLink to="/conta">{t('nav.account')}</NavLink>}
           {session ? (
-            <button type="button" onClick={sair}>Sair</button>
+            <button type="button" onClick={sair}>{t('nav.signOut')}</button>
           ) : (
-            <NavLink to="/auth">Entrar</NavLink>
+            <NavLink to="/auth">{t('nav.signIn')}</NavLink>
           )}
+          <LanguageMenu />
         </nav>
       </div>
     </header>

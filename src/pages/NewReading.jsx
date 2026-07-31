@@ -8,6 +8,7 @@ import Paywall from '../components/Paywall'
 import StepIndicator from '../components/StepIndicator'
 import { CardFront } from '../components/TarotCard'
 import SafeMarkdown from '../components/SafeMarkdown'
+import { useI18n } from '../lib/i18n-context'
 import { detectCrisis, CRISIS_RESOURCES } from '../../supabase/functions/_shared/ai-safety.js'
 
 const FREE_READINGS_PER_WEEK = 1
@@ -26,11 +27,11 @@ function isCompoundQuestion(q) {
   return comInterrogativa >= 2
 }
 
-const MSG_COMPOSTA = 'Sinto aqui mais de uma pergunta. As cartas pedem um único foco por leitura — escolha a que mais importa agora e guarde a outra para a próxima.'
-const MSG_PREMIUM_DIA = 'Você já fez suas 10 leituras de hoje. Amanhã as cartas estarão à sua espera.'
-
 export default function NewReading() {
   const { user } = useAuth()
+  const { t } = useI18n()
+  const MSG_COMPOSTA = t('reading.compound')
+  const MSG_PREMIUM_DIA = t('reading.premiumDaily')
   const [step, setStep] = useState(null) // null (a carregar) | nome | pergunta | tiragem | leitura
   const [displayName, setDisplayName] = useState('')
   const [question, setQuestion] = useState('')
@@ -103,7 +104,7 @@ export default function NewReading() {
       setIdempotencyKey(crypto.randomUUID())
       setStep('tiragem')
     } catch {
-      setError('Não consegui embaralhar as cartas. Tente de novo.')
+      setError(t('reading.shuffleError'))
     }
   }
 
@@ -129,7 +130,7 @@ export default function NewReading() {
         // VLT2-005: se a reserva foi liberada no servidor, a chave atual já não
         // serve — renova para que o próximo "Revelar" comece uma reserva nova.
         if (shouldRenewIdempotencyKey(err.code)) setIdempotencyKey(crypto.randomUUID())
-        setError('O véu tremeu por um instante e a leitura não chegou. Suas cartas continuam escolhidas — toque em "Revelar a leitura" para tentar de novo.')
+        setError(t('reading.veilError'))
       }
     } finally {
       setBusy(false)
@@ -137,7 +138,7 @@ export default function NewReading() {
   }
 
   const crisisNotice = crisis && (
-    <aside className="crisis-notice" role="alert" aria-label="Apoio e acolhimento">
+    <aside className="crisis-notice" role="alert" aria-label={t('reading.crisisAria')}>
       <p className="crisis-notice__headline">{CRISIS_RESOURCES.headline}</p>
       <p>{CRISIS_RESOURCES.body}</p>
       <ul className="crisis-notice__list">
@@ -149,53 +150,51 @@ export default function NewReading() {
   return (
     <main className={`internal-page reading-page reading-page--${step}`}>
       <div className="container">
-        {step === null && <p className="muted" style={{ textAlign: 'center' }}>Abrindo o véu…</p>}
+        {step === null && <p className="muted" style={{ textAlign: 'center' }}>{t('reading.loading')}</p>}
         {step !== null && <StepIndicator current={step} />}
         {step === 'nome' && (
           <div className="card-panel ornate-panel name-panel">
-            <p className="internal-kicker">Antes de abrir as cartas</p>
-            <h2>Como você gostaria de ser chamada ou chamado?</h2>
-            <p className="muted name-panel__lead">A Veleda usará seu nome com delicadeza durante a leitura.</p>
+            <p className="internal-kicker">{t('reading.nameKicker')}</p>
+            <h2>{t('reading.nameTitle')}</h2>
+            <p className="muted name-panel__lead">{t('reading.nameLead')}</p>
             <form onSubmit={saveName}>
-              <label className="sr-only" htmlFor="display-name">Seu nome</label>
-              <input id="display-name" className="name-input" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Seu nome" maxLength={60} autoComplete="name" required />
-              <button className="btn btn--wine" type="submit" disabled={!displayName.trim()}>Continuar</button>
+              <label className="sr-only" htmlFor="display-name">{t('reading.nameLabel')}</label>
+              <input id="display-name" className="name-input" type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder={t('reading.nameLabel')} maxLength={60} autoComplete="name" required />
+              <button className="btn btn--wine" type="submit" disabled={!displayName.trim()}>{t('reading.continue')}</button>
             </form>
           </div>
         )}
         {step === 'pergunta' && (
           <div className="card-panel ornate-panel" style={{ maxWidth: 560, margin: '0 auto' }}>
-            <h2>✦ {displayName}, o que traz você até as cartas?</h2>
+            <h2>{t('reading.greeting').replace('{name}', displayName)}</h2>
             <p className="muted" style={{ margin: '0.5rem 0 1.2rem' }}>
-              Escreva sua pergunta com calma — uma só por leitura. Quanto mais concreta, mais clara será a resposta.
+              {t('reading.questionLead')}
             </p>
             {/* VLT2-015: aviso ANTES do envio, sempre visível. */}
             <p className="pre-send-note" role="note">
-              A Veleda é reflexão simbólica e entretenimento — não prevê o futuro nem substitui
-              apoio profissional (médico, psicológico, jurídico ou financeiro). Em emergência,
-              procure ajuda imediata.
+              {t('reading.preSend')}
             </p>
             {crisisNotice}
             <form onSubmit={startSpread}>
               <textarea
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                placeholder="Ex.: Que energia me acompanha nesta mudança de trabalho?"
+                placeholder={t('reading.questionPlaceholder')}
                 maxLength={500}
                 required
               />
               {error && <p className="error-msg">{error}</p>}
               <button className="btn" type="submit" disabled={!question.trim()} style={{ marginTop: '1rem' }}>
-                Embaralhar as cartas
+                {t('reading.shuffle')}
               </button>
               {!isPremium && credits > 0 && (
                 <p className="muted" style={{ marginTop: '0.8rem' }}>
-                  ✦ Você tem <strong>{credits} {credits === 1 ? 'leitura avulsa' : 'leituras avulsas'}</strong> disponíveis.
+                  ✦ {t('reading.creditsBefore')} <strong>{credits} {credits === 1 ? t('reading.creditUnitOne') : t('reading.creditUnitMany')}</strong>
                 </p>
               )}
               {!isPremium && credits === 0 && usedThisWeek !== null && usedThisWeek >= FREE_READINGS_PER_WEEK && (
                 <p className="muted" style={{ marginTop: '0.8rem' }}>
-                  ✦ Você já usou sua leitura gratuita desta semana — pode tirar as cartas, mas a leitura pedirá Premium ou uma consulta avulsa.
+                  {t('reading.freeUsed')}
                 </p>
               )}
             </form>
@@ -204,9 +203,9 @@ export default function NewReading() {
 
         {step === 'tiragem' && (
           <div className="reading-stage">
-            <p className="internal-kicker">O chamado das cartas</p>
-            <h2>✦ Escolha 3 cartas</h2>
-            <p className="muted">Deixe a intuição guiar sua mão. {3 - picked.length > 0 ? `Faltam ${3 - picked.length}.` : 'Tiragem completa.'}</p>
+            <p className="internal-kicker">{t('reading.drawKicker')}</p>
+            <h2>{t('reading.drawTitle')}</h2>
+            <p className="muted">{t('reading.drawLeadBase')} {3 - picked.length > 0 ? t('reading.remaining').replace('{n}', 3 - picked.length) : t('reading.spreadComplete')}</p>
             {crisisNotice}
             <FanSpread deck={deck} picked={picked} onPick={(c) => setPicked((p) => [...p, c])} />
             {busy ? (
@@ -216,12 +215,12 @@ export default function NewReading() {
                   <span className="ring ring--inner" />
                   <span className="star">✦</span>
                 </div>
-                <p>A Veleda está fazendo sua leitura…</p>
+                <p>{t('reading.generating')}</p>
               </div>
             ) : (
               <div style={{ marginTop: '1.6rem' }}>
                 <button className="btn" onClick={reveal} disabled={picked.length !== 3}>
-                  Revelar a leitura
+                  {t('reading.reveal')}
                 </button>
               </div>
             )}
@@ -231,14 +230,15 @@ export default function NewReading() {
 
         {step === 'leitura' && reading && (
           <div className="card-panel ornate-panel" style={{ maxWidth: 720, margin: '0 auto' }}>
-            <p className="muted">Sua pergunta</p>
+            <p className="muted">{t('reading.yourQuestion')}</p>
             <h2 style={{ marginBottom: '1rem' }}>“{reading.question}”</h2>
             <div className="spread-slots" style={{ marginBottom: '1.5rem' }}>
               {reading.cards.map((c) => {
                 const full = deck.find((d) => d.id === c.card_id) || c
+                const posKey = { passado: 'reading.posPast', presente: 'reading.posPresent', futuro: 'reading.posFuture' }[c.position]
                 return (
                   <div className="slot" key={c.position}>
-                    <div className="slot-label">{c.position}</div>
+                    <div className="slot-label">{posKey ? t(posKey) : c.position}</div>
                     <CardFront card={{ ...full, ...c }} />
                   </div>
                 )
@@ -247,16 +247,13 @@ export default function NewReading() {
             {crisisNotice}
             <SafeMarkdown>{reading.reading_text}</SafeMarkdown>
             {showDisclaimer && (
-              <aside className="reading-disclaimer" role="note" aria-label="Sobre as leituras da Veleda">
-                A Veleda é uma ferramenta de reflexão e autoconhecimento, de caráter simbólico.
-                As leituras não preveem o futuro nem substituem aconselhamento profissional —
-                médico, psicológico, jurídico ou financeiro. Se estiver passando por um momento
-                difícil, procure apoio de um profissional qualificado.
+              <aside className="reading-disclaimer" role="note" aria-label={t('reading.disclaimerAria')}>
+                {t('reading.disclaimer')}
               </aside>
             )}
             <div style={{ marginTop: '1.8rem', display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
-              <Link to="/diario" className="btn">Escrever no diário</Link>
-              <Link to="/historico" className="btn ghost">Ver histórico</Link>
+              <Link to="/diario" className="btn">{t('reading.writeJournal')}</Link>
+              <Link to="/historico" className="btn ghost">{t('reading.viewHistory')}</Link>
             </div>
           </div>
         )}

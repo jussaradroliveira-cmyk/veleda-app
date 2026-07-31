@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { startCheckout } from '../lib/billing'
+import { useI18n } from '../lib/i18n-context'
 import BillingOffers from './BillingOffers'
 
 // Paywall semanal — o botão abre o checkout Stripe quando as chaves estiverem
 // configuradas no servidor; até lá mostra "em breve".
 export default function Paywall({ onClose }) {
+  const { t } = useI18n()
   const [busy, setBusy] = useState('')
   const [notice, setNotice] = useState('')
 
@@ -18,10 +20,10 @@ export default function Paywall({ onClose }) {
         return
       }
       setNotice(r.error === 'stripe_not_configured'
-        ? 'A assinatura Premium está chegando ✦ volte em breve.'
-        : 'Não consegui abrir o pagamento. Tente outra vez daqui a pouco.')
+        ? t('paywall.comingSoon')
+        : t('paywall.error'))
     } catch {
-      setNotice('Não consegui abrir o pagamento. Tente outra vez daqui a pouco.')
+      setNotice(t('paywall.error'))
     } finally {
       setBusy('')
     }
@@ -30,20 +32,19 @@ export default function Paywall({ onClose }) {
   return (
     <div className="paywall-overlay" onClick={onClose}>
       <div className="card-panel paywall" onClick={(e) => e.stopPropagation()}>
-        <h2>✦ O véu se fecha por esta semana</h2>
+        <h2>{t('paywall.title')}</h2>
         <p className="muted">
-          Você já usou sua leitura gratuita desta semana. As cartas se abrem de novo na segunda-feira —
-          ou torne-se Premium e consulte a Veleda sempre que precisar.
+          {t('paywall.lead')}
         </p>
         <ul>
-          <li>Até 10 leituras por dia</li>
-          <li>Histórico e diário sem limites</li>
-          <li>Acesso antecipado a novas tiragens</li>
+          <li>{t('paywall.feat1')}</li>
+          <li>{t('paywall.feat2')}</li>
+          <li>{t('paywall.feat3')}</li>
         </ul>
         <BillingOffers busy={busy} onCheckout={subscribe} />
         {notice && <p className="muted" style={{ marginTop: '0.8rem' }}>{notice}</p>}
         <p style={{ marginTop: '1rem' }}>
-          <a href="#" onClick={(e) => { e.preventDefault(); onClose() }}>voltar</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); onClose() }}>{t('paywall.back')}</a>
         </p>
       </div>
     </div>

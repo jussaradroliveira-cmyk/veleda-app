@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-
-const TITULOS = {
-  login: 'Que bom ter você de volta',
-  signup: 'Crie sua conta Veleda',
-  forgot: 'Vamos recuperar seu acesso',
-  reset: 'Escolha sua nova senha',
-}
+import { useI18n } from '../lib/i18n-context'
 
 export default function Auth({ recoveryLock = false, onRecoveryDone }) {
   const navigate = useNavigate()
   const location = useLocation()
+  const { t } = useI18n()
+  const TITULOS = {
+    login: t('auth.title.login'),
+    signup: t('auth.title.signup'),
+    forgot: t('auth.title.forgot'),
+    reset: t('auth.title.reset'),
+  }
   // recoveryLock: renderizada pelo lock de recuperação — só o modo reset existe.
   // chegar com state.signup abre direto no modo de cadastro (botão "Cadastre-se")
   const [mode, setMode] = useState(recoveryLock ? 'reset' : (location.state?.signup ? 'signup' : 'login')) // login | signup | forgot | reset
@@ -59,7 +60,7 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
       setBusy(false)
       // no 429 (pedido repetido cedo demais) o email já foi enviado antes — mensagem honesta, nunca "erro"
       if (error && error.status !== 429) {
-        setError('Não consegui enviar o email. Confira o endereço e tente de novo.')
+        setError(t('auth.errForgot'))
       } else {
         setNotice('sent')
         setCooldown(60)
@@ -72,8 +73,8 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
       setBusy(false)
       if (error) {
         setError(error.message.includes('different from the old')
-          ? 'A nova senha precisa ser diferente da anterior.'
-          : 'Não consegui salvar a nova senha. Tente de novo.')
+          ? t('auth.errResetDiff')
+          : t('auth.errReset'))
         return
       }
       // só aqui o lock abre: senha confirmada no servidor
@@ -84,7 +85,7 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
 
     if (mode === 'signup' && (!ageOk || !termsOk || !privacyOk)) {
       setBusy(false)
-      setError('Para criar a conta, faça as três declarações obrigatórias.')
+      setError(t('auth.errConsent'))
       return
     }
 
@@ -108,8 +109,8 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
     if (error) {
       setBusy(false)
       const msgs = {
-        'Invalid login credentials': 'Email ou senha incorretos. Se você ainda não tem conta, toque em "Cadastre-se" aqui embaixo.',
-        'User already registered': 'Este email já tem conta — tente entrar.',
+        'Invalid login credentials': t('auth.errInvalid'),
+        'User already registered': t('auth.errRegistered'),
       }
       setError(msgs[error.message] || error.message)
       return
@@ -139,20 +140,20 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
   const showPassword = mode === 'login' || mode === 'signup' || mode === 'reset'
   const forgotBlocked = mode === 'forgot' && cooldown > 0
   const submitLabel = busy
-    ? 'Aguarde…'
-    : mode === 'login' ? 'Entrar'
-    : mode === 'signup' ? 'Criar conta'
-    : mode === 'forgot' ? (cooldown > 0 ? 'Link enviado' : 'Enviar link de recuperação')
-    : 'Salvar nova senha'
+    ? t('auth.wait')
+    : mode === 'login' ? t('auth.submitLogin')
+    : mode === 'signup' ? t('auth.submitSignup')
+    : mode === 'forgot' ? (cooldown > 0 ? t('auth.submitForgotSent') : t('auth.submitForgotSend'))
+    : t('auth.submitReset')
 
   return (
     <main className="internal-page auth-page">
       <div className="container auth-grid">
         <section className="auth-intro">
-          <p className="internal-kicker">Seu espaço privado</p>
-          <h1>{isLogin || mode === 'reset' ? 'Volte às cartas quando precisar.' : mode === 'forgot' ? 'As cartas esperam por você.' : 'Comece seu primeiro ritual.'}</h1>
+          <p className="internal-kicker">{t('auth.kicker')}</p>
+          <h1>{isLogin || mode === 'reset' ? t('auth.introReturning') : mode === 'forgot' ? t('auth.introForgot') : t('auth.introSignup')}</h1>
           <p className="auth-intro__lead">
-            Seu histórico e diário permanecem guardados em seu espaço pessoal.
+            {t('auth.introLead')}
           </p>
           <img
             className="auth-deck"
@@ -168,33 +169,33 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
           <form onSubmit={submit}>
             {showEmail && (
               <div className="field">
-                <label htmlFor="auth-email">Email</label>
+                <label htmlFor="auth-email">{t('auth.email')}</label>
                 <input id="auth-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
               </div>
             )}
             {showPassword && (
               <div className="field">
-                <label htmlFor="auth-password">{mode === 'reset' ? 'Nova senha' : 'Senha'}</label>
+                <label htmlFor="auth-password">{mode === 'reset' ? t('auth.passwordNew') : t('auth.password')}</label>
                 <input id="auth-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} autoComplete={isLogin ? 'current-password' : 'new-password'} />
               </div>
             )}
             {mode === 'signup' && (
               <fieldset className="consent-fieldset">
-                <legend className="sr-only">Declarações obrigatórias</legend>
+                <legend className="sr-only">{t('auth.consentLegend')}</legend>
                 <label className="consent-check">
                   <input type="checkbox" checked={ageOk} onChange={(e) => setAgeOk(e.target.checked)} required />
-                  <span>Declaro ter 18 anos ou mais.</span>
+                  <span>{t('auth.consentAge')}</span>
                 </label>
                 <label className="consent-check">
                   <input type="checkbox" checked={termsOk} onChange={(e) => setTermsOk(e.target.checked)} required />
                   <span>
-                    Li e aceito os <Link to="/termos" target="_blank">Termos de Uso</Link>.
+                    {t('auth.consentTermsBefore')} <Link to="/termos" target="_blank">{t('footer.terms')}</Link>{t('auth.consentTermsAfter')}
                   </span>
                 </label>
                 <label className="consent-check">
                   <input type="checkbox" checked={privacyOk} onChange={(e) => setPrivacyOk(e.target.checked)} required />
                   <span>
-                    Li e estou ciente da <Link to="/privacidade" target="_blank">Política de Privacidade</Link>.
+                    {t('auth.consentPrivacyBefore')} <Link to="/privacidade" target="_blank">{t('auth.privacyLink')}</Link>{t('auth.consentPrivacyAfter')}
                   </span>
                 </label>
               </fieldset>
@@ -202,8 +203,8 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
             {error && <p className="error-msg" role="alert">{error}</p>}
             {emailSent && (
               <div className="sent-notice" role="status">
-                <p className="sent-notice__title">📧 Vá ao seu email</p>
-                <p>Enviamos um link para o seu e-mail — confira a caixa de entrada.</p>
+                <p className="sent-notice__title">{t('auth.sentTitle')}</p>
+                <p>{t('auth.sentBody')}</p>
               </div>
             )}
             <button
@@ -216,22 +217,22 @@ export default function Auth({ recoveryLock = false, onRecoveryDone }) {
             {mode === 'login' && (
               <p className="auth-switch-row">
                 <button className="text-button" type="button" onClick={() => switchMode('forgot')}>
-                  Esqueceu a senha?
+                  {t('auth.forgotLink')}
                 </button>
               </p>
             )}
             {(mode === 'login' || mode === 'signup') && (
               <p className="auth-switch-row">
-                {isLogin ? 'Ainda não tem conta?' : 'Já tem conta?'}{' '}
+                {isLogin ? t('auth.noAccount') : t('auth.hasAccount')}{' '}
                 <button className="text-button" type="button" onClick={() => switchMode(isLogin ? 'signup' : 'login')}>
-                  {isLogin ? 'Cadastre-se' : 'Entre aqui'}
+                  {isLogin ? t('auth.signupCta') : t('auth.loginCta')}
                 </button>
               </p>
             )}
             {mode === 'forgot' && (
               <p className="auth-switch-row">
                 <button className="text-button" type="button" onClick={() => switchMode('login')}>
-                  ← Voltar para entrar
+                  {t('auth.backToLogin')}
                 </button>
               </p>
             )}

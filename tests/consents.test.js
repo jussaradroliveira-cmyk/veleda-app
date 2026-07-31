@@ -51,7 +51,10 @@ test('UI reports signup failure instead of claiming consent saved', () => {
 })
 
 test('age declaration stores no identity document or birth date', () => {
-  assert.match(auth, /Declaro ter 18 anos ou mais\./)
+  // a declaração de idade é uma frase simples de checkbox (não pede documentos);
+  // com i18n, o texto vive no dicionário (src/lib/i18n.js), não no Auth.jsx.
+  const i18n = fs.readFileSync('src/lib/i18n.js', 'utf8')
+  assert.match(i18n, /Declaro ter 18 anos ou mais\./)
   assert.doesNotMatch(migration, /cpf|passport|passaporte|birth|nascimento|biometr|fotografia|document_number/i)
 })
 

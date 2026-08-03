@@ -14,6 +14,7 @@ import Cookies from './pages/Cookies'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import Subprocessors from './pages/Subprocessors'
+import { Analytics } from '@vercel/analytics/react'
 import AppHeader from './components/AppHeader'
 import AppFooter from './components/AppFooter'
 import InstallPrompt from './components/InstallPrompt'
@@ -139,6 +140,8 @@ export default function App() {
             <InstallPrompt />
           </>
         )}
+        {/* Medição de audiência anónima e sem cookies (Vercel Web Analytics). */}
+        <Analytics />
       </div>
     </AuthContext.Provider>
   )

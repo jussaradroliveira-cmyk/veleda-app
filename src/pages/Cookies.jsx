@@ -5,14 +5,19 @@ export default function Cookies() {
         <div className="card-panel ornate-panel legal-panel">
           <p className="internal-kicker">Transparência</p>
           <h2>Política de Cookies</h2>
-          <p className="muted">Última atualização: 28 de julho de 2026</p>
+          <p className="muted">Última atualização: 3 de agosto de 2026</p>
 
           <div className="legal-content">
             <h3>O essencial, sem rodeios</h3>
             <p>
               A Veleda <strong>não usa cookies de publicidade nem de rastreamento</strong>.
-              Não vendemos seus dados, não seguimos você pela internet e não usamos
-              ferramentas de análise de terceiros.
+              Não vendemos seus dados e não seguimos você por outros sites da internet.
+            </p>
+            <p>
+              Para saber quantas pessoas visitam a Veleda, usamos uma{' '}
+              <strong>medição de audiência anónima e sem cookies</strong> (Vercel Web Analytics).
+              Ela conta visitas e origem do acesso de forma agregada, <strong>sem identificar
+              você, sem cookies e sem criar um perfil</strong> — não dá para saber quem você é.
             </p>
 
             <p>

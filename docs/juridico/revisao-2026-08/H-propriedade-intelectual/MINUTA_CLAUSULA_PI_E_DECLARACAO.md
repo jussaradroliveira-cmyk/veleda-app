@@ -9,8 +9,10 @@
 > prova: históricos/prompts das ferramentas de IA, iterações, datas e os
 > ficheiros originais em `art-originais/` e `cards-originais/`.
 >
-> ⚠️ Verificação factual pendente: confirmar que TODOS os ativos assistidos
-> por IA saíram de ferramentas da OpenAI (a minuta só menciona OpenAI).
+> ✅ Verificação factual CONFIRMADA pela Jussara (13/08/2026): todos os ativos
+> assistidos por IA foram produzidos em ferramentas da OpenAI e descarregados
+> diretamente de lá para o computador. Falta apenas arquivar os históricos/
+> prompts como acervo de prova.
 
 ---
 

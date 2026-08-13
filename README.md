@@ -16,14 +16,14 @@ npm run dev            # http://localhost:5173
 - **Base de dados** (Supabase, projeto `veleda`, ref `phixumwuktqabcngncrk`, região UE/Irlanda). RLS ativo em todas as tabelas:
   - `cards` — 78 cartas (22 maiores + 56 menores), leitura pública
   - `profiles` — criado no signup pelo trigger; `is_premium`, créditos e IDs Stripe (só o service role escreve estes; o dono só edita `display_name`)
-  - `readings` — só a Edge Function escreve; o dono lê
+  - `readings` — só a Edge Function escreve; o dono lê e pode apagar ("apagar histórico"; a quota não é devolvida — conta por `reading_reservations`)
   - `journal_entries` — diário (RLS total; FK composta garante que um diário ligado a leitura é do mesmo dono; limite de tamanho por entrada e por conta)
   - `user_consents` — aceites append-only (Termos/Privacidade/18+): versão + **hash SHA-256** do texto + data-hora do servidor + idioma + mercado
   - `reading_reservations` — reserva atómica de quota (grátis semanal, Premium diário, créditos), com idempotência e estorno
   - `stripe_payment_purchases` / `processed_stripe_events` — pacotes avulsos e idempotência de eventos Stripe
   - Migrations em `supabase/migrations/`
 - **Edge Functions** (`supabase/functions/`):
-  - `generate-reading` — valida sessão → reserva quota atómica → chama Claude (`claude-sonnet-5`) → grava. Prompt endurecido, pergunta delimitada como dado não confiável.
+  - `generate-reading` — valida sessão → reserva quota atómica → chama Claude (`claude-sonnet-5`) → grava. Prompt endurecido, pergunta delimitada como dado não confiável. A leitura interpreta as cartas **para a pergunta** (síntese dá a tendência/resposta), no idioma do utilizador, sem avisos no texto (o aviso fixo é da app) e termina com o convite a nova tiragem.
   - `delete-account` — cancela assinaturas na Stripe antes de apagar (falha-fechada), reautenticação por senha, logs sem PII
   - `export-data` — exportação server-side completa (conta + 6 tabelas), falha-fechada, inventário versionado
   - `create-checkout` / `manage-subscription` — checkout e portal Stripe (catálogo regional server-side)
@@ -75,9 +75,11 @@ Migrations testam-se num Postgres descartável antes de qualquer ambiente remoto
 ## Deploy
 
 `scripts/deploy.sh` publica na Vercel **a partir do último commit** — commitar antes.
+Exige `VELEDA_CONFIRM_DEPLOY=1` e a CLI fixada em cache (se falhar por falta dela:
+`npx -y vercel@58.1.0 --version` primeiro).
 
 ```bash
-git commit -am "…" && bash scripts/deploy.sh          # frontend (Vercel)
+git commit -am "…" && VELEDA_CONFIRM_DEPLOY=1 bash scripts/deploy.sh   # frontend (Vercel)
 supabase db push                                       # migrations (ordem: migrations → funções → frontend)
 supabase functions deploy generate-reading             # funções (JWT on por defeito)
 supabase functions deploy stripe-webhook --no-verify-jwt
@@ -120,8 +122,9 @@ reembolso e disputa/chargeback).
 
 ## Por fazer (não-código, decisões da Jussara)
 
-- **E-mail fiável (VLT-012):** SMTP próprio / Resend para `veledataro.com` — recuperação de senha e confirmação de e-mail. É configuração de painel + secrets, não código.
-- **Go-live do Stripe:** chaves/produtos/webhook live, confirmar Pix, ativar Customer Portal.
-- **Supabase Pro:** sem pausa por inatividade, backups melhores.
-- **Revisão jurídica confirmada** dos textos v2.1 (já publicados, vigentes 29/07/2026).
+Já feito: go-live do Stripe (live, Pix, Customer Portal), Resend/SMTP próprio,
+legais revistos (Termos 2.2 · Privacidade 2.3). Falta:
+
+- **Supabase Pro:** backups diário + PITR (torna plena a frase de backups da Privacidade v2.3). Ativar na véspera de divulgar.
+- **Teste do cartão real** no Stripe live: concluir uma cobrança → webhook liga Premium → reembolso/cancelamento.
 - Imagens reais das cartas em `public/cards/` quando definitivas.

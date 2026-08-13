@@ -5,6 +5,45 @@ redeployadas, frontend publicado na Vercel). Referências = commits em `main`.
 
 ---
 
+## 13 de agosto de 2026 — Qualidade da leitura + UX pós-leitura (feedback de uso real)
+
+Duas rondas de feedback da Jussara após usar o produto no live. Tudo em produção:
+migrations aplicadas, `generate-reading` redeployada, frontend publicado.
+Commits `215586a` · `537ab6a` · `d7d0a88` · `2d78920`.
+
+- **Prompt da leitura reescrito** (`generate-reading`). Antes: persona mínima
+  ("taróloga acolhedora") + cartas como palavras-chave → a IA respondia com
+  dedução lógica da pergunta. Agora: a **pergunta é o centro** — cada secção diz
+  o que aquela carta significa **para aquela pergunta** (imagem da carta em no
+  máximo 1 frase; o resto é interpretação aplicada); posições lidas em função da
+  pergunta; a síntese é **obrigada a dar a tendência/resposta**; proibidas
+  abstrações vagas (fé, universo, energias) e sermões de autoajuda; arcano+naipe
+  enviados à IA além das keywords; tratamento por "você" em pt. Termina SEMPRE
+  com "Gostaria de tirar novas cartas para saber mais?". Validado no live com
+  pergunta amorosa real (síntese responde diretamente à pergunta).
+- **Aviso de reflexão fixo**: a IA está proibida de escrever avisos no texto; o
+  aviso da app aparece agora **sempre, no fim de toda leitura** (NewReading e
+  ReadingDetail). Removida a chave `veleda_disclaimer_seen` (antes o aviso só
+  saía na 1ª leitura de sempre); página de Cookies atualizada.
+- **Botão "Nova leitura"** no fim de cada leitura (repõe o fluxo na pergunta) e
+  no detalhe do histórico. i18n PT/EN/FR.
+- **Paywall antecipado**: o plano é verificado ao **submeter a pergunta** (free
+  sem créditos e com a grátis da semana gasta → paywall imediato, antes da
+  tiragem); "Nova leitura" refresca premium/créditos/quota. O servidor continua
+  a autoridade (reserva atómica).
+- **Apagar histórico / apagar diário**: botões com confirmação em History e
+  Journal. Migration `20260813130000_readings_owner_delete.sql` — política
+  DELETE nas `readings` (dono, `(select auth.uid())`). A quota **não** é
+  afetada (conta por `reading_reservations`, não por `readings`); a FK em
+  cascata apaga a nota do diário ligada à leitura apagada — o texto de
+  confirmação avisa. Testado no live via RLS com token do próprio utilizador.
+- **`deploy.sh` corrigido**: sem `pipefail`, uma falha do `npx --no-install
+  vercel` era engolida pelo `| tail` e o script dizia "publicado" sem publicar
+  (aconteceu de facto; detetado por verificação do bundle no site).
+- **`npm test` desbloqueado**: o import do jsdom 29 ficava preso indefinidamente
+  no Node 26.5 (Homebrew) e pendurava a suite no `safe-markdown.test.js`.
+  jsdom 29→30 (dev-dep): **77/77 em <1s**.
+
 ## 30 de julho de 2026 — Privacidade v2.3: retenção + backups (VLT2-012)
 
 - **VLT2-012** Política de Privacidade **v2.3** (revisão jurídica aprovada). §8

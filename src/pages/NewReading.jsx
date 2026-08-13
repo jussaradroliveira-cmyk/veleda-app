@@ -94,6 +94,14 @@ export default function NewReading() {
       setError(MSG_COMPOSTA)
       return
     }
+    // Plano verificado ANTES da tiragem: sem Premium, sem créditos e com a
+    // leitura grátis da semana gasta → paywall já aqui, em vez de deixar a
+    // pessoa escolher as cartas para ser barrada no fim. (O servidor continua
+    // a ser a autoridade — reserve_reading_request conta por reservas.)
+    if (!isPremium && credits === 0 && usedThisWeek !== null && usedThisWeek >= FREE_READINGS_PER_WEEK) {
+      setShowPaywall(true)
+      return
+    }
     // VLT2-015: deteção de crise ANTES de enviar — o acolhimento fica visível
     // enquanto a pessoa escolhe as cartas e antes de revelar a leitura.
     setCrisis(detectCrisis(question))
@@ -137,7 +145,19 @@ export default function NewReading() {
     setReading(null)
     setError('')
     setCrisis(false)
+    // o plano pode ter mudado com a leitura que acabou (crédito consumido,
+    // grátis da semana gasta) — refresca antes de deixar perguntar de novo
     readingsThisWeek(user.id).then(setUsedThisWeek).catch(() => {})
+    supabase
+      .from('profiles')
+      .select('is_premium, reading_credits, reading_credits_expire_at')
+      .eq('id', user.id)
+      .single()
+      .then(({ data }) => {
+        setIsPremium(Boolean(data?.is_premium))
+        const valido = data?.reading_credits_expire_at && new Date(data.reading_credits_expire_at) > new Date()
+        setCredits(valido ? (data.reading_credits ?? 0) : 0)
+      })
     setStep('pergunta')
   }
 

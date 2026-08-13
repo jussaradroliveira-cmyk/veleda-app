@@ -8,6 +8,8 @@ export default function History() {
   const { user } = useAuth()
   const { t, dateLocale } = useI18n()
   const [readings, setReadings] = useState(null)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     supabase
@@ -17,6 +19,19 @@ export default function History() {
       .order('created_at', { ascending: false })
       .then(({ data }) => setReadings(data ?? []))
   }, [user.id])
+
+  async function clearHistory() {
+    if (!window.confirm(t('history.clearConfirm'))) return
+    setBusy(true)
+    setError('')
+    const { error: deleteError } = await supabase.from('readings').delete().eq('user_id', user.id)
+    setBusy(false)
+    if (deleteError) {
+      setError(t('history.clearError'))
+      return
+    }
+    setReadings([])
+  }
 
   return (
     <main className="internal-page history-page">
@@ -39,6 +54,14 @@ export default function History() {
             </div>
           </Link>
         ))}
+        {readings?.length > 0 && (
+          <div style={{ marginTop: '1.5rem' }}>
+            <button className="btn ghost small" onClick={clearHistory} disabled={busy}>
+              {busy ? t('history.clearing') : t('history.clear')}
+            </button>
+            {error && <p className="error-msg" role="alert">{error}</p>}
+          </div>
+        )}
       </div>
     </main>
   )

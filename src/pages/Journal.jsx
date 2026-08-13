@@ -46,6 +46,19 @@ export default function Journal() {
     load()
   }
 
+  async function clearJournal() {
+    if (!window.confirm(t('journal.clearConfirm'))) return
+    setBusy(true)
+    setError('')
+    const { error: deleteError } = await supabase.from('journal_entries').delete().eq('user_id', user.id)
+    setBusy(false)
+    if (deleteError) {
+      setError(t('journal.clearError'))
+      return
+    }
+    load()
+  }
+
   return (
     <main className="internal-page journal-page">
       <div className="container">
@@ -83,6 +96,13 @@ export default function Journal() {
             </p>
           </div>
         ))}
+        {entries?.length > 0 && (
+          <div style={{ marginTop: '1.5rem' }}>
+            <button className="btn ghost small" onClick={clearJournal} disabled={busy}>
+              {t('journal.clear')}
+            </button>
+          </div>
+        )}
         </div>
       </div>
     </main>

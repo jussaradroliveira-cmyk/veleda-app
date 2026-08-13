@@ -11,6 +11,7 @@ Supabase, Inc. e entidades do grupo — Base de dados, autenticação, armazenam
 Anthropic, PBC (Claude) — Geração de leituras por inteligência artificial. — Pergunta, cartas selecionadas, instruções técnicas e texto gerado. Não recebe nome, e-mail, diário ou histórico. — Estados Unidos e infraestrutura/suboperadores indicados pelo fornecedor.
 Stripe e entidade contratante aplicável do grupo Stripe — Checkout, assinaturas, compra avulsa, faturação, prevenção de fraude, reembolso e chargeback. — E-mail, identificador de cliente, plano, mercado, moeda, valor, estado e dados de pagamento inseridos diretamente no checkout. — Espaço Económico Europeu, Estados Unidos e outros locais necessários ao processamento global.
 Vercel, Inc. e entidades do grupo — Hospedagem do frontend/PWA, CDN, entrega de conteúdo e logs operacionais. — Endereço IP, data/hora, navegador, dispositivo, rota solicitada, identificadores técnicos e logs de erro/segurança. — Estados Unidos e rede global de infraestrutura/CDN.
+Resend, Inc. — Envio de e-mails transacionais de autenticação e segurança, incluindo recuperação de senha e confirmações de conta. — E-mail do destinatário, conteúdo da mensagem transacional e metadados de entrega. — Estados Unidos e infraestrutura indicada pelo fornecedor.
 
 O número completo do cartão e os códigos de segurança são enviados diretamente ao processador de pagamento e não são armazenados pelo Veleda.
 
@@ -32,4 +33,4 @@ A lista será atualizada antes da ativação de um novo fornecedor que trate dad
 
 Responsável: Jussara Derly Rodrigues de Oliveira Grota · NIF 302020250 · Rua Comandante Manuel Freire, 8, 2655-443 Ericeira, Portugal · Privacidade: contact@veledataro.com.
 
-Veleda Tarô Simbólico  |  Lista de Subprocessadores  |  versão 2.2  |  29 de julho de 2026
+Veleda Tarô Simbólico  |  Lista de Subprocessadores  |  versão 2.3  |  13 de agosto de 2026

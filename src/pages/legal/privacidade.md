@@ -49,17 +49,21 @@ Quando o tratamento se basear em interesse legítimo, a Responsável avaliará f
 
 # 5. Perguntas, dados sensíveis e inteligência artificial
 
-ATENÇÃO A DADOS ÍNTIMOS. Perguntas e diário podem revelar saúde, religião, sexualidade, opiniões políticas, origem racial ou étnica e outros aspetos íntimos. O Veleda não solicita que esses dados sejam incluídos.
+ATENÇÃO A DADOS ÍNTIMOS. Perguntas e diário podem revelar saúde, religião, sexualidade, opiniões políticas, origem racial ou étnica e outros aspectos íntimos. O Veleda não solicita que esses dados sejam incluídos.
 
-A pergunta e as cartas selecionadas são enviadas ao fornecedor de IA para gerar a resposta. O nome, o e-mail, o diário e o histórico não são enviados à IA. A própria pergunta, contudo, pode conter dados pessoais ou sensíveis voluntariamente inseridos pelo Usuário.
+Para gerar cada leitura, o Veleda transmite à Anthropic, PBC, fornecedora comercial de inteligência artificial localizada nos Estados Unidos, apenas o texto da pergunta, as três cartas selecionadas, as instruções técnicas fixas e o idioma. Não são enviados nome, e-mail, identificador da conta, endereço IP do Usuário, diário, histórico ou dados de pagamento. Cada solicitação é enviada sem identificadores da conta e sem contexto de solicitações anteriores.
 
-O Veleda orienta o Usuário a não incluir dados sensíveis na pergunta. Caso o Usuário, por sua própria escolha, insira dados sensíveis, estes são tratados apenas na medida estritamente necessária para gerar aquela leitura, ao abrigo do consentimento prestado no cadastro e nesta Política, não sendo utilizados para qualquer outra finalidade. O Usuário pode, antes de enviar, apagar ou reformular a pergunta. O diário permanece armazenado no Veleda e não é utilizado como contexto para a IA.
+A própria pergunta pode conter dados pessoais ou sensíveis inseridos voluntariamente pelo Usuário. Evite incluir nomes completos, documentos, dados de terceiros ou informações desnecessárias. O Usuário pode apagar ou reformular a pergunta antes de enviá-la. O diário permanece armazenado no Veleda, não é enviado ao fornecedor de IA e não é utilizado como contexto para a leitura.
+
+Caso o Usuário, por sua própria escolha, insira dados sensíveis na pergunta, estes serão tratados apenas na medida estritamente necessária para gerar aquela leitura, ao abrigo do consentimento prestado no cadastro e nesta Política, sem utilização para outra finalidade pelo Veleda.
+
+Nos termos aplicáveis ao serviço comercial utilizado pelo Veleda, a Anthropic não utiliza, por padrão, as entradas e saídas da API comercial para treinamento geral de seus modelos. Os conteúdos são eliminados segundo os prazos e condições de retenção aplicáveis ao serviço comercial contratado. O Veleda não envia feedback à Anthropic com autorização para utilização desses conteúdos em treinamento. Alterações materiais nessas condições serão avaliadas antes de sua aplicação ao Serviço.
 
 A IA não é utilizada para tomar decisões exclusivamente automatizadas que produzam efeitos jurídicos ou impacto semelhante sobre crédito, emprego, seguro, saúde, elegibilidade ou direitos do Usuário.
 
 # 6. Compartilhamento e destinatários
 
-Os dados são compartilhados apenas na medida necessária com fornecedores de infraestrutura, inteligência artificial, hospedagem e pagamentos descritos na Lista de Subprocessadores. Também podem ser comunicados a consultores sujeitos a confidencialidade, autoridades competentes, tribunais ou sucessores em reorganização, quando exista base jurídica.
+Os dados são compartilhados apenas na medida necessária com fornecedores de infraestrutura, inteligência artificial, hospedagem, pagamentos e envio de e-mails transacionais descritos na Lista de Subprocessadores. O Resend recebe o e-mail do destinatário, o conteúdo da mensagem transacional e metadados de entrega para enviar mensagens de autenticação e segurança da conta. Também podem ser comunicados a consultores sujeitos a confidencialidade, autoridades competentes, tribunais ou sucessores em reorganização, quando exista base jurídica.
 
 Processadores de pagamento podem atuar como responsáveis independentes para prevenção de fraude, cumprimento regulatório, gestão de disputas e operação financeira. Nesses casos, aplicam-se também os avisos de privacidade do próprio fornecedor.
 
@@ -89,9 +93,9 @@ Uma solicitação de eliminação não alcança dados cuja conservação seja ob
 
 # 9. Segurança
 
-São adotadas medidas técnicas e organizacionais proporcionais ao risco, incluindo autenticação, segregação por usuário, controle de acesso, criptografia em trânsito, validação server-side, sanitização de conteúdo, registos técnicos, gestão de vulnerabilidades, backups e resposta a incidentes.
+São adotadas medidas técnicas e organizacionais proporcionais ao risco, incluindo autenticação, segregação por Usuário, controle de acesso, criptografia em trânsito, validação no servidor, sanitização de conteúdo, registros técnicos, gestão de vulnerabilidades e resposta a incidentes.
 
-As cópias de segurança (backups) da base de dados são geridas pelo subcontratante de infraestrutura (Supabase). No plano contratado existem backups automáticos diários e recuperação a um ponto no tempo (point-in-time recovery), com retenção de curto prazo definida pelo plano; as cópias mais antigas são sobrescritas automaticamente segundo esse ciclo. Por esse motivo, após a eliminação de dados dos sistemas ativos, as cópias de segurança deixam de os conter no decurso do ciclo de retenção do fornecedor.
+As cópias de segurança da base de dados, quando disponibilizadas e ativadas no plano de infraestrutura contratado, são geridas pelo Supabase segundo a configuração e o ciclo de retenção aplicáveis. A recuperação a um ponto no tempo somente será considerada ativa quando estiver efetivamente habilitada no plano. Dados eliminados dos sistemas ativos deixam de integrar cópias rotativas no decorrer do respectivo ciclo de retenção. A existência de cópias de segurança não amplia as finalidades de tratamento nem autoriza a restauração de dados para uso incompatível com o pedido de eliminação.
 
 Nenhum sistema é absolutamente seguro. O Usuário deve utilizar senha exclusiva, proteger os dispositivos, encerrar sessões em equipamentos compartilhados e informar suspeitas de acesso indevido.
 
@@ -133,4 +137,4 @@ Alterações materiais serão comunicadas por meio adequado. Se uma nova finalid
 
 Responsável: Jussara Derly Rodrigues de Oliveira Grota · NIF 302020250 · Rua Comandante Manuel Freire, 8, 2655-443 Ericeira, Portugal · Canal de privacidade: contact@veledataro.com.
 
-Veleda Tarô Simbólico  |  Política de Privacidade  |  versão 2.3  |  30 de julho de 2026
+Veleda Tarô Simbólico  |  Política de Privacidade  |  versão 2.4  |  13 de agosto de 2026

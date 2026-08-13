@@ -198,6 +198,10 @@ export default function NewReading() {
             <p className="pre-send-note" role="note">
               {t('reading.preSend')}
             </p>
+            {/* Aviso de interface v1.0 (revisão jurídica 2026-08): dados pessoais e IA. */}
+            <p className="pre-send-note" role="note">
+              {t('reading.aiPrivacyNote')}
+            </p>
             {crisisNotice}
             <form onSubmit={startSpread}>
               <textarea

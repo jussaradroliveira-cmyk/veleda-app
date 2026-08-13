@@ -4,11 +4,8 @@ import fs from 'node:fs'
 import { createHash } from 'node:crypto'
 
 const migration = fs.readFileSync('supabase/migrations/20260728120000_phase1_security_integrity.sql', 'utf8')
-const publishV22 = fs.readFileSync('supabase/migrations/20260729190000_publish_legal_v22.sql', 'utf8')
-// fingerprint vigente da 2.2 dos Termos (última correção in-place: preço §6)
-const fixTermsV22 = fs.readFileSync('supabase/migrations/20260729200000_fix_terms_v22_price.sql', 'utf8')
-// Privacidade vigente = 2.3 (retenção/backups — VLT2-012)
-const publishPrivacyV23 = fs.readFileSync('supabase/migrations/20260730140000_publish_privacy_v23.sql', 'utf8')
+// vigentes: Termos 2.3 + Privacidade 2.4 (revisão jurídica 2026-08)
+const publishLegal202608 = fs.readFileSync('supabase/migrations/20260813150000_publish_terms_v23_privacy_v24.sql', 'utf8')
 const auth = fs.readFileSync('src/pages/Auth.jsx', 'utf8')
 const sha256File = (f) => createHash('sha256').update(fs.readFileSync(f)).digest('hex')
 
@@ -24,19 +21,17 @@ test('user id and timestamp are server-controlled', () => {
   assert.doesNotMatch(auth, /terms_accepted_at|new Date\(\)\.toISOString\(\)/)
 })
 
-test('published document versions and hashes match server records (v2.2)', () => {
-  // a migração de publicação torna a 2.2 vigente em legal_documents
-  assert.match(publishV22, /'terms_acceptance', '2\.2'/)
+test('published document versions and hashes match server records (v2.3/v2.4)', () => {
+  // a migração de publicação torna Termos 2.3 e Privacidade 2.4 vigentes
+  assert.match(publishLegal202608, /'terms_acceptance', '2\.3'/)
+  assert.match(publishLegal202608, /'privacy_acknowledgement', '2\.4'/)
   // o hash vigente é o SHA-256 do texto verbatim efetivamente exibido.
-  // Termos: fingerprint corrigido in-place na 2.2 (correção de redação §9 + preço).
-  assert.match(fixTermsV22, new RegExp('sha256:' + sha256File('src/pages/legal/termos.md')))
-  // Privacidade: vigente 2.3 (VLT2-012), hash do texto atual.
-  assert.match(publishPrivacyV23, /'privacy_acknowledgement', '2\.3'/)
-  assert.match(publishPrivacyV23, new RegExp('sha256:' + sha256File('src/pages/legal/privacidade.md')))
+  assert.match(publishLegal202608, new RegExp('sha256:' + sha256File('src/pages/legal/termos.md')))
+  assert.match(publishLegal202608, new RegExp('sha256:' + sha256File('src/pages/legal/privacidade.md')))
   // as páginas mostram a versão vigente de cada documento
-  assert.match(fs.readFileSync('src/pages/Terms.jsx', 'utf8'), /Versão 2\.2/)
-  assert.match(fs.readFileSync('src/pages/Privacy.jsx', 'utf8'), /Versão 2\.3/)
-  assert.match(fs.readFileSync('src/pages/Subprocessors.jsx', 'utf8'), /Versão 2\.2/)
+  assert.match(fs.readFileSync('src/pages/Terms.jsx', 'utf8'), /Versão 2\.3/)
+  assert.match(fs.readFileSync('src/pages/Privacy.jsx', 'utf8'), /Versão 2\.4/)
+  assert.match(fs.readFileSync('src/pages/Subprocessors.jsx', 'utf8'), /Versão 2\.3/)
 })
 
 test('signup trigger creates consent even when email confirmation delays session', () => {

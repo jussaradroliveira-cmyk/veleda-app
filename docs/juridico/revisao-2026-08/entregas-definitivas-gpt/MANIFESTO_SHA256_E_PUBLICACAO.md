@@ -1,5 +1,13 @@
 # Manifesto de integridade e publicação
 
+> **Registo de publicação (13/08/2026):** aprovado pela Jussara com UMA
+> alteração — removida do §6 dos Termos a frase da promoção de R$ 29,90
+> (promoção inexistente no catálogo). O texto PUBLICADO dos Termos v2.3
+> difere por essa frase; hash publicado:
+> `sha256:224c14e32b2d752e4119d744c3895d72ca781ec035af2b88ae012975a0834e9c`
+> (fonte: src/pages/legal/termos.md; migration 20260813150000). Privacidade
+> v2.4 e Subprocessadores v2.3 publicados verbatim (hashes abaixo conferem).
+
 Hashes SHA-256 dos textos Markdown definitivos. O hash de consentimento do sistema deve ser recalculado sobre o texto exato efetivamente publicado.
 
 - `Veleda_Termos_de_Uso_v2.3_DEFINITIVO.md`: `b1e7ac76f4229d358df62c929cedf7fc0b2e5a92288bc732e96194a1f4c839c8`

@@ -52,7 +52,7 @@ O pacote avulso inclui 5 (cinco) leituras, não constitui assinatura, não se re
 
 # 6. Preços, promoções e formação do contrato
 
-No mercado brasileiro, os preços vigentes são de R$ 39,90 por mês, R$ 383,04 por ano e R$ 49,90 pelo pacote avulso de 5 leituras. O primeiro mês da assinatura mensal poderá ser oferecido por R$ 29,90 quando a promoção estiver expressamente ativa no checkout, com indicação clara do preço de renovação.
+No mercado brasileiro, os preços vigentes são de R$ 39,90 por mês, R$ 383,04 por ano e R$ 49,90 pelo pacote avulso de 5 leituras.
 
 Em Portugal/EEE, os preços são apresentados em euros. Em qualquer mercado, prevalecem o preço, a moeda, os impostos, o período, os benefícios e as condições exibidas imediatamente antes da confirmação da compra.
 
@@ -74,13 +74,13 @@ Mudanças de preço aplicam-se apenas a períodos futuros, com aviso prévio e n
 
 # 8. Direito de arrependimento, livre resolução e reembolsos
 
-Brasil. O consumidor pode exercer o direito de arrependimento no prazo legal de 7 (sete) dias contado da contratação à distância, mediante pedido inequívoco enviado a contact@veledataro.com. Quando aplicável, os valores pagos serão restituídos pelo mesmo meio ou por meio equivalente, sem prejuízo de direitos mais favoráveis previstos em lei ou na oferta.
+Brasil. O consumidor pode exercer o direito de arrependimento no prazo legal de 7 (sete) dias contado da contratação à distância, mediante pedido inequívoco enviado a contact@veledataro.com. O exercício tempestivo do direito assegura a restituição integral dos valores pagos, inclusive quando o Usuário já tiver iniciado a utilização do Serviço, sem cobrança pelas leituras realizadas durante esse período e sem prejuízo de direitos mais favoráveis previstos em lei ou na oferta.
 
-Portugal/EEE. O consumidor dispõe, em regra, de 14 (catorze) dias para exercer o direito de livre resolução. Quando solicitar o início imediato de um serviço durante esse prazo, poderá ser devido montante proporcional ao que tiver sido efetivamente prestado. Para conteúdo digital fornecido sem suporte material, a perda do direito de livre resolução só ocorrerá quando a execução tiver começado com consentimento prévio e expresso e o consumidor tiver reconhecido essa consequência, nos termos da lei.
+Portugal/EEE. O consumidor dispõe, em regra, de 14 (catorze) dias para exercer o direito de livre resolução. Quando solicitar expressamente o início imediato de um serviço durante esse prazo, poderá ser devido montante proporcional ao que tiver sido efetivamente prestado. Para conteúdo digital fornecido sem suporte material, a perda do direito de livre resolução somente ocorrerá quando a execução tiver começado com consentimento prévio e expresso e o consumidor tiver reconhecido essa consequência, nos termos da lei. A declaração aplicável será apresentada no checkout antes da contratação destinada a Portugal/EEE.
 
 Fora dos prazos legais, o simples cancelamento da renovação não gera reembolso proporcional de dias ou leituras não utilizados, salvo previsão obrigatória, defeito do Serviço, duplicidade de cobrança, oferta mais favorável ou decisão expressa da Prestadora.
 
-Pedidos de reembolso devem indicar o e-mail da conta, a data da compra e o identificador da transação, sem incluir dados completos de cartão.
+Pedidos de reembolso devem indicar o e-mail da conta, a data da compra e o identificador da transação, sem incluir dados completos de cartão. O Veleda confirmará o recebimento e concluirá a análise e as providências sob seu controle em até 7 (sete) dias úteis, sem prejuízo de prazo inferior exigido por lei. O prazo de crédito na fatura ou na conta depende do processador de pagamento e da instituição financeira.
 
 # 9. Perguntas, diário e conteúdo do Usuário
 
@@ -110,11 +110,23 @@ introduzir malware, realizar ataques, testes de intrusão não autorizados ou so
 
 usar o Serviço para fraude, perseguição, coerção, exploração, discriminação ou decisões automatizadas sobre terceiros.
 
-# 11. Propriedade intelectual
+# 11. Propriedade intelectual, direção criativa e conteúdos assistidos por inteligência artificial
 
-O nome Veleda, logotipos, identidade visual, cartas, ilustrações, textos editoriais, software, interfaces e demais materiais são protegidos por direitos autorais, marcas e outras normas. A contratação concede apenas uma licença pessoal, limitada, revogável e não transferível para utilizar o Serviço durante a vigência do acesso.
+O nome Veleda, a marca Veleda Tarô, os logotipos, sinais distintivos, identidade visual, paleta cromática, composições gráficas, interfaces, textos, conteúdos editoriais, estrutura das leituras, seleção e organização simbólica do baralho, bem como as ilustrações das 78 cartas, versos, fundos, texturas, molduras, elementos ornamentais, imagens da página de apresentação, materiais promocionais, arquivos digitais e respectivas variações constituem ativos intelectuais e comerciais do projeto Veleda.
 
-A compra de uma assinatura, pacote ou eventual baralho físico não transfere direitos de reprodução, fabricação, tokenização, licenciamento, adaptação ou exploração comercial das artes e conteúdos.
+Esses ativos foram concebidos, dirigidos, selecionados, coordenados e validados por Jussara Derly Rodrigues de Oliveira Grota, NIF 302020250, responsável pela definição do conceito, propósito, linguagem simbólica, paleta cromática, estilo visual, composição, instruções criativas, critérios de seleção e integração final dos materiais no conjunto Veleda.
+
+Determinados elementos visuais foram produzidos com assistência de ferramentas de inteligência artificial generativa disponibilizadas pela OpenAI, a partir de instruções, referências, escolhas, revisões, curadoria e direção criativa da titular. A utilização dessas ferramentas teve natureza instrumental e não atribui à fornecedora da ferramenta a qualidade de autora, coautora, proprietária, licenciadora da marca ou participante no projeto Veleda.
+
+Na medida permitida pela legislação aplicável e pelos termos dos fornecedores tecnológicos utilizados, os direitos, títulos, interesses, faculdades de exploração e direitos de utilização comercial relativos aos resultados produzidos para o Veleda pertencem a Jussara Derly Rodrigues de Oliveira Grota, sem prejuízo de direitos de terceiros validamente constituídos e das limitações legais aplicáveis aos conteúdos gerados ou assistidos por inteligência artificial.
+
+Independentemente da eventual proteção autoral de cada elemento considerado isoladamente, são reservados à titular os direitos sobre as contribuições humanas, incluindo o conceito, os textos, a direção criativa, a seleção, a curadoria, as modificações, a combinação, a organização, a identidade visual, a apresentação e a composição do conjunto dos materiais do Veleda, bem como os direitos decorrentes de marca, desenho ou modelo, concorrência desleal, segredo comercial e demais regimes legalmente aplicáveis.
+
+Nenhuma disposição destes Termos concede ao Usuário direito de propriedade, reprodução, adaptação, distribuição, comercialização ou exploração dos ativos do Veleda. É proibido, sem autorização prévia e escrita da titular, copiar, extrair, imprimir, fabricar, alterar, adaptar, disponibilizar, vender, sublicenciar, tokenizar, utilizar para treinamento de modelos de inteligência artificial, criar produtos derivados ou explorar comercialmente qualquer carta, ilustração, verso, fundo, textura, interface ou elemento da identidade Veleda.
+
+A aquisição ou utilização de uma versão digital ou física do Veleda concede apenas o direito de uso pessoal previsto nestes Termos, não transferindo qualquer direito de reprodução, fabricação, distribuição, adaptação ou exploração comercial.
+
+Caso os ativos do Veleda sejam futuramente transferidos ou licenciados a uma sociedade comercial, a transferência ou licença deverá constar de instrumento escrito. Até a formalização expressa desse ato, a titularidade permanece com Jussara Derly Rodrigues de Oliveira Grota.
 
 # 12. Disponibilidade, atualizações e conformidade do serviço digital
 
@@ -182,4 +194,4 @@ Identificador da transação, se disponível: ________________________
 
 Data: ____/____/________   Assinatura (apenas se enviado em papel): __________________________
 
-Veleda Tarô Simbólico  |  Termos de Uso  |  versão 2.2  |  29 de julho de 2026
+Veleda Tarô Simbólico  |  Termos de Uso  |  versão 2.3  |  13 de agosto de 2026

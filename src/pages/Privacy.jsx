@@ -8,7 +8,7 @@ export default function Privacy() {
         <div className="card-panel ornate-panel legal-panel">
           <p className="internal-kicker">Transparência</p>
           <h2>Política de Privacidade</h2>
-          <p className="muted">Versão 2.3 · vigente a partir de 30 de julho de 2026</p>
+          <p className="muted">Versão 2.4 · vigente a partir de 13 de agosto de 2026</p>
           <LegalDoc text={privacyText} />
         </div>
       </div>

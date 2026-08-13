@@ -2,6 +2,7 @@
 # Publica a Veleda na Vercel a partir do ÚLTIMO COMMIT — nunca da working
 # tree, para não arriscar publicar trabalho não commitado.
 set -e
+set -o pipefail
 cd "$(dirname "$0")/.."
 ROOT=$(pwd)
 COMMIT=$(git rev-parse --short HEAD)

@@ -69,13 +69,6 @@ export default function Cookies() {
                     <td>Até limpar os dados locais</td>
                   </tr>
                   <tr>
-                    <td><code>veleda_disclaimer_seen</code></td>
-                    <td>Veleda</td>
-                    <td>Lembrar que você já viu o aviso de reflexão/entretenimento na primeira leitura</td>
-                    <td>Preferência funcional</td>
-                    <td>Até limpar os dados locais</td>
-                  </tr>
-                  <tr>
                     <td><code>veleda_lang</code></td>
                     <td>Veleda</td>
                     <td>Lembrar o idioma escolhido (português, inglês ou francês)</td>

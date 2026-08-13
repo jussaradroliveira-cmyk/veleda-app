@@ -88,6 +88,12 @@ export default function ReadingDetail() {
             })}
           </div>
           <SafeMarkdown>{reading.reading_text}</SafeMarkdown>
+          <div style={{ marginTop: '1.8rem' }}>
+            <Link to="/leitura" className="btn">{t('reading.newReading')}</Link>
+          </div>
+          <aside className="reading-disclaimer" role="note" aria-label={t('reading.disclaimerAria')} style={{ marginTop: '1.5rem' }}>
+            {t('reading.disclaimer')}
+          </aside>
         </div>
 
         <div className="card-panel ornate-panel" style={{ marginTop: '1.5rem' }}>

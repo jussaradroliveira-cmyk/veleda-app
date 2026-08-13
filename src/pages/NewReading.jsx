@@ -46,7 +46,6 @@ export default function NewReading() {
   const [isPremium, setIsPremium] = useState(false)
   const [credits, setCredits] = useState(0)
   const [idempotencyKey, setIdempotencyKey] = useState('')
-  const [showDisclaimer, setShowDisclaimer] = useState(false)
   // VLT2-015: pergunta com sinais de crise → mostrar acolhimento antes da leitura.
   const [crisis, setCrisis] = useState(false)
 
@@ -115,13 +114,6 @@ export default function NewReading() {
     try {
       const r = await generateReading(question, picked, idempotencyKey, locale)
       setReading(r)
-      // Nota de segurança completa: visível uma única vez, na primeira leitura.
-      let primeiraLeitura = false
-      try {
-        primeiraLeitura = !localStorage.getItem('veleda_disclaimer_seen')
-        if (primeiraLeitura) localStorage.setItem('veleda_disclaimer_seen', '1')
-      } catch { primeiraLeitura = false }
-      setShowDisclaimer(primeiraLeitura)
       setStep('leitura')
     } catch (err) {
       if (err.code === 'quota_exceeded') setShowPaywall(true)
@@ -136,6 +128,17 @@ export default function NewReading() {
     } finally {
       setBusy(false)
     }
+  }
+
+  function startNewReading() {
+    setQuestion('')
+    setPicked([])
+    setDeck([])
+    setReading(null)
+    setError('')
+    setCrisis(false)
+    readingsThisWeek(user.id).then(setUsedThisWeek).catch(() => {})
+    setStep('pergunta')
   }
 
   const crisisNotice = crisis && (
@@ -247,15 +250,14 @@ export default function NewReading() {
             </div>
             {crisisNotice}
             <SafeMarkdown>{reading.reading_text}</SafeMarkdown>
-            {showDisclaimer && (
-              <aside className="reading-disclaimer" role="note" aria-label={t('reading.disclaimerAria')}>
-                {t('reading.disclaimer')}
-              </aside>
-            )}
             <div style={{ marginTop: '1.8rem', display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
-              <Link to="/diario" className="btn">{t('reading.writeJournal')}</Link>
+              <button className="btn" onClick={startNewReading}>{t('reading.newReading')}</button>
+              <Link to="/diario" className="btn ghost">{t('reading.writeJournal')}</Link>
               <Link to="/historico" className="btn ghost">{t('reading.viewHistory')}</Link>
             </div>
+            <aside className="reading-disclaimer" role="note" aria-label={t('reading.disclaimerAria')} style={{ marginTop: '1.5rem' }}>
+              {t('reading.disclaimer')}
+            </aside>
           </div>
         )}
 
